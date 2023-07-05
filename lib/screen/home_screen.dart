@@ -48,13 +48,13 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 18),
               child: SizedBox(
                 width: MediaQuery.of(context).size.width,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
-                    const SizedBox(height: 26),
+                    const SizedBox(height: 16),
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Row(
@@ -151,13 +151,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 20,
                     ),
                     SizedBox(
-                      height: 320,
+                      height: 600,
                       child: ListView.separated(
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
                         separatorBuilder: (context, index) =>
                             const SizedBox(height: 36),
-                        itemCount: 2,
+                        itemCount: books.length,
                         itemBuilder: (BuildContext context, int index) {
                           final book = books[index];
                           return InkWell(
@@ -178,6 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                     ),
+                    SizedBox(height: 100,)
                   ],
                 ),
               ),
