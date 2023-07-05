@@ -1,4 +1,6 @@
 import 'package:bitread_app/screen/book_screen.dart';
+import 'package:bitread_app/screen/more_popular_book.dart';
+import 'package:bitread_app/screen/more_recom_book.dart';
 import 'package:bitread_app/widget/card_book.dart';
 import 'package:bitread_app/widget/carousel.dart';
 import 'package:bitread_app/widget/popular_book.dart';
@@ -72,14 +74,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                    Column(
+                    const Column(
                       children: [
-                        const SizedBox(
+                        SizedBox(
                           height: 26,
                         ),
-                        const SearchBox(),
+                        SearchBox(),
                         Carousel(),
-                        const SizedBox(
+                        SizedBox(
                           height: 26,
                         ),
                       ],
@@ -93,7 +95,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontWeight: FontWeight.w800, fontSize: 14),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                             Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const RecommendedBookScreen()),
+                              );
+                          },
                           child: const Text(
                             'Lihat Semua',
                             style: TextStyle(fontSize: 14, color: Colors.black),
@@ -139,7 +147,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               fontWeight: FontWeight.w800, fontSize: 14),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const PopularBookScreen()),
+                              );
+                          },
                           child: const Text(
                             'Lihat Semua',
                             style: TextStyle(fontSize: 14, color: Colors.black),
@@ -178,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                     ),
-                    SizedBox(height: 100,)
+                    const SizedBox(height: 100,)
                   ],
                 ),
               ),

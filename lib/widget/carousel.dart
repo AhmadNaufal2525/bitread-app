@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class Carousel extends StatefulWidget {
-  Carousel({super.key});
+  const Carousel({super.key});
 
   @override
   _CarouselState createState() => _CarouselState();
