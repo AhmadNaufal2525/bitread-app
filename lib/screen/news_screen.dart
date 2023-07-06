@@ -69,7 +69,7 @@ class _NewsScreenState extends State<NewsScreen> {
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             SizedBox(
               height: 620,
               child: ListView.separated(

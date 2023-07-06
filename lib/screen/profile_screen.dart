@@ -14,9 +14,9 @@ class _ProfilScreenState extends State<ProfilScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            Container(
+            const SizedBox(
               height: 250,
-              child: const Center(
+              child: Center(
                 child: CircleAvatar(
                   radius: 80,
                   backgroundImage: AssetImage('assets/profil.png'),
