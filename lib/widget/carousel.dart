@@ -1,21 +1,21 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 class Carousel extends StatefulWidget {
-  const Carousel({super.key});
+  Carousel({super.key});
 
   @override
   _CarouselState createState() => _CarouselState();
 }
 
 class _CarouselState extends State<Carousel> {
-   final List<String> images = [
+  final List<String> images = [
     'assets/slider1.jpg',
     'assets/slider2.jpg',
     'assets/slider3.jpg',
   ];
 
-  int _currentIndex = 0;
+  int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class _CarouselState extends State<Carousel> {
             aspectRatio: 16 / 9,
             onPageChanged: (index, reason) {
               setState(() {
-                _currentIndex = index;
+                currentIndex = index;
               });
             },
           ),
@@ -52,7 +52,6 @@ class _CarouselState extends State<Carousel> {
             );
           }).toList(),
         ),
-        const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: images.map((image) {
@@ -63,7 +62,7 @@ class _CarouselState extends State<Carousel> {
               margin: const EdgeInsets.symmetric(horizontal: 4.0),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: _currentIndex == index ? Colors.blue : Colors.grey,
+                color: currentIndex == index ? Colors.blue : Colors.grey,
               ),
             );
           }).toList(),

@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class NewsCard extends StatelessWidget {
   final String title;
   final String description;
+  final String author;
   final String imageUrl;
-  const NewsCard({super.key, required this.title, required this.description, required this.imageUrl, });
+  const NewsCard({super.key, required this.title, required this.description, required this.imageUrl, required this.author, });
 
     @override
   Widget build(BuildContext context) {
@@ -17,8 +18,8 @@ class NewsCard extends StatelessWidget {
           children: [
             Image.asset(
               imageUrl,
-              fit: BoxFit.cover,
-              height: 100,
+              fit: BoxFit.fitWidth,
+              height: 160,
               width: double.infinity,
             ),
             Padding(
@@ -36,6 +37,12 @@ class NewsCard extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     description,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Oleh: $author',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),

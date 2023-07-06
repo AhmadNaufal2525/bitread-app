@@ -74,14 +74,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                    const Column(
+                    Column(
                       children: [
-                        SizedBox(
+                        const SizedBox(
                           height: 26,
                         ),
-                        SearchBox(),
+                        const SearchBox(),
                         Carousel(),
-                        SizedBox(
+                        const SizedBox(
                           height: 26,
                         ),
                       ],
@@ -96,11 +96,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         TextButton(
                           onPressed: () {
-                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const RecommendedBookScreen()),
-                              );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const RecommendedBookScreen()),
+                            );
                           },
                           child: const Text(
                             'Lihat Semua',
@@ -149,10 +150,11 @@ class _HomeScreenState extends State<HomeScreen> {
                         TextButton(
                           onPressed: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const PopularBookScreen()),
-                              );
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const PopularBookScreen()),
+                            );
                           },
                           child: const Text(
                             'Lihat Semua',
@@ -165,12 +167,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 20,
                     ),
                     SizedBox(
-                      height: 600,
-                      child: ListView.separated(
+                      height: 340,
+                      child: GridView.builder(
                         shrinkWrap: true,
                         scrollDirection: Axis.vertical,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 36),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16.0,
+                        ),
                         itemCount: books.length,
                         itemBuilder: (BuildContext context, int index) {
                           final book = books[index];
@@ -192,7 +196,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       ),
                     ),
-                    const SizedBox(height: 100,)
+                    
                   ],
                 ),
               ),
