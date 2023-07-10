@@ -34,7 +34,7 @@ final List<Map<String, dynamic>> ListNews = [
     'author': 'Jenie Morgana',
     'imageUrl': 'assets/slider1.jpg',
   },
-   {
+  {
     'title': 'Be Modest, Be Social, Earn The Best',
     'description': 'This sample of description',
     'author': 'Jenie Morgana',
@@ -73,19 +73,19 @@ class _NewsScreenState extends State<NewsScreen> {
             SizedBox(
               height: 620,
               child: ListView.separated(
-              separatorBuilder: (context, index) => const SizedBox(height: 20),
-              itemCount: ListNews.length,
-              itemBuilder: (BuildContext context, int index) {
-                final news = ListNews[index];
-                return NewsCard(
-                    title: news['title'],
-                    description: news['description'],
-                    imageUrl: news['imageUrl'],
-                    author: news['author']);
-              },
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 20),
+                itemCount: ListNews.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final news = ListNews[index];
+                  return NewsCard(
+                      title: news['title'],
+                      description: news['description'],
+                      imageUrl: news['imageUrl'],
+                      author: news['author']);
+                },
+              ),
             ),
-            ),
-            
           ],
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:bitread_app/screen/register_screen.dart';
 import 'package:bitread_app/screen/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: GoogleFonts.poppins().fontFamily,
       ),
-      home: const SplashScreen(),
+      home: const RegisterScreen(),
     );
   }
 }
