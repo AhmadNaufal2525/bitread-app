@@ -2,7 +2,6 @@ import 'package:bitread_app/screen/home_screen.dart';
 import 'package:bitread_app/screen/news_screen.dart';
 import 'package:bitread_app/screen/profile_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});
@@ -13,65 +12,59 @@ class BottomNav extends StatefulWidget {
 
 class _BottomNavState extends State<BottomNav> {
   int selectedIndex = 0;
-
-  late PersistentTabController controller;
-
-  List<Widget> screens() {
-    return [
-      const HomeScreen(),
-      const NewsScreen(),
-      const ProfilScreen(),
-    ];
+  PageController pageController = PageController(
+    initialPage: 0,
+    keepPage: true,
+  );
+  void pageChanged(int index) {
+    setState(() {
+      selectedIndex = index;
+    });
   }
 
-  List<PersistentBottomNavBarItem> navBarItems() {
-    return [
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.home_filled),
-        title: 'Beranda',
-        activeColorPrimary: Colors.blue,
-        inactiveColorPrimary: Colors.grey,
-      ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.newspaper),
-        title: 'Berita',
-        activeColorPrimary: Colors.orange,
-        inactiveColorPrimary: Colors.grey,
-      ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.person_2_rounded),
-        title: 'Profil',
-        activeColorPrimary: Colors.red,
-        inactiveColorPrimary: Colors.grey,
-      ),
-    ];
+  void bottomTapped(int index) {
+    setState(() {
+      selectedIndex = index;
+      pageController.animateToPage(index,
+          duration: const Duration(milliseconds: 500), curve: Curves.easeInOut);
+    });
   }
 
-  @override
-  void initState() {
-    super.initState();
-    controller = PersistentTabController(initialIndex: selectedIndex);
+  List<BottomNavigationBarItem> buildBottomNavBarItems() {
+    return [
+      const BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.newspaper_rounded,  color: Colors.orange,), label: 'Blog'),
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.person_2_rounded,  color: Colors.red,), label: 'Profile' ),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
-    return PersistentTabView(
-      context,
-      controller: controller,
-      screens: screens(),
-      items: navBarItems(),
-      navBarHeight: 68,
-      confineInSafeArea: true,
-      backgroundColor: Colors.white,
-      handleAndroidBackButtonPress: true,
-      resizeToAvoidBottomInset: true,
-      stateManagement: true,
-      hideNavigationBarWhenKeyboardShows: true,
-      decoration: NavBarDecoration(
-        borderRadius: BorderRadius.circular(20),
+    return Scaffold(
+      body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: pageController,
+        onPageChanged: (index) {
+          pageChanged(index);
+        },
+        children: const <Widget>[
+          HomeScreen(),
+          NewsScreen(),
+          ProfilScreen(),
+        ],
       ),
-      popAllScreensOnTapOfSelectedTab: true,
-      navBarStyle: NavBarStyle.style12,
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: selectedIndex,
+        showUnselectedLabels: true,
+        unselectedItemColor: Colors.grey,
+        onTap: (index) {
+          bottomTapped(index);
+        },
+        items: buildBottomNavBarItems(),
+      ),
     );
   }
 }

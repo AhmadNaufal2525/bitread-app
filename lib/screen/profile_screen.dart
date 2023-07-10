@@ -1,3 +1,4 @@
+import 'package:bitread_app/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class ProfilScreen extends StatefulWidget {
@@ -59,40 +60,6 @@ class _ProfilScreenState extends State<ProfilScreen> {
                     ),
                   ],
                 ),
-                Column(
-                  children: [
-                    Text(
-                      'Followers',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      '15.3K',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      'Following',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      '312',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
-                ),
               ],
             ),
             const SizedBox(height: 28),
@@ -141,33 +108,23 @@ class _ProfilScreenState extends State<ProfilScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    const Row(
-                      children: [
-                        Icon(
-                          Icons.abc_sharp,
-                          size: 24,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          'instagram.com/johndoe',
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
                     const SizedBox(height: 60),
                     Center(
                       child: ElevatedButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                           Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (BuildContext context) => const LoginScreen(),),
+        (route) => false,
+      );
+                        },
                         icon: const Icon(Icons.logout),
                         label: const Text('Logout'),
                         style: ButtonStyle(
                           backgroundColor: MaterialStateProperty.all<Color>(
-                              Colors.deepOrange),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            Colors.deepOrange,
+                          ),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(60.0),
                             ),
@@ -177,7 +134,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                           ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

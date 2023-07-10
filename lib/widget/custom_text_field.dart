@@ -15,9 +15,9 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
+      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
       decoration: BoxDecoration(
-        border: Border.all(color: Color.fromARGB(255, 235, 231, 231)),
+        border: Border.all(color: const Color.fromARGB(255, 235, 231, 231)),
       ),
       child: Row(
         children: [
@@ -25,7 +25,7 @@ class CustomTextField extends StatelessWidget {
             icon,
             color: Colors.grey,
           ),
-          Expanded(
+          const Expanded(
             child: SizedBox(
               height: 24.0, // Tinggi garis pemisah
               child: VerticalDivider(color: Colors.grey), // Garis pemisah
@@ -38,7 +38,7 @@ class CustomTextField extends StatelessWidget {
               decoration: InputDecoration(
                   hintText: hintText,
                   border: InputBorder.none,
-                  hintStyle: TextStyle(color: Colors.grey)),
+                  hintStyle: const TextStyle(color: Colors.grey)),
             ),
           ),
         ],

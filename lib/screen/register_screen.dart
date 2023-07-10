@@ -3,6 +3,7 @@ import 'package:bitread_app/widget/custom_button.dart';
 import 'package:bitread_app/widget/custom_text_field.dart';
 import 'package:bitread_app/widget/google_button.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -17,86 +18,114 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
-            physics: NeverScrollableScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 30,
-                ),
                 Align(
                   alignment: AlignmentDirectional.topStart,
                   child: IconButton(
-                      onPressed: () {}, icon: Icon(Icons.arrow_back)),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.arrow_back)),
                 ),
-                SizedBox(
-                  height: 30,
-                ),
-                Center(
+                const Center(
                   child: Text(
                     'DAFTAR AKUN',
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 32),
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      SizedBox(
-                        height: 18,
-                      ),
-                      CustomTextField(
+                      const CustomTextField(
                         icon: Icons.person,
                         hintText: 'Username',
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      CustomTextField(
+                      const CustomTextField(
                         icon: Icons.email,
                         hintText: 'Email',
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      CustomTextField(
+                      const CustomTextField(
                         icon: Icons.lock,
                         hintText: 'Password',
                         obscureText: true,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
-                      CustomTextField(
+                      const CustomTextField(
                         icon: Icons.lock,
                         hintText: 'Confirm Password',
                         obscureText: true,
                       ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      CustomButton(
-                        width: MediaQuery.of(context).size.width * 1,
-                        height: MediaQuery.of(context).size.height * 0.07,
-                        text: 'Sign In',
-                        onPressed: () {},
-                      ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      Text(
-                          'Dengan mendaftarkan akun, anda telah menyetujui untuk menerima Kebijakan Privasi Policy'),
+                      CustomButton(
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        height: MediaQuery.of(context).size.height * 0.07,
+                        text: 'Daftar',
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Padding(
+                          padding: EdgeInsets.all(5),
+                          child: RichText(
+                            textAlign: TextAlign.justify,
+                            text: TextSpan(
+                              text:
+                                  'Dengan mendaftarkan akun, anda telah menyetujui untuk menerima ',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: GoogleFonts.poppins().fontFamily,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: 'Privacy Police Bitread',
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontFamily:
+                                          GoogleFonts.poppins().fontFamily),
+                                ),
+                              ],
+                            ),
+                          )),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       GoogleButton(
                         press: () {},
-                        textColor: Color(0xffC65B56),
-                        color: Color(0xffF6E8EA),
+                        textColor: const Color(0xffC65B56),
+                        color: const Color(0xffF6E8EA),
                         text: 'Sign In with Google',
                       ),
-                      SizedBox(
-                        height: 16,
+                      const SizedBox(
+                        height: 10,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

@@ -21,7 +21,7 @@ class CustomButton extends StatelessWidget {
       height: height,
       child: ElevatedButton(
         onPressed: onPressed,
-        child: Text(text),
+        child: Text(text)
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:bitread_app/screen/register_screen.dart';
+import 'package:bitread_app/widget/bottom_navigation.dart';
 import 'package:bitread_app/widget/custom_button.dart';
 import 'package:bitread_app/widget/custom_text_field.dart';
 import 'package:bitread_app/widget/google_button.dart';
@@ -17,14 +18,13 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: SingleChildScrollView(
-            physics: NeverScrollableScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 Center(
@@ -35,50 +35,61 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 18,
                       ),
-                      CustomTextField(
+                      const CustomTextField(
                         icon: Icons.person,
                         hintText: 'Username',
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      CustomTextField(
+                      const CustomTextField(
                         icon: Icons.lock,
                         hintText: 'Password',
                         obscureText: true,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       CustomButton(
                         width: MediaQuery.of(context).size.width * 1,
                         height: MediaQuery.of(context).size.height * 0.07,
-                        text: 'Sign In',
-                        onPressed: () {},
+                        text: 'Masuk',
+                        onPressed: () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const BottomNav()),
+                            (route) => false,
+                          );
+                        },
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Lupa Password?',
-                          style: TextStyle(color: Colors.black),
+                      Container(
+                        margin: const EdgeInsets.only(left: 220.0),
+                        child: TextButton(
+                          onPressed: () {},
+                          child: const Text(
+                            'Lupa kata sandi?',
+                            style: TextStyle(color: Colors.black, fontSize: 14),
+                          ),
                         ),
                       ),
                       GoogleButton(
                         press: () {},
-                        textColor: Color(0xffC65B56),
-                        color: Color(0xffF6E8EA),
+                        textColor: const Color(0xffC65B56),
+                        color: const Color(0xffF6E8EA),
                         text: 'Sign In with Google',
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 16,
                       ),
                       Row(

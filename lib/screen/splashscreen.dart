@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:bitread_app/widget/bottom_navigation.dart';
+import 'package:bitread_app/screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             builder: (_) {
-              return const BottomNav();
+              return const LoginScreen();
             },
           ),
         );

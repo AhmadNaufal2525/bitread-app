@@ -40,8 +40,8 @@ class GoogleButton extends StatelessWidget {
             'assets/google.png',
             height: 26,
           ),
-          SizedBox(
-            width: 66,
+          const SizedBox(
+            width: 72,
           ),
           Text(
             text,
