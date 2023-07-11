@@ -5,6 +5,7 @@ class GoogleButton extends StatelessWidget {
   final String text;
   final Function() press;
   final Color? color, textColor;
+  final double? width;
   final double? height;
   const GoogleButton({
     Key? key,
@@ -13,11 +14,13 @@ class GoogleButton extends StatelessWidget {
     this.color,
     this.textColor,
     this.height,
+    this.width,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+    final double buttonWidth = width ?? size.width * 0.9;
     final double buttonHeight = height ?? size.height * 0.07;
     return ElevatedButton(
       onPressed: press,
@@ -35,7 +38,7 @@ class GoogleButton extends StatelessWidget {
           fontSize: 14,
           fontWeight: FontWeight.w500,
         ),
-        minimumSize: Size(size.width, buttonHeight),
+        minimumSize: Size(buttonWidth, buttonHeight),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
