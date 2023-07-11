@@ -112,11 +112,14 @@ class _ProfilScreenState extends State<ProfilScreen> {
                     Center(
                       child: ElevatedButton.icon(
                         onPressed: () {
-                           Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (BuildContext context) => const LoginScreen(),),
-        (route) => false,
-      );
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const LoginScreen(),
+                            ),
+                            (route) => false,
+                          );
                         },
                         icon: const Icon(Icons.logout),
                         label: const Text('Logout'),
@@ -124,7 +127,8 @@ class _ProfilScreenState extends State<ProfilScreen> {
                           backgroundColor: MaterialStateProperty.all<Color>(
                             Colors.deepOrange,
                           ),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(60.0),
                             ),
