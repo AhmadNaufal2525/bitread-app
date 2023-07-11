@@ -1,4 +1,3 @@
-import 'package:bitread_app/widget/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 
 class NewsDetailScreen extends StatelessWidget {
@@ -28,12 +27,7 @@ class NewsDetailScreen extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const BottomNav(),
-                        ),
-                      );
+                      Navigator.pop(context);
                     },
                     icon: const Icon(Icons.arrow_back),
                   ),
