@@ -1,3 +1,4 @@
+import 'package:bitread_app/screen/add_post_screen.dart';
 import 'package:bitread_app/screen/news_detail_screen.dart';
 import 'package:bitread_app/widget/news_card.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +53,14 @@ class _NewsScreenState extends State<NewsScreen> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddPostScreen(),
+                          ),
+                        );
+                      },
                       icon: const Icon(Icons.post_add_outlined),
                     ),
                   ],
