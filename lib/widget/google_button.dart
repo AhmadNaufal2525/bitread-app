@@ -24,8 +24,9 @@ class GoogleButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-            side: BorderSide(color: Colors.grey)),
+          borderRadius: BorderRadius.circular(30),
+          side: const BorderSide(color: Colors.grey),
+        ),
         padding: const EdgeInsets.symmetric(
           horizontal: 40,
         ),
