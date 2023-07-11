@@ -32,11 +32,24 @@ class _BottomNavState extends State<BottomNav> {
 
   List<BottomNavigationBarItem> buildBottomNavBarItems() {
     return [
-      const BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
       const BottomNavigationBarItem(
-          icon: Icon(Icons.newspaper_rounded,  color: Colors.orange,), label: 'Blog'),
+          icon: Icon(
+            Icons.home_filled,
+            color: Colors.blue,
+          ),
+          label: 'Home'),
       const BottomNavigationBarItem(
-          icon: Icon(Icons.person_2_rounded,  color: Colors.red,), label: 'Profile' ),
+          icon: Icon(
+            Icons.newspaper_rounded,
+            color: Colors.orange,
+          ),
+          label: 'Blog'),
+      const BottomNavigationBarItem(
+          icon: Icon(
+            Icons.person_2_rounded,
+            color: Colors.red,
+          ),
+          label: 'Profile'),
     ];
   }
 

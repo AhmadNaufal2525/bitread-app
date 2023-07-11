@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
 class Carousel extends StatefulWidget {
-  Carousel({super.key});
+  const Carousel({super.key});
 
   @override
-  _CarouselState createState() => _CarouselState();
+  CarouselState createState() => CarouselState();
 }
 
-class _CarouselState extends State<Carousel> {
+class CarouselState extends State<Carousel> {
   final List<String> images = [
     'assets/slider1.jpg',
     'assets/slider2.jpg',
