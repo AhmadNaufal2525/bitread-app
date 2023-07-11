@@ -69,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void dispose() {
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        statusBarColor: Color(0xffF2F5F9),
+        statusBarColor: Colors.transparent,
       ),
     );
     super.dispose();
