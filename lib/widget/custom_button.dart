@@ -4,14 +4,14 @@ class CustomButton extends StatelessWidget {
   final String text;
   final Function() onPressed;
   final Color? color, textColor;
-  final double width;
+  final double? width;
   final double? height;
 
   const CustomButton({
     Key? key,
     required this.text,
     required this.onPressed,
-    required this.width,
+    this.width,
     this.height,
     this.color,
     this.textColor,

@@ -78,8 +78,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 20,
                       ),
                       CustomButton(
-                        width: MediaQuery.of(context).size.width * 0.9,
-                        height: MediaQuery.of(context).size.height * 0.07,
                         text: 'Daftar',
                         onPressed: () {
                           Navigator.push(
@@ -94,7 +92,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 20,
                       ),
                       Padding(
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           child: RichText(
                             textAlign: TextAlign.justify,
                             text: TextSpan(
@@ -106,7 +104,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                               children: [
                                 TextSpan(
-                                  text: 'Privacy Police Bitread',
+                                  text: 'Privacy Policy Bitread',
                                   style: TextStyle(
                                       color: Colors.blue,
                                       fontFamily:
