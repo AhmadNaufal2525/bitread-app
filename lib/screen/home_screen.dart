@@ -126,8 +126,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const BookDetailScreen(),
+                                  builder: (context) => BookDetailScreen(
+                                      title: book['title'],
+                                      author: book['author'],
+                                      rating: book['rating'].toString(),
+                                      imageUrl: book['imageUrl']),
                                 ),
                               );
                             },
@@ -186,8 +189,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const BookDetailScreen(),
+                                  builder: (context) => BookDetailScreen(
+                                    title: book['title'],
+                                    author: book['author'],
+                                    rating: book['rating'].toString(),
+                                    imageUrl: book['imageUrl'],
+                                  ),
                                 ),
                               );
                             },
