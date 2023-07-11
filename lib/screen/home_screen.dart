@@ -1,4 +1,4 @@
-import 'package:bitread_app/screen/book_screen.dart';
+import 'package:bitread_app/screen/book_detail_screen.dart';
 import 'package:bitread_app/screen/more_popular_book.dart';
 import 'package:bitread_app/screen/more_recom_book.dart';
 import 'package:bitread_app/widget/card_book.dart';
@@ -126,7 +126,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const BookScreen()),
+                                  builder: (context) =>
+                                      const BookDetailScreen(),
+                                ),
                               );
                             },
                             child: BookCard(
@@ -184,7 +186,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const BookScreen()),
+                                  builder: (context) =>
+                                      const BookDetailScreen(),
+                                ),
                               );
                             },
                             child: PopularBook(
