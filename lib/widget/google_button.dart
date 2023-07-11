@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class GoogleButton extends StatelessWidget {
   final String text;
@@ -16,32 +17,35 @@ class GoogleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      width: size.width * 0.9,
-      height: size.height * 0.07,
-      child: ClipRRect(
-        child: newElevatedButton(),
-      ),
-    );
-  }
-
-  Widget newElevatedButton() {
+    final Size size = MediaQuery.of(context).size;
+    final double buttonHeight = height ?? size.height * 0.07;
     return ElevatedButton(
       onPressed: press,
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+            side: BorderSide(color: Colors.grey)),
+        padding: const EdgeInsets.symmetric(
+          horizontal: 40,
+        ),
+        textStyle: GoogleFonts.poppins(
+          color: color,
+          fontSize: 14,
+          fontWeight: FontWeight.w500,
+        ),
+        minimumSize: Size(size.width, buttonHeight),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Image.asset(
             'assets/google.png',
-            height: 26,
+            width: 36,
+            height: 36,
           ),
           const SizedBox(
-            width: 72,
+            width: 46,
           ),
           Text(
             text,
