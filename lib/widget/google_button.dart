@@ -53,7 +53,7 @@ class GoogleButton extends StatelessWidget {
           ),
           Text(
             text,
-            style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
+            style: TextStyle(color: textColor, fontWeight: FontWeight.w500),
           ),
         ],
       ),

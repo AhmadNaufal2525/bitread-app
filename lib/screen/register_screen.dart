@@ -2,6 +2,7 @@ import 'package:bitread_app/screen/login_screen.dart';
 import 'package:bitread_app/widget/custom_button.dart';
 import 'package:bitread_app/widget/custom_text_field.dart';
 import 'package:bitread_app/widget/google_button.dart';
+import 'package:bitread_app/widget/password_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -47,32 +48,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      const CustomTextField(
+                      CustomTextField(
                         icon: Icons.person,
                         hintText: 'Username',
+                        onChanged: (String value) {},
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      const CustomTextField(
+                      CustomTextField(
                         icon: Icons.email,
                         hintText: 'Email',
+                        onChanged: (String value) {},
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      const CustomTextField(
-                        icon: Icons.lock,
+                      PasswordTextField(
                         hintText: 'Password',
-                        obscureText: true,
+                        icon: Icons.lock,
+                        onChanged: (String value) {},
                       ),
                       const SizedBox(
                         height: 30,
                       ),
-                      const CustomTextField(
-                        icon: Icons.lock,
+                      PasswordTextField(
                         hintText: 'Confirm Password',
-                        obscureText: true,
+                        icon: Icons.lock,
+                        onChanged: (String value) {},
                       ),
                       const SizedBox(
                         height: 20,
@@ -99,31 +102,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               text:
                                   'Dengan mendaftarkan akun, anda telah menyetujui untuk menerima ',
                               style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: GoogleFonts.poppins().fontFamily,
-                              ),
+                                  color: Colors.black,
+                                  fontFamily: GoogleFonts.poppins().fontFamily,
+                                  fontSize: 14),
                               children: [
                                 TextSpan(
                                   text: 'Privacy Policy Bitread',
                                   style: TextStyle(
-                                      color: Colors.blue,
-                                      fontFamily:
-                                          GoogleFonts.poppins().fontFamily),
+                                    color: Colors.blue,
+                                    fontFamily:
+                                        GoogleFonts.poppins().fontFamily,
+                                    fontSize: 14,
+                                  ),
                                 ),
                               ],
                             ),
                           )),
                       const SizedBox(
-                        height: 10,
+                        height: 18,
                       ),
                       GoogleButton(
                         press: () {},
-                        textColor: const Color(0xffC65B56),
-                        color: const Color(0xffF6E8EA),
+                        textColor: const Color.fromARGB(255, 12, 12, 12),
+                        color: const Color(0xffFFFFFF),
                         text: 'Sign In with Google',
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 18,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

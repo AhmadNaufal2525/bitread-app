@@ -1,23 +1,37 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget {
-  final ValueChanged<String> onChanged;
+class PasswordTextField extends StatefulWidget {
   final IconData icon;
   final String hintText;
-  final bool obscureText;
   final FormFieldValidator<String>? validator;
+  final ValueChanged<String> onChanged;
   final String? initialValue;
   final TextEditingController? controller;
 
-  const CustomTextField({
+  const PasswordTextField({
     Key? key,
     required this.icon,
     required this.hintText,
-    this.obscureText = false,
     this.validator,
     this.initialValue,
     this.controller, required this.onChanged,
   }) : super(key: key);
+
+  @override
+  State<PasswordTextField> createState() => _PasswordTextFieldState();
+}
+
+class _PasswordTextFieldState extends State<PasswordTextField> {
+  bool obscureText = true;
+
+  String? validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Password is required';
+    } else if (value.length < 6) {
+      return 'Password must be at least 6 characters';
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +43,7 @@ class CustomTextField extends StatelessWidget {
       child: Row(
         children: [
           Icon(
-            icon,
+            widget.icon,
             color: Colors.grey,
           ),
           const Expanded(
@@ -41,12 +55,25 @@ class CustomTextField extends StatelessWidget {
           Expanded(
             flex: 8,
             child: TextFormField(
-              onChanged: onChanged,
-              controller: controller,
-              validator: validator,
+              onChanged: widget.onChanged,
+              controller: widget.controller,
+              validator: widget.validator,
               obscureText: obscureText,
               decoration: InputDecoration(
-                hintText: hintText,
+                suffixIcon: GestureDetector(
+                  onTap: () {
+                    setState(
+                      () {
+                        obscureText = !obscureText;
+                      },
+                    );
+                  },
+                  child: Icon(
+                    obscureText ? Icons.visibility : Icons.visibility_off,
+                    color: Colors.grey,
+                  ),
+                ),
+                hintText: widget.hintText,
                 border: InputBorder.none,
                 hintStyle: const TextStyle(color: Colors.grey),
               ),

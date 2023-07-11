@@ -3,6 +3,7 @@ import 'package:bitread_app/widget/bottom_navigation.dart';
 import 'package:bitread_app/widget/custom_button.dart';
 import 'package:bitread_app/widget/custom_text_field.dart';
 import 'package:bitread_app/widget/google_button.dart';
+import 'package:bitread_app/widget/password_text_field.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -41,17 +42,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(
                         height: 18,
                       ),
-                      const CustomTextField(
+                      CustomTextField(
                         icon: Icons.person,
                         hintText: 'Username',
+                        onChanged: (value) {},
                       ),
                       const SizedBox(
                         height: 20,
                       ),
-                      const CustomTextField(
-                        icon: Icons.lock,
+                      PasswordTextField(
                         hintText: 'Password',
-                        obscureText: true,
+                        icon: Icons.lock, onChanged: (String value) {},
                       ),
                       const SizedBox(
                         height: 30,
@@ -82,14 +83,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: 16,
+                      ),
                       GoogleButton(
                         press: () {},
-                        textColor: const Color(0xffC65B56),
-                        color: const Color(0xffF6E8EA),
+                        textColor: const Color.fromARGB(255, 12, 12, 12),
+                        color: const Color(0xffFFFFFF),
                         text: 'Sign In with Google',
                       ),
                       const SizedBox(
-                        height: 16,
+                        height: 20,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
