@@ -1,4 +1,3 @@
-import 'package:bitread_app/widget/bottom_navigation.dart';
 import 'package:bitread_app/widget/star_rating.dart';
 import 'package:flutter/material.dart';
 
@@ -147,14 +146,7 @@ class BookDetailScreen extends StatelessWidget {
                                     Border.all(color: Colors.grey, width: 2),
                                 borderRadius: BorderRadius.circular(12)),
                             child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const BottomNav(),
-                                  ),
-                                );
-                              },
+                              onTap: () {},
                               child: const Text(
                                 "Beli Buku",
                                 style: TextStyle(
