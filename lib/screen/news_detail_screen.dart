@@ -8,6 +8,7 @@ class NewsDetailScreen extends StatelessWidget {
   final String author;
 
   const NewsDetailScreen({
+    super.key,
     required this.title,
     required this.description,
     required this.imageUrl,
