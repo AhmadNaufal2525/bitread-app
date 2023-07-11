@@ -57,15 +57,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 30,
                       ),
                       CustomButton(
-                        width: MediaQuery.of(context).size.width * 1,
-                        height: MediaQuery.of(context).size.height * 0.07,
                         text: 'Masuk',
                         onPressed: () {
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    const BottomNav()),
+                              builder: (BuildContext context) =>
+                                  const BottomNav(),
+                            ),
                             (route) => false,
                           );
                         },
