@@ -34,9 +34,9 @@ class AddPostScreenState extends State<AddPostScreen> {
                       ),
                       const Padding(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                            EdgeInsets.symmetric(horizontal: 82, vertical: 10),
                         child: Text(
-                          'Buat Postingan Blog Mu Disini',
+                          'Posting Blog',
                           style: TextStyle(
                               fontWeight: FontWeight.w900, fontSize: 16),
                         ),
