@@ -84,9 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const Column(
                       children: [
-                        SizedBox(
-                          height: 26,
-                        ),
                         Carousel(),
                         SizedBox(
                           height: 26,
