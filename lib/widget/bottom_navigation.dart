@@ -1,6 +1,7 @@
 import 'package:bitread_app/screen/home_screen.dart';
 import 'package:bitread_app/screen/news_screen.dart';
 import 'package:bitread_app/screen/profile_screen.dart';
+import 'package:bitread_app/screen/search_screen.dart';
 import 'package:flutter/material.dart';
 
 class BottomNav extends StatefulWidget {
@@ -33,23 +34,27 @@ class _BottomNavState extends State<BottomNav> {
   List<BottomNavigationBarItem> buildBottomNavBarItems() {
     return [
       const BottomNavigationBarItem(
-          icon: Icon(
-            Icons.home_filled,
-            color: Colors.blue,
-          ),
-          label: 'Home'),
+        icon: Icon(
+          Icons.home_filled,
+        ),
+        label: 'Home',
+      ),
       const BottomNavigationBarItem(
-          icon: Icon(
-            Icons.newspaper_rounded,
-            color: Colors.orange,
-          ),
-          label: 'Blog'),
+        icon: Icon(
+          Icons.search_rounded,
+        ),
+        label: 'Search',
+      ),
       const BottomNavigationBarItem(
-          icon: Icon(
-            Icons.person_2_rounded,
-            color: Colors.red,
-          ),
-          label: 'Profile'),
+        icon: Icon(
+          Icons.newspaper_rounded,
+        ),
+        label: 'Blog',
+      ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.person_2_rounded),
+        label: 'Profile',
+      ),
     ];
   }
 
@@ -64,6 +69,7 @@ class _BottomNavState extends State<BottomNav> {
         },
         children: const <Widget>[
           HomeScreen(),
+          SearchSreen(),
           NewsScreen(),
           ProfilScreen(),
         ],
@@ -71,11 +77,13 @@ class _BottomNavState extends State<BottomNav> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: selectedIndex,
-        showUnselectedLabels: true,
-        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: false,
+        showSelectedLabels: false,
         onTap: (index) {
           bottomTapped(index);
         },
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.black,
         items: buildBottomNavBarItems(),
       ),
     );

@@ -10,12 +10,12 @@ class SearchBox extends StatelessWidget {
         TextField(
           decoration: InputDecoration(
               filled: true,
-              fillColor: const Color.fromARGB(255, 223, 223, 223),
+              fillColor: const Color.fromARGB(255, 228, 225, 225),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20),
                 borderSide: BorderSide.none,
               ),
-              hintText: "Cari Buku Disini",
+              hintText: "Cari Buku",
               hintStyle: const TextStyle(fontSize: 15),
               prefixIcon: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),

@@ -4,7 +4,6 @@ import 'package:bitread_app/screen/more_recom_book.dart';
 import 'package:bitread_app/widget/card_book.dart';
 import 'package:bitread_app/widget/carousel.dart';
 import 'package:bitread_app/widget/popular_book.dart';
-import 'package:bitread_app/widget/searchbox.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -64,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           const Text(
                             "Hallo Naufal,",
                             style: TextStyle(
-                                fontWeight: FontWeight.w500, fontSize: 24),
+                                fontWeight: FontWeight.w800, fontSize: 24),
                           ),
                           const Spacer(),
                           CircleAvatar(
@@ -75,11 +74,19 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 14),
+                          child: Text('Mau baca apa hari ini?'),
+                        )
+                      ],
+                    ),
+                    const Column(
                       children: [
                         SizedBox(
                           height: 26,
                         ),
-                        SearchBox(),
                         Carousel(),
                         SizedBox(
                           height: 26,
@@ -90,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          'Rekomendasi Untuk Kamu',
+                          'Rekomendasi Buku',
                           style: TextStyle(
                               fontWeight: FontWeight.w800, fontSize: 14),
                         ),
@@ -104,7 +111,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           child: const Text(
-                            'Lihat Semua',
+                            'Lihat Semua >>',
                             style: TextStyle(fontSize: 14, color: Colors.black),
                           ),
                         ),
@@ -127,10 +134,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => BookDetailScreen(
-                                      title: book['title'],
-                                      author: book['author'],
-                                      rating: book['rating'].toString(),
-                                      imageUrl: book['imageUrl']),
+                                    title: book['title'],
+                                    author: book['author'],
+                                    rating: book['rating'].toString(),
+                                    imageUrl: book['imageUrl'],
+                                  ),
                                 ),
                               );
                             },
@@ -143,6 +151,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         },
                       ),
+                    ),
+                    const SizedBox(
+                      height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -162,7 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           child: const Text(
-                            'Lihat Semua',
+                            'Lihat Semua >>',
                             style: TextStyle(fontSize: 14, color: Colors.black),
                           ),
                         ),
