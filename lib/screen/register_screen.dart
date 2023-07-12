@@ -80,6 +80,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       const SizedBox(
                         height: 20,
                       ),
+                      Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: RichText(
+                          textAlign: TextAlign.justify,
+                          text: TextSpan(
+                            text:
+                                'Dengan mendaftarkan akun, anda telah menyetujui untuk menerima ',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: GoogleFonts.poppins().fontFamily,
+                                fontSize: 14),
+                            children: [
+                              TextSpan(
+                                text: 'Privacy Policy Bitread',
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontFamily: GoogleFonts.poppins().fontFamily,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 16,
+                      ),
                       CustomButton(
                         text: 'Daftar',
                         onPressed: () {
@@ -92,43 +119,49 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         },
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 16,
                       ),
-                      Padding(
-                          padding: const EdgeInsets.all(5),
-                          child: RichText(
-                            textAlign: TextAlign.justify,
-                            text: TextSpan(
-                              text:
-                                  'Dengan mendaftarkan akun, anda telah menyetujui untuk menerima ',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: GoogleFonts.poppins().fontFamily,
-                                  fontSize: 14),
-                              children: [
-                                TextSpan(
-                                  text: 'Privacy Policy Bitread',
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    fontFamily:
-                                        GoogleFonts.poppins().fontFamily,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                  left: 10.0, right: 20.0),
+                              child: const Divider(
+                                color: Colors.grey,
+                                height: 36,
+                              ),
                             ),
-                          )),
+                          ),
+                          const Text(
+                            "Daftar dengan",
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                  left: 20.0, right: 10.0),
+                              child: const Divider(
+                                color: Colors.grey,
+                                height: 36,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                       const SizedBox(
-                        height: 18,
+                        height: 16,
                       ),
                       GoogleButton(
                         press: () {},
                         textColor: const Color.fromARGB(255, 12, 12, 12),
                         color: const Color(0xffFFFFFF),
-                        text: 'Sign In with Google',
+                        text: 'Sign Up with Google',
                       ),
                       const SizedBox(
-                        height: 18,
+                        height: 16,
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,

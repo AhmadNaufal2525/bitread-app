@@ -52,10 +52,24 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       PasswordTextField(
                         hintText: 'Password',
-                        icon: Icons.lock, onChanged: (String value) {},
+                        icon: Icons.lock,
+                        onChanged: (String value) {},
                       ),
                       const SizedBox(
                         height: 30,
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: TextButton(
+                          onPressed: () {},
+                          child: const Text(
+                            'Lupa Password?',
+                            style: TextStyle(color: Colors.black, fontSize: 14),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
                       ),
                       CustomButton(
                         text: 'Masuk',
@@ -71,17 +85,37 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 16,
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(left: 220.0),
-                        child: TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            'Lupa kata sandi?',
-                            style: TextStyle(color: Colors.black, fontSize: 14),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                  left: 10.0, right: 20.0),
+                              child: const Divider(
+                                color: Colors.grey,
+                                height: 36,
+                              ),
+                            ),
                           ),
-                        ),
+                          const Text(
+                            "Masuk dengan",
+                            style: TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                  left: 20.0, right: 10.0),
+                              child: const Divider(
+                                color: Colors.grey,
+                                height: 36,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
                         height: 16,
