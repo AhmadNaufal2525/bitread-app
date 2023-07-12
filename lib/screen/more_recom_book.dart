@@ -34,6 +34,18 @@ final List<Map<String, dynamic>> books = [
     'rating': 4.0,
     'imageUrl': 'assets/book4.jpg',
   },
+  {
+    'title': 'The Best tips for Design',
+    'author': 'Ujang Lumajang',
+    'rating': 4.0,
+    'imageUrl': 'assets/book4.jpg',
+  },
+  {
+    'title': 'The Best tips for Design',
+    'author': 'Ujang Lumajang',
+    'rating': 4.0,
+    'imageUrl': 'assets/book4.jpg',
+  },
 ];
 
 class _RecommendedBookScreenState extends State<RecommendedBookScreen> {
@@ -41,56 +53,62 @@ class _RecommendedBookScreenState extends State<RecommendedBookScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: ListView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
                 IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back),
                 ),
-                Padding(
-                  padding: EdgeInsets.all(16),
-                  child: SizedBox(
-                    height: 340,
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 16.0,
-                      ),
-                      itemCount: books.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        final book = books[index];
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => BookDetailScreen(
-                                  title: book['title'],
-                                  author: book['author'],
-                                  rating: book['rating'].toString(),
-                                  imageUrl: book['imageUrl'],
-                                ),
-                              ),
-                            );
-                          },
-                          child: PopularBook(
-                            title: book['title'],
-                            author: book['author'],
-                            rating: book['rating'],
-                            imageUrl: book['imageUrl'],
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 70),
+                  child: Text(
+                    'Rekomendasi Buku',
+                    style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                  ),
+                )
+              ],
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: GridView.builder(
+                  scrollDirection: Axis.vertical,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16.0,
+                  ),
+                  itemCount: books.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final book = books[index];
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookDetailScreen(
+                              title: book['title'],
+                              author: book['author'],
+                              rating: book['rating'].toString(),
+                              imageUrl: book['imageUrl'],
+                            ),
                           ),
                         );
                       },
-                    ),
-                  ),
+                      child: PopularBook(
+                        title: book['title'],
+                        author: book['author'],
+                        rating: book['rating'],
+                        imageUrl: book['imageUrl'],
+                      ),
+                    );
+                  },
                 ),
-              ],
+              ),
             ),
           ],
         ),
