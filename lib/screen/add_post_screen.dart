@@ -1,4 +1,4 @@
-import 'package:bitread_app/widget/news_card.dart';
+import 'package:bitread_app/widget/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class AddPostScreen extends StatefulWidget {
@@ -10,93 +10,72 @@ class AddPostScreen extends StatefulWidget {
 
 class AddPostScreenState extends State<AddPostScreen> {
   final _formKey = GlobalKey<FormState>();
-  String? _title;
-  String? _description;
-  String? _imageUrl;
-  String? _author;
-
   @override
   Widget build(BuildContext context) {
+    MediaQueryData mediaQueryData = MediaQuery.of(context);
+    double screenWidth = mediaQueryData.size.width;
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back),
-                ),
-                const Text(
-                  'Tambahkan Postingan Blog mu disini',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Title'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a title';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _title = value,
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Description'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a description';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _description = value,
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Image URL'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter an image URL';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _imageUrl = value,
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(labelText: 'Author'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter an author';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) => _author = value,
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      // Create the new news card with the entered values
-                      final newNewsCard = NewsCard(
-                        title: _title!,
-                        description: _description!,
-                        imageUrl: _imageUrl!,
-                        author: _author!,
-                      );
-                      print('New News Card:');
-                      print('Title: ${newNewsCard.title}');
-                      print('Description: ${newNewsCard.description}');
-                      print('Image URL: ${newNewsCard.imageUrl}');
-                      print('Author: ${newNewsCard.author}');
-                    }
-                  },
-                  child: const Text('Add Post'),
-                ),
-              ],
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.arrow_back),
+                      ),
+                      const Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        child: Text(
+                          'Buat Postingan Blog Mu Disini',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w900, fontSize: 16),
+                        ),
+                      )
+                    ],
+                  ),
+                  Image.asset(
+                    'assets/add_image.png',
+                    height: 120,
+                    width: 120,
+                    fit: BoxFit.fill,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomButton(
+                    onPressed: () {},
+                    text: 'Tambah Gambar',
+                    width: screenWidth * 0.5,
+                  ),
+                  const SizedBox(height: 30),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), labelText: 'Title'),
+                  ),
+                  const SizedBox(height: 30),
+                  TextFormField(
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), labelText: 'Author'),
+                  ),
+                  const SizedBox(height: 30),
+                  TextFormField(
+                    maxLength: 2500,
+                    maxLines: 5,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), labelText: 'Isi Post'),
+                  ),
+                  const SizedBox(height: 30),
+                  CustomButton(text: 'Post', onPressed: () {})
+                ],
+              ),
             ),
           ),
         ),

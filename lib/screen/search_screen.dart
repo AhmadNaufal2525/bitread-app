@@ -1,5 +1,6 @@
 import 'package:bitread_app/screen/book_detail_screen.dart';
-import 'package:bitread_app/screen/more_recom_book.dart';
+import 'package:bitread_app/screen/more_new_book.dart';
+import 'package:bitread_app/screen/more_rating_book.dart';
 import 'package:bitread_app/widget/card_book.dart';
 import 'package:bitread_app/widget/searchbox.dart';
 import 'package:flutter/material.dart';
@@ -118,7 +119,7 @@ class _SearchSreenState extends State<SearchSreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const RecommendedBookScreen(),
+                            builder: (context) => const RatingBook(),
                           ),
                         );
                       },
@@ -178,7 +179,7 @@ class _SearchSreenState extends State<SearchSreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const RecommendedBookScreen(),
+                            builder: (context) => const NewBook(),
                           ),
                         );
                       },
