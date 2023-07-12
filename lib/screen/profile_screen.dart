@@ -15,8 +15,16 @@ class _ProfilScreenState extends State<ProfilScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            const SizedBox(height: 20),
+            const Align(
+              alignment: Alignment.center,
+              child: Text(
+                'Profile',
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 22),
+              ),
+            ),
             const SizedBox(
-              height: 250,
+              height: 220,
               child: Center(
                 child: CircleAvatar(
                   radius: 80,
@@ -33,7 +41,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
             ),
             const SizedBox(height: 10),
             const Text(
-              'UI/UX Designer',
+              'johndoe@gmail.com',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey,
