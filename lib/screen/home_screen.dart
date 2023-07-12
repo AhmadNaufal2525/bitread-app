@@ -44,7 +44,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffF2F5F9),
       body: SafeArea(
         child: ListView(
           children: [
