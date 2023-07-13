@@ -15,6 +15,22 @@ class AddPostScreenState extends State<AddPostScreen> {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
     double screenWidth = mediaQueryData.size.width;
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 80,
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        title: const Text(
+          'Posting Blog',
+          style: TextStyle(color: Colors.black),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
@@ -23,26 +39,6 @@ class AddPostScreenState extends State<AddPostScreen> {
               key: _formKey,
               child: Column(
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.arrow_back),
-                      ),
-                      const Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 82, vertical: 10),
-                        child: Text(
-                          'Posting Blog',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w900, fontSize: 16),
-                        ),
-                      )
-                    ],
-                  ),
                   Image.asset(
                     'assets/add_image.png',
                     height: 120,
@@ -58,17 +54,12 @@ class AddPostScreenState extends State<AddPostScreen> {
                   const SizedBox(height: 30),
                   TextFormField(
                     decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Title'),
-                  ),
-                  const SizedBox(height: 30),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Author'),
+                        border: OutlineInputBorder(), labelText: 'Judul Blog'),
                   ),
                   const SizedBox(height: 30),
                   TextFormField(
                     maxLength: 2500,
-                    maxLines: 5,
+                    maxLines: 10,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(), labelText: 'Isi Post'),
                   ),
