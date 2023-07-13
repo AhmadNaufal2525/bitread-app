@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:bitread_app/widget/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({super.key});
@@ -9,6 +11,7 @@ class AddPostScreen extends StatefulWidget {
 }
 
 class AddPostScreenState extends State<AddPostScreen> {
+  String selectedImagePath = '';
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class AddPostScreenState extends State<AddPostScreen> {
         centerTitle: true,
         title: const Text(
           'Posting Blog',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
         ),
         leading: IconButton(
           icon: const Icon(Icons.clear),
@@ -39,15 +42,24 @@ class AddPostScreenState extends State<AddPostScreen> {
               key: _formKey,
               child: Column(
                 children: [
-                  Image.asset(
-                    'assets/add_image.png',
-                    height: 120,
-                    width: 120,
-                    fit: BoxFit.fill,
-                  ),
+                  (selectedImagePath != '')
+                      ? Image.file(
+                          File(selectedImagePath),
+                          height: 120,
+                          width: 120,
+                          fit: BoxFit.fill,
+                        )
+                      : Image.asset(
+                          'assets/add_image.png',
+                          height: 120,
+                          width: 120,
+                          fit: BoxFit.fill,
+                        ),
                   const SizedBox(height: 20),
                   CustomButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      selectImage();
+                    },
                     text: 'Tambah Gambar',
                     width: screenWidth * 0.5,
                   ),
@@ -64,7 +76,12 @@ class AddPostScreenState extends State<AddPostScreen> {
                         border: OutlineInputBorder(), labelText: 'Isi Post'),
                   ),
                   const SizedBox(height: 30),
-                  CustomButton(text: 'Post', onPressed: () {})
+                  CustomButton(
+                    text: 'Post',
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                 ],
               ),
             ),
@@ -72,5 +89,115 @@ class AddPostScreenState extends State<AddPostScreen> {
         ),
       ),
     );
+  }
+
+  Future selectImage() {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          child: SizedBox(
+            height: 130,
+            child: Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: Column(
+                children: [
+                  const Text(
+                    'Pilih Gambar Dari',
+                    style:
+                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          selectedImagePath = await selectImageFromGallery();
+                          if (selectedImagePath != '') {
+                            Navigator.pop(context);
+                            setState(() {});
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Tidak Ada Gambar Yang Dipilih!"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
+                        child: const Card(
+                            elevation: 5,
+                            child: Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Icon(Icons.image),
+                                  Text('Galeri'),
+                                ],
+                              ),
+                            )),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          selectedImagePath = await selectImageFromCamera();
+
+                          if (selectedImagePath != '') {
+                            Navigator.pop(context);
+                            setState(() {});
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Tidak Ada Gambar Yang Dipilih!"),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
+                        child: const Card(
+                          elevation: 5,
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
+                              children: [
+                                Icon(Icons.camera_alt),
+                                Text('Kamera'),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  selectImageFromGallery() async {
+    XFile? file = await ImagePicker()
+        .pickImage(source: ImageSource.gallery, imageQuality: 10);
+    if (file != null) {
+      return file.path;
+    } else {
+      return '';
+    }
+  }
+
+  selectImageFromCamera() async {
+    XFile? file = await ImagePicker()
+        .pickImage(source: ImageSource.camera, imageQuality: 10);
+    if (file != null) {
+      return file.path;
+    } else {
+      return '';
+    }
   }
 }
