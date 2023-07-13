@@ -72,6 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 20,
                       ),
                       CustomButton(
+                        color: const Color(0xffFE0002),
                         text: 'Masuk',
                         onPressed: () {
                           Navigator.pushAndRemoveUntil(

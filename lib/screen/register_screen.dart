@@ -108,6 +108,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 16,
                       ),
                       CustomButton(
+                        color: const Color(0xffFE0002),
                         text: 'Daftar',
                         onPressed: () {
                           Navigator.push(
