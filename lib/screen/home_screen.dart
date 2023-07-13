@@ -66,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           const Spacer(),
                           CircleAvatar(
+                            backgroundColor: Colors.grey,
                             radius: 30,
                             child: Image.asset('assets/profil.png'),
                           )

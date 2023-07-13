@@ -27,6 +27,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
               height: 220,
               child: Center(
                 child: CircleAvatar(
+                  backgroundColor: Colors.grey,
                   radius: 80,
                   backgroundImage: AssetImage('assets/profil.png'),
                 ),
