@@ -91,113 +91,33 @@ class AddPostScreenState extends State<AddPostScreen> {
     );
   }
 
-  Future selectImage() {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: SizedBox(
-            height: 130,
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Column(
-                children: [
-                  const Text(
-                    'Pilih Gambar Dari',
-                    style:
-                        TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          selectedImagePath = await selectImageFromGallery();
-                          if (selectedImagePath != '') {
-                            Navigator.pop(context);
-                            setState(() {});
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Tidak Ada Gambar Yang Dipilih!"),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        },
-                        child: const Card(
-                            elevation: 5,
-                            child: Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: Column(
-                                children: [
-                                  Icon(Icons.image),
-                                  Text('Galeri'),
-                                ],
-                              ),
-                            )),
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          selectedImagePath = await selectImageFromCamera();
-
-                          if (selectedImagePath != '') {
-                            Navigator.pop(context);
-                            setState(() {});
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Tidak Ada Gambar Yang Dipilih!"),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          }
-                        },
-                        child: const Card(
-                          elevation: 5,
-                          child: Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Column(
-                              children: [
-                                Icon(Icons.camera_alt),
-                                Text('Kamera'),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+  void selectImage() async {
+    selectedImagePath = (await selectImageFromGallery())!;
+    if (selectedImagePath != '') {
+      setState(
+        () {},
+      );
+    } else {
+      setState(
+        () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text("Tidak Ada Gambar Yang Dipilih!"),
+              backgroundColor: Colors.red,
             ),
-          ),
-        );
-      },
-    );
+          );
+        },
+      );
+    }
   }
 
-  selectImageFromGallery() async {
-    XFile? file = await ImagePicker()
+  Future<String?> selectImageFromGallery() async {
+    final XFile? file = await ImagePicker()
         .pickImage(source: ImageSource.gallery, imageQuality: 10);
     if (file != null) {
       return file.path;
     } else {
-      return '';
-    }
-  }
-
-  selectImageFromCamera() async {
-    XFile? file = await ImagePicker()
-        .pickImage(source: ImageSource.camera, imageQuality: 10);
-    if (file != null) {
-      return file.path;
-    } else {
-      return '';
+      return null;
     }
   }
 }
