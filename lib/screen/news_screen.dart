@@ -11,7 +11,7 @@ class NewsScreen extends StatefulWidget {
   State<NewsScreen> createState() => _NewsScreenState();
 }
 
-final List<Map<String, dynamic>> ListNews = [
+final List<Map<String, dynamic>> listNews = [
   {
     'title': 'Be Modest, Be Social, Earn The Best',
     'description': 'This sample of description',
@@ -80,9 +80,9 @@ class _NewsScreenState extends State<NewsScreen> {
               child: ListView.separated(
                 separatorBuilder: (context, index) =>
                     const SizedBox(height: 20),
-                itemCount: ListNews.length,
+                itemCount: listNews.length,
                 itemBuilder: (BuildContext context, int index) {
-                  final news = ListNews[index];
+                  final news = listNews[index];
                   return InkWell(
                     onTap: () {
                       Navigator.push(

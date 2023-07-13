@@ -65,48 +65,54 @@ class _SearchSreenState extends State<SearchSreen> {
                   style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
                 ),
                 const SizedBox(height: 16),
-                Wrap(
-                  spacing: 8.0,
-                  runSpacing: 8.0,
-                  children: searchResults.map(
-                    (search) {
-                      return InkWell(
-                        onTap: () {},
-                        child: Container(
-                          height: 40,
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(60),
-                              border: Border.all(color: Colors.grey)),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const SizedBox(
-                                width: 10,
+                searchResults.isEmpty
+                    ? const Text(
+                        'Riwayat Pencarian Tidak Ditemukan',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: 14),
+                      )
+                    : Wrap(
+                        spacing: 8.0,
+                        runSpacing: 8.0,
+                        children: searchResults.map(
+                          (search) {
+                            return InkWell(
+                              onTap: () {},
+                              child: Container(
+                                height: 40,
+                                padding: const EdgeInsets.all(4),
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(60),
+                                    border: Border.all(color: Colors.grey)),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      search,
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.close,
+                                          color: Colors.grey, size: 16),
+                                      onPressed: () {
+                                        setState(
+                                          () {
+                                            searchResults.remove(search);
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
                               ),
-                              Text(
-                                search,
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.close,
-                                    color: Colors.grey, size: 16),
-                                onPressed: () {
-                                  setState(
-                                    () {
-                                      searchResults.remove(search);
-                                    },
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ).toList(),
-                ),
+                            );
+                          },
+                        ).toList(),
+                      ),
                 const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,7 +132,7 @@ class _SearchSreenState extends State<SearchSreen> {
                         );
                       },
                       child: const Text(
-                        'Lihat Semua >>',
+                        'Lihat Semua',
                         style: TextStyle(fontSize: 14, color: Colors.black),
                       ),
                     ),
@@ -186,7 +192,7 @@ class _SearchSreenState extends State<SearchSreen> {
                         );
                       },
                       child: const Text(
-                        'Lihat Semua >>',
+                        'Lihat Semua',
                         style: TextStyle(fontSize: 14, color: Colors.black),
                       ),
                     ),
