@@ -102,12 +102,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      const RecommendedBookScreen()),
+                                builder: (context) =>
+                                    const RecommendedBookScreen(),
+                              ),
                             );
                           },
                           child: const Text(
-                            'Lihat Semua >>',
+                            'Lihat Semua',
                             style: TextStyle(fontSize: 14, color: Colors.black),
                           ),
                         ),
@@ -169,7 +170,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             );
                           },
                           child: const Text(
-                            'Lihat Semua >>',
+                            'Lihat Semua',
                             style: TextStyle(fontSize: 14, color: Colors.black),
                           ),
                         ),
