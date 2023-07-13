@@ -39,11 +39,7 @@ final List<Map<String, dynamic>> books = [
   },
 ];
 
-final List<String> lastSearches = [
-  'Flutter',
-  'Mobile',
-  'Machine',
-];
+List<String> searchResults = [];
 
 class _SearchSreenState extends State<SearchSreen> {
   @override
@@ -56,7 +52,13 @@ class _SearchSreenState extends State<SearchSreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SearchBox(),
+                SearchBox(
+                  onSearch: (query) {
+                    setState(() {
+                      searchResults.add(query);
+                    });
+                  },
+                ),
                 const SizedBox(height: 20),
                 const Text(
                   'Pencarian Sebelumnya',
@@ -66,7 +68,7 @@ class _SearchSreenState extends State<SearchSreen> {
                 Wrap(
                   spacing: 8.0,
                   runSpacing: 8.0,
-                  children: lastSearches.map(
+                  children: searchResults.map(
                     (search) {
                       return InkWell(
                         onTap: () {},
@@ -93,7 +95,7 @@ class _SearchSreenState extends State<SearchSreen> {
                                 onPressed: () {
                                   setState(
                                     () {
-                                      lastSearches.remove(search);
+                                      searchResults.remove(search);
                                     },
                                   );
                                 },
