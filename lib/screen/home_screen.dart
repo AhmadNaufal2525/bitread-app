@@ -180,10 +180,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 20,
                     ),
                     SizedBox(
-                      height: 340,
+                      height: 320,
                       child: GridView.builder(
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
+                        physics: const NeverScrollableScrollPhysics(),
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
