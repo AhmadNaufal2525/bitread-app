@@ -62,6 +62,7 @@ class AddPostScreenState extends State<AddPostScreen> {
                     },
                     text: 'Tambah Gambar',
                     width: screenWidth * 0.5,
+                    color: const Color(0xffFE0002),
                   ),
                   const SizedBox(height: 30),
                   TextFormField(
@@ -81,6 +82,7 @@ class AddPostScreenState extends State<AddPostScreen> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
+                    color: const Color(0xffFE0002),
                   ),
                 ],
               ),

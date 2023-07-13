@@ -53,6 +53,7 @@ class _NewsScreenState extends State<NewsScreen> {
                       ),
                     ),
                     IconButton(
+                      color: const Color(0xffFE0002),
                       onPressed: () {
                         Navigator.push(
                           context,

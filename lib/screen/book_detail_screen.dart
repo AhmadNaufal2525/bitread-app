@@ -93,8 +93,9 @@ class BookDetailScreen extends StatelessWidget {
                             Text(
                               rating,
                               style: const TextStyle(
-                                  color: Color.fromARGB(255, 0, 133, 69),
-                                  fontSize: 14),
+                                color: Color.fromARGB(255, 0, 133, 69),
+                                fontSize: 14,
+                              ),
                             )
                           ],
                         )
@@ -123,8 +124,9 @@ class BookDetailScreen extends StatelessWidget {
                             alignment: Alignment.center,
                             padding: const EdgeInsets.symmetric(vertical: 18),
                             decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 0, 133, 69),
-                                borderRadius: BorderRadius.circular(12)),
+                              color: const Color(0xffFE0002),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                             child: const Text(
                               "Baca Buku",
                               style: TextStyle(

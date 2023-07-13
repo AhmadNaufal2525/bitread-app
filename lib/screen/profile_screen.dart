@@ -1,4 +1,5 @@
 import 'package:bitread_app/screen/login_screen.dart';
+import 'package:bitread_app/widget/custom_button.dart';
 import 'package:flutter/material.dart';
 
 class ProfilScreen extends StatefulWidget {
@@ -119,7 +120,8 @@ class _ProfilScreenState extends State<ProfilScreen> {
                     ),
                     const SizedBox(height: 60),
                     Center(
-                      child: ElevatedButton.icon(
+                      child: CustomButton(
+                        text: ('Logout'),
                         onPressed: () {
                           Navigator.pushAndRemoveUntil(
                             context,
@@ -130,22 +132,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                             (route) => false,
                           );
                         },
-                        icon: const Icon(Icons.logout),
-                        label: const Text('Logout'),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            Colors.deepOrange,
-                          ),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(60.0),
-                            ),
-                          ),
-                          fixedSize: MaterialStateProperty.all<Size>(
-                            const Size(200.0, 60.0),
-                          ),
-                        ),
+                        color: const Color(0xffFE0002),
                       ),
                     ),
                   ],
