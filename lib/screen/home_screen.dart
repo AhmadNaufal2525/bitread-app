@@ -4,6 +4,7 @@ import 'package:bitread_app/screen/more_recom_book.dart';
 import 'package:bitread_app/widget/card_book.dart';
 import 'package:bitread_app/widget/carousel.dart';
 import 'package:bitread_app/widget/popular_book.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -68,11 +69,35 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontWeight: FontWeight.w800, fontSize: 20),
                           ),
                           const Spacer(),
-                          CircleAvatar(
-                            backgroundColor: Colors.grey,
-                            radius: 30,
-                            child: Image.asset('assets/profil.png'),
-                          )
+                          SizedBox(
+                            child: StreamBuilder(
+                              stream: FirebaseFirestore.instance
+                                  .collection('User')
+                                  .where('id',
+                                      isEqualTo: FirebaseAuth
+                                          .instance.currentUser!.uid)
+                                  .snapshots(),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasData) {
+                                  var data = snapshot.data!.docs[0];
+                                  String image = data['image'];
+                                  if (image.isNotEmpty) {
+                                    return CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: NetworkImage(image),
+                                    );
+                                  }
+                                }
+                                return const CircleAvatar(
+                                  radius: 30,
+                                  backgroundColor: Colors.grey,
+                                  backgroundImage:
+                                      AssetImage('assets/user.png'),
+                                );
+                              },
+                            ),
+                          ),
                         ],
                       ),
                     ),

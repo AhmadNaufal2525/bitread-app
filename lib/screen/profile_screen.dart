@@ -1,5 +1,6 @@
 import 'package:bitread_app/screen/login_screen.dart';
 import 'package:bitread_app/widget/custom_button.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -43,13 +44,35 @@ class _ProfilScreenState extends State<ProfilScreen> {
                 style: TextStyle(fontWeight: FontWeight.w900, fontSize: 22),
               ),
             ),
-            const SizedBox(
+            SizedBox(
               height: 220,
               child: Center(
-                child: CircleAvatar(
-                  backgroundColor: Colors.grey,
-                  radius: 80,
-                  backgroundImage: AssetImage('assets/profil.png'),
+                child: SizedBox(
+                  child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('User')
+                        .where('id',
+                            isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                        .snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasData) {
+                        var data = snapshot.data!.docs[0];
+                        String image = data['image'];
+                        if (image.isNotEmpty) {
+                          return CircleAvatar(
+                            radius: 80,
+                            backgroundImage: NetworkImage(image),
+                          );
+                        }
+                      }
+                      return const CircleAvatar(
+                        radius: 80,
+                        backgroundColor: Colors.grey,
+                        backgroundImage: AssetImage('assets/user.png'),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
