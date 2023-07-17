@@ -101,7 +101,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Password Tidak Boleh Kosong!';
-                            } else if (value.length < 3) {
+                            } else if (value.length < 6) {
                               return 'Password harus terdiri dari 6 karakter atau lebih';
                             }
                             return null;
