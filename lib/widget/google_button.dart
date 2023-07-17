@@ -22,7 +22,7 @@ class GoogleButton extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     final double buttonWidth = width ?? size.width * 0.9;
     final double buttonHeight = height ?? size.height * 0.07;
-    return ElevatedButton(
+    return ElevatedButton.icon(
       onPressed: press,
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
@@ -40,22 +40,14 @@ class GoogleButton extends StatelessWidget {
         ),
         minimumSize: Size(buttonWidth, buttonHeight),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Image.asset(
-            'assets/google.png',
-            width: 36,
-            height: 36,
-          ),
-          const SizedBox(
-            width: 38,
-          ),
-          Text(
-            text,
-            style: TextStyle(color: textColor, fontWeight: FontWeight.w500),
-          ),
-        ],
+      icon: Image.asset(
+        'assets/google.png',
+        width: 28,
+        height: 28,
+      ),
+      label: Text(
+        text,
+        style: TextStyle(color: textColor, fontWeight: FontWeight.w500),
       ),
     );
   }

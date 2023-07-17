@@ -17,7 +17,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
@@ -135,7 +134,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                           const Text(
-                            "Daftar dengan",
+                            "atau",
                             style: TextStyle(
                               color: Colors.grey,
                             ),

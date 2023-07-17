@@ -121,6 +121,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                     const SizedBox(height: 60),
                     Center(
                       child: CustomButton(
+                        icon: const Icon(Icons.logout_rounded),
                         text: ('Logout'),
                         onPressed: () {
                           Navigator.pushAndRemoveUntil(
