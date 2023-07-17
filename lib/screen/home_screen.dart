@@ -4,6 +4,7 @@ import 'package:bitread_app/screen/more_recom_book.dart';
 import 'package:bitread_app/widget/card_book.dart';
 import 'package:bitread_app/widget/carousel.dart';
 import 'package:bitread_app/widget/popular_book.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -43,6 +44,8 @@ final List<Map<String, dynamic>> books = [
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    final username = user?.displayName ?? "User";
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -59,9 +62,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                       child: Row(
                         children: [
-                          const Text(
-                            "Hallo Naufal,",
-                            style: TextStyle(
+                          Text(
+                            "Hallo $username,",
+                            style: const TextStyle(
                                 fontWeight: FontWeight.w800, fontSize: 24),
                           ),
                           const Spacer(),
