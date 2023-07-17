@@ -46,6 +46,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
     final username = user?.displayName ?? "User";
+    String displayName =
+        "Hallo ${username.length > 12 ? '${username.substring(0, 12)},' : username}";
     return Scaffold(
       body: SafeArea(
         child: ListView(
@@ -63,9 +65,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         children: [
                           Text(
-                            "Hallo $username,",
+                            displayName,
                             style: const TextStyle(
-                                fontWeight: FontWeight.w800, fontSize: 24),
+                                fontWeight: FontWeight.w800, fontSize: 20),
                           ),
                           const Spacer(),
                           CircleAvatar(
