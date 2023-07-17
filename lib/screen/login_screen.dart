@@ -5,7 +5,10 @@ import 'package:bitread_app/widget/custom_button.dart';
 import 'package:bitread_app/widget/custom_text_field.dart';
 import 'package:bitread_app/widget/google_button.dart';
 import 'package:bitread_app/widget/password_text_field.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,8 +19,30 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final formKey = GlobalKey<FormState>();
-  late String username;
+  late String email;
   late String password;
+  final auth = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
+  Future<void> signin(
+      BuildContext context, String email, String password) async {
+    try {
+      await auth.signInWithEmailAndPassword(email: email, password: password);
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => const BottomNav(),
+        ),
+        (route) => false,
+      );
+    } on FirebaseAuthException catch (error) {
+      Fluttertoast.showToast(
+          msg: error.message.toString(),
+          gravity: ToastGravity.TOP,
+          backgroundColor: Colors.red,
+          textColor: Colors.white);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,16 +73,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 18,
                         ),
                         CustomTextField(
-                          icon: Icons.person,
-                          hintText: 'Username',
+                          icon: Icons.email,
+                          hintText: 'Email',
                           onChanged: (value) {
-                            username = value.trim();
+                            email = value.trim();
                           },
                           validator: (value) {
+                            final emailRegex = RegExp(
+                                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
                             if (value == null || value.isEmpty) {
-                              return 'Masukkan Username Anda';
-                            } else if (value.length < 6) {
-                              return 'Username harus terdiri dari 6 karakter!';
+                              return 'Email Tidak Boleh Kosong!';
+                            } else if (!emailRegex.hasMatch(value)) {
+                              return 'Masukkan Alamat Email Dengan Benar!';
                             }
                             return null;
                           },
@@ -110,14 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           text: 'Masuk',
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      const BottomNav(),
-                                ),
-                                (route) => false,
-                              );
+                              signin(context, email, password);
                             }
                           },
                         ),
