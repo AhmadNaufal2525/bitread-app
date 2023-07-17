@@ -3,7 +3,10 @@ import 'package:bitread_app/widget/custom_button.dart';
 import 'package:bitread_app/widget/custom_text_field.dart';
 import 'package:bitread_app/widget/google_button.dart';
 import 'package:bitread_app/widget/password_text_field.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -19,6 +22,45 @@ class _RegisterScreenState extends State<RegisterScreen> {
   late String email;
   late String password;
   late String confPassword;
+  final auth = FirebaseAuth.instance;
+  final firestore = FirebaseFirestore.instance;
+  Future<void> registerUser(BuildContext context, String username, String email,
+      String password) async {
+    try {
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      User? user = userCredential.user;
+      user?.updateDisplayName(username);
+      String id = user?.uid ?? '';
+      await firestore.collection('User').doc(user?.uid).set(
+        {'id': id, 'username': username, 'email': email, 'image': ''},
+      );
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => const LoginScreen()),
+        (route) => false,
+      );
+
+      Fluttertoast.showToast(
+        msg: "Daftar Akun Berhasil!",
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+      );
+    } on FirebaseAuthException catch (error) {
+      Fluttertoast.showToast(
+        msg: error.message.toString(),
+        gravity: ToastGravity.TOP,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -161,12 +203,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           text: 'Daftar',
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const LoginScreen(),
-                                ),
-                              );
+                              registerUser(context, username, email, password);
                             }
                           },
                         ),
