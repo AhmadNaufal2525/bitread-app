@@ -1,5 +1,6 @@
 import 'package:bitread_app/screen/login_screen.dart';
 import 'package:bitread_app/widget/custom_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ProfilScreen extends StatefulWidget {
@@ -10,8 +11,23 @@ class ProfilScreen extends StatefulWidget {
 }
 
 class _ProfilScreenState extends State<ProfilScreen> {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  Future<void> logout() async {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => const LoginScreen(),
+      ),
+      (route) => false,
+    );
+    await auth.signOut();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+    final username = user?.displayName ?? "User";
+    final email = user?.email;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -34,17 +50,17 @@ class _ProfilScreenState extends State<ProfilScreen> {
                 ),
               ),
             ),
-            const Text(
-              'John Doe',
-              style: TextStyle(
+            Text(
+              username,
+              style: const TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 10),
-            const Text(
-              'johndoe@gmail.com',
-              style: TextStyle(
+            Text(
+              '$email',
+              style: const TextStyle(
                 fontSize: 16,
                 color: Colors.grey,
               ),
@@ -124,14 +140,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                         icon: const Icon(Icons.logout_rounded),
                         text: ('Logout'),
                         onPressed: () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const LoginScreen(),
-                            ),
-                            (route) => false,
-                          );
+                          logout();
                         },
                         color: const Color(0xffFE0002),
                       ),
