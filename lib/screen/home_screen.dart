@@ -63,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Row(
                         children: [
                           Text(
-                            "Hallo ${username.length > 12 ? '${username.substring(0, 12)},' : username},",
+                            "Hallo ${username.length > 12 ? '${username.substring(0, 12)},' : '$username,'}",
                             style: const TextStyle(
                                 fontWeight: FontWeight.w800, fontSize: 20),
                           ),
