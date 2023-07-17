@@ -1,3 +1,4 @@
+import 'package:bitread_app/screen/forgot_password_screen.dart';
 import 'package:bitread_app/screen/register_screen.dart';
 import 'package:bitread_app/widget/bottom_navigation.dart';
 import 'package:bitread_app/widget/custom_button.dart';
@@ -60,7 +61,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ForgotPassScreen(),
+                              ),
+                            );
+                          },
                           child: const Text(
                             'Lupa Password?',
                             style: TextStyle(color: Colors.black, fontSize: 14),
