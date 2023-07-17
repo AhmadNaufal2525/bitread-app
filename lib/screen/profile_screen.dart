@@ -2,6 +2,7 @@ import 'package:bitread_app/screen/login_screen.dart';
 import 'package:bitread_app/widget/custom_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class ProfilScreen extends StatefulWidget {
   const ProfilScreen({super.key});
@@ -12,6 +13,7 @@ class ProfilScreen extends StatefulWidget {
 
 class _ProfilScreenState extends State<ProfilScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
+  GoogleSignIn googleSignIn = GoogleSignIn();
   Future<void> logout() async {
     Navigator.pushAndRemoveUntil(
       context,
@@ -21,6 +23,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
       (route) => false,
     );
     await auth.signOut();
+    await googleSignIn.signOut();
   }
 
   @override
