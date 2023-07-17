@@ -55,7 +55,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                       ),
                       const Padding(
                         padding: EdgeInsets.all(5),
-                        child: Text('Pastikan Email akunmu sudah terdaftar'),
+                        child: Text('Pastikan Emailmu sudah terdaftar'),
                       ),
                       const SizedBox(
                         height: 30,
