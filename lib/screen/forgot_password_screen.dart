@@ -11,6 +11,8 @@ class ForgotPassScreen extends StatefulWidget {
 }
 
 class _ForgotPassScreenState extends State<ForgotPassScreen> {
+  final formKey = GlobalKey<FormState>();
+  late String email;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,41 +40,58 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      CustomTextField(
-                        icon: Icons.email,
-                        hintText: 'Email',
-                        onChanged: (String value) {},
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Text('Pastikan Emailmu sudah terdaftar'),
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      CustomButton(
-                        color: const Color(0xffFE0002),
-                        text: 'Kirim',
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => const SuccessDialog(
-                                message:
-                                    'Silahkan cek email kamu untuk melakukan perubahan password'),
-                          );
-                        },
-                      ),
-                    ],
+                Form(
+                  key: formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        CustomTextField(
+                          icon: Icons.email,
+                          hintText: 'Email',
+                          onChanged: (value) {
+                            email = value.trim();
+                          },
+                          validator: (value) {
+                            final emailRegex = RegExp(
+                                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                            if (value == null || value.isEmpty) {
+                              return 'Email Tidak Boleh Kosong!';
+                            } else if (!emailRegex.hasMatch(value)) {
+                              return 'Masukkan Alamat Email Dengan Benar!';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.all(5),
+                          child: Text('Pastikan Emailmu sudah terdaftar'),
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        CustomButton(
+                          color: const Color(0xffFE0002),
+                          text: 'Kirim',
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              showDialog(
+                                context: context,
+                                builder: (context) => const SuccessDialog(
+                                    message:
+                                        'Silahkan cek email kamu untuk melakukan perubahan password'),
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],
