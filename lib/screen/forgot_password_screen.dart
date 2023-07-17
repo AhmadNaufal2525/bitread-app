@@ -1,6 +1,8 @@
 import 'package:bitread_app/widget/custom_button.dart';
 import 'package:bitread_app/widget/custom_text_field.dart';
+import 'package:bitread_app/widget/failed_dialog.dart';
 import 'package:bitread_app/widget/success_dialog.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPassScreen extends StatefulWidget {
@@ -13,6 +15,24 @@ class ForgotPassScreen extends StatefulWidget {
 class _ForgotPassScreenState extends State<ForgotPassScreen> {
   final formKey = GlobalKey<FormState>();
   late String email;
+  void resetPassword(String email) async {
+    try {
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+      showDialog(
+        context: context,
+        builder: (context) => const SuccessDialog(
+            message:
+                'Silahkan cek email anda untuk melakukan perubahan password'),
+      );
+    } catch (error) {
+      showDialog(
+        context: context,
+        builder: (context) =>
+            const FailedDialog(message: 'Cek Kembali email anda'),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,12 +101,7 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
                           text: 'Kirim',
                           onPressed: () {
                             if (formKey.currentState!.validate()) {
-                              showDialog(
-                                context: context,
-                                builder: (context) => const SuccessDialog(
-                                    message:
-                                        'Silahkan cek email kamu untuk melakukan perubahan password'),
-                              );
+                              resetPassword(email);
                             }
                           },
                         ),
