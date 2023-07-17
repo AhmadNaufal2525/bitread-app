@@ -197,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 16,
                         ),
                         GoogleButton(
-                          press: () async {
+                          press: () {
                             signInWithGoogle();
                           },
                           textColor: const Color.fromARGB(255, 12, 12, 12),
