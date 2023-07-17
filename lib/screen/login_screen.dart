@@ -56,8 +56,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Masukkan Username Anda';
-                            } else if (value.length < 3) {
-                              return 'Username harus lebih dari 3 karakter';
+                            } else if (value.length < 6) {
+                              return 'Username harus terdiri dari 6 karakter!';
                             }
                             return null;
                           },
@@ -74,8 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Masukkan Password Anda';
-                            } else if (value.length < 3) {
-                              return 'Password harus terdiri dari 6 karakter atau lebih';
+                            } else if (value.length < 6) {
+                              return 'Password harus terdiri dari 6 karakter!';
                             }
                             return null;
                           },
