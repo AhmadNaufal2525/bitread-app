@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -41,6 +42,24 @@ class _LoginScreenState extends State<LoginScreen> {
           backgroundColor: Colors.red,
           textColor: Colors.white);
     }
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => const BottomNav(),
+      ),
+      (route) => false,
+    );
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   @override
@@ -178,7 +197,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 16,
                         ),
                         GoogleButton(
-                          press: () {},
+                          press: () async {
+                            signInWithGoogle();
+                          },
                           textColor: const Color.fromARGB(255, 12, 12, 12),
                           color: const Color(0xffFFFFFF),
                           text: 'Sign In with Google',
