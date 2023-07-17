@@ -15,6 +15,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final formKey = GlobalKey<FormState>();
+  late String username;
+  late String password;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,126 +38,154 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: 200,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 18,
-                      ),
-                      CustomTextField(
-                        icon: Icons.person,
-                        hintText: 'Username',
-                        onChanged: (value) {},
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      PasswordTextField(
-                        hintText: 'Password',
-                        icon: Icons.lock,
-                        onChanged: (String value) {},
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ForgotPassScreen(),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            'Lupa Password?',
-                            style: TextStyle(color: Colors.black, fontSize: 14),
-                          ),
+                Form(
+                  key: formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 18,
                         ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      CustomButton(
-                        color: const Color(0xffFE0002),
-                        text: 'Masuk',
-                        onPressed: () {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const BottomNav(),
-                            ),
-                            (route) => false,
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.only(
-                                  left: 10.0, right: 20.0),
-                              child: const Divider(
-                                color: Colors.grey,
-                                height: 36,
-                              ),
-                            ),
-                          ),
-                          const Text(
-                            "atau",
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.only(
-                                  left: 20.0, right: 10.0),
-                              child: const Divider(
-                                color: Colors.grey,
-                                height: 36,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      GoogleButton(
-                        press: () {},
-                        textColor: const Color.fromARGB(255, 12, 12, 12),
-                        color: const Color(0xffFFFFFF),
-                        text: 'Sign In with Google',
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          const Text("Tidak punya akun?"),
-                          TextButton(
+                        CustomTextField(
+                          icon: Icons.person,
+                          hintText: 'Username',
+                          onChanged: (value) {
+                            username = value.trim();
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Masukkan Username Anda';
+                            } else if (value.length < 3) {
+                              return 'Username harus lebih dari 3 karakter';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        PasswordTextField(
+                          hintText: 'Password',
+                          icon: Icons.lock,
+                          onChanged: (value) {
+                            password = value.trim();
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Masukkan Password Anda';
+                            } else if (value.length < 3) {
+                              return 'Password harus terdiri dari 6 karakter atau lebih';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const RegisterScreen(),
+                                  builder: (context) =>
+                                      const ForgotPassScreen(),
                                 ),
                               );
                             },
-                            child: const Text("Daftar disini"),
+                            child: const Text(
+                              'Lupa Password?',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 14),
+                            ),
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CustomButton(
+                          color: const Color(0xffFE0002),
+                          text: 'Masuk',
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const BottomNav(),
+                                ),
+                                (route) => false,
+                              );
+                            }
+                          },
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                    left: 10.0, right: 20.0),
+                                child: const Divider(
+                                  color: Colors.grey,
+                                  height: 36,
+                                ),
+                              ),
+                            ),
+                            const Text(
+                              "atau",
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                    left: 20.0, right: 10.0),
+                                child: const Divider(
+                                  color: Colors.grey,
+                                  height: 36,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        GoogleButton(
+                          press: () {},
+                          textColor: const Color.fromARGB(255, 12, 12, 12),
+                          color: const Color(0xffFFFFFF),
+                          text: 'Sign In with Google',
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            const Text("Tidak punya akun?"),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const RegisterScreen(),
+                                  ),
+                                );
+                              },
+                              child: const Text("Daftar disini"),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],
