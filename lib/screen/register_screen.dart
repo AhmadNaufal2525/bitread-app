@@ -14,6 +14,11 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  final formKey = GlobalKey<FormState>();
+  late String username;
+  late String email;
+  late String password;
+  late String confPassword;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,144 +48,192 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      CustomTextField(
-                        icon: Icons.person,
-                        hintText: 'Username',
-                        onChanged: (String value) {},
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      CustomTextField(
-                        icon: Icons.email,
-                        hintText: 'Email',
-                        onChanged: (String value) {},
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      PasswordTextField(
-                        hintText: 'Password',
-                        icon: Icons.lock,
-                        onChanged: (String value) {},
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      PasswordTextField(
-                        hintText: 'Confirm Password',
-                        icon: Icons.lock,
-                        onChanged: (String value) {},
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: RichText(
-                          textAlign: TextAlign.justify,
-                          text: TextSpan(
-                            text:
-                                'Dengan mendaftarkan akun, anda telah menyetujui untuk menerima ',
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontFamily: GoogleFonts.poppins().fontFamily,
-                                fontSize: 14),
-                            children: [
-                              TextSpan(
-                                text: 'Privacy Policy Bitread',
-                                style: TextStyle(
-                                  color: Colors.blue,
+                Form(
+                  key: formKey,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        CustomTextField(
+                          icon: Icons.person,
+                          hintText: 'Username',
+                          onChanged: (value) {
+                            username = value.trim();
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Username Tidak Boleh Kosong!';
+                            } else if (value.length < 6) {
+                              return 'Username harus terdiri dari 6 karakter!';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        CustomTextField(
+                          icon: Icons.email,
+                          hintText: 'Email',
+                          onChanged: (value) {
+                            email = value.trim();
+                          },
+                          validator: (value) {
+                            final emailRegex = RegExp(
+                                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                            if (value == null || value.isEmpty) {
+                              return 'Email Tidak Boleh Kosong!';
+                            } else if (!emailRegex.hasMatch(value)) {
+                              return 'Masukkan Alamat Email Dengan Benar!';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        PasswordTextField(
+                          hintText: 'Password',
+                          icon: Icons.lock,
+                          onChanged: (value) {
+                            password = value.trim();
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Password Tidak Boleh Kosong!';
+                            } else if (value.length < 3) {
+                              return 'Password harus terdiri dari 6 karakter atau lebih';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        PasswordTextField(
+                          hintText: 'Confirm Password',
+                          icon: Icons.lock,
+                          onChanged: (value) {
+                            confPassword = value.trim();
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Confirm Password Tidak Boleh Kosong!';
+                            } else if (value != password) {
+                              return 'Password tidak sama!';
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: RichText(
+                            textAlign: TextAlign.justify,
+                            text: TextSpan(
+                              text:
+                                  'Dengan mendaftarkan akun, anda telah menyetujui untuk menerima ',
+                              style: TextStyle(
+                                  color: Colors.black,
                                   fontFamily: GoogleFonts.poppins().fontFamily,
-                                  fontSize: 14,
+                                  fontSize: 14),
+                              children: [
+                                TextSpan(
+                                  text: 'Privacy Policy Bitread',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontFamily:
+                                        GoogleFonts.poppins().fontFamily,
+                                    fontSize: 14,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      CustomButton(
-                        color: const Color(0xffFE0002),
-                        text: 'Daftar',
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const LoginScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.only(
-                                  left: 10.0, right: 20.0),
-                              child: const Divider(
-                                color: Colors.grey,
-                                height: 36,
-                              ),
-                            ),
-                          ),
-                          const Text(
-                            "atau",
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              margin: const EdgeInsets.only(
-                                  left: 20.0, right: 10.0),
-                              child: const Divider(
-                                color: Colors.grey,
-                                height: 36,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      GoogleButton(
-                        press: () {},
-                        textColor: const Color.fromARGB(255, 12, 12, 12),
-                        color: const Color(0xffFFFFFF),
-                        text: 'Sign Up with Google',
-                      ),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          const Text("Sudah punya akun?"),
-                          TextButton(
-                            onPressed: () {
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        CustomButton(
+                          color: const Color(0xffFE0002),
+                          text: 'Daftar',
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const LoginScreen(),
                                 ),
                               );
-                            },
-                            child: const Text("Masuk disini"),
-                          ),
-                        ],
-                      ),
-                    ],
+                            }
+                          },
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                    left: 10.0, right: 20.0),
+                                child: const Divider(
+                                  color: Colors.grey,
+                                  height: 36,
+                                ),
+                              ),
+                            ),
+                            const Text(
+                              "atau",
+                              style: TextStyle(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                margin: const EdgeInsets.only(
+                                    left: 20.0, right: 10.0),
+                                child: const Divider(
+                                  color: Colors.grey,
+                                  height: 36,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        GoogleButton(
+                          press: () {},
+                          textColor: const Color.fromARGB(255, 12, 12, 12),
+                          color: const Color(0xffFFFFFF),
+                          text: 'Sign Up with Google',
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            const Text("Sudah punya akun?"),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const LoginScreen(),
+                                  ),
+                                );
+                              },
+                              child: const Text("Masuk disini"),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],
