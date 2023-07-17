@@ -8,6 +8,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+import '../widget/bottom_navigation.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -59,6 +62,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
         textColor: Colors.white,
       );
     }
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => const BottomNav(),
+      ),
+      (route) => false,
+    );
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   @override
@@ -244,10 +265,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           height: 16,
                         ),
                         GoogleButton(
-                          press: () {},
+                          press: () {
+                            signInWithGoogle();
+                          },
                           textColor: const Color.fromARGB(255, 12, 12, 12),
                           color: const Color(0xffFFFFFF),
-                          text: 'Sign Up with Google',
+                          text: 'Sign In with Google',
                         ),
                         const SizedBox(
                           height: 16,
