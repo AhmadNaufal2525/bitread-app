@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "905919636113",
+    "project_id": "bitread-app",
+    "storage_bucket": "bitread-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905919636113:android:335b4d83fbd529e6491530",
+        "android_client_info": {
+          "package_name": "com.example.bitread_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "905919636113-np95unc9h8f157ndapgrpdvrrmuakdug.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bitread_app",
+            "certificate_hash": "cb737589f9fc560aa0ae7b2dd446b9a504395acc"
+          }
+        },
+        {
+          "client_id": "905919636113-eaq1oj7ma58chdnlud1e8evus29lg1ld.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB8Ka21E9pDf45Urk5tuadLjCWJ4t_djfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "905919636113-eaq1oj7ma58chdnlud1e8evus29lg1ld.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
