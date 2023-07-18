@@ -75,11 +75,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   .collection('User')
                                   .where('id',
                                       isEqualTo: FirebaseAuth
-                                          .instance.currentUser!.uid)
+                                          .instance.currentUser?.uid)
                                   .snapshots(),
                               builder: (BuildContext context,
                                   AsyncSnapshot<QuerySnapshot> snapshot) {
-                                if (snapshot.hasData) {
+                                if (snapshot.hasData &&
+                                    snapshot.data!.docs.isNotEmpty) {
                                   var data = snapshot.data!.docs[0];
                                   String image = data['image'];
                                   if (image.isNotEmpty) {
@@ -87,6 +88,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                       radius: 30,
                                       backgroundImage: NetworkImage(image),
                                     );
+                                  } else {
+                                    String? googleProfileImage = FirebaseAuth
+                                        .instance.currentUser?.photoURL;
+                                    if (googleProfileImage != null) {
+                                      return CircleAvatar(
+                                        radius: 30,
+                                        backgroundImage:
+                                            NetworkImage(googleProfileImage),
+                                      );
+                                    }
                                   }
                                 }
                                 return const CircleAvatar(
