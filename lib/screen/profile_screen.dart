@@ -52,11 +52,11 @@ class _ProfilScreenState extends State<ProfilScreen> {
                     stream: FirebaseFirestore.instance
                         .collection('User')
                         .where('id',
-                            isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+                            isEqualTo: FirebaseAuth.instance.currentUser?.uid)
                         .snapshots(),
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasData) {
+                      if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
                         var data = snapshot.data!.docs[0];
                         String image = data['image'];
                         if (image.isNotEmpty) {
@@ -64,6 +64,15 @@ class _ProfilScreenState extends State<ProfilScreen> {
                             radius: 80,
                             backgroundImage: NetworkImage(image),
                           );
+                        } else {
+                          String? googleProfileImage =
+                              FirebaseAuth.instance.currentUser?.photoURL;
+                          if (googleProfileImage != null) {
+                            return CircleAvatar(
+                              radius: 80,
+                              backgroundImage: NetworkImage(googleProfileImage),
+                            );
+                          }
                         }
                       }
                       return const CircleAvatar(
@@ -79,7 +88,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
             Text(
               username,
               style: const TextStyle(
-                fontSize: 24,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
