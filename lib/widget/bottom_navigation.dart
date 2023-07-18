@@ -83,7 +83,7 @@ class _BottomNavState extends State<BottomNav> {
           bottomTapped(index);
         },
         unselectedItemColor: Colors.grey,
-        selectedItemColor: Colors.black,
+        selectedItemColor: const Color(0xffFE0002),
         items: buildBottomNavBarItems(),
       ),
     );
