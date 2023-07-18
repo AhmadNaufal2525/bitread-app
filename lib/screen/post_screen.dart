@@ -1,6 +1,6 @@
 import 'package:bitread_app/screen/add_post_screen.dart';
 import 'package:bitread_app/screen/post_detail_screen.dart';
-import 'package:bitread_app/widget/news_card.dart';
+import 'package:bitread_app/widget/post_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -101,7 +101,7 @@ class _PostScreenState extends State<PostScreen> {
                             ),
                           );
                         },
-                        child: NewsCard(
+                        child: PostCard(
                           title: news['judul'],
                           description: news['isiBlog'],
                           imageUrl: news['imageURL'],
