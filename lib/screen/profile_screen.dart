@@ -62,6 +62,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                         if (image.isNotEmpty) {
                           return CircleAvatar(
                             radius: 80,
+                            backgroundColor: Colors.grey,
                             backgroundImage: NetworkImage(image),
                           );
                         } else {
@@ -70,6 +71,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                           if (googleProfileImage != null) {
                             return CircleAvatar(
                               radius: 80,
+                              backgroundColor: Colors.grey,
                               backgroundImage: NetworkImage(googleProfileImage),
                             );
                           }
