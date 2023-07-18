@@ -1,5 +1,5 @@
 import 'package:bitread_app/screen/home_screen.dart';
-import 'package:bitread_app/screen/news_screen.dart';
+import 'package:bitread_app/screen/post_screen.dart';
 import 'package:bitread_app/screen/profile_screen.dart';
 import 'package:bitread_app/screen/search_screen.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +70,7 @@ class _BottomNavState extends State<BottomNav> {
         children: const <Widget>[
           HomeScreen(),
           SearchSreen(),
-          NewsScreen(),
+          PostScreen(),
           ProfilScreen(),
         ],
       ),
