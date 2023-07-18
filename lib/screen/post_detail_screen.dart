@@ -74,6 +74,7 @@ class PostDetailScreen extends StatelessWidget {
                         Text(
                           description,
                           style: const TextStyle(fontSize: 16),
+                          textAlign: TextAlign.justify,
                         ),
                       ],
                     ),
