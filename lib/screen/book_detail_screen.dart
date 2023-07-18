@@ -1,3 +1,4 @@
+import 'package:bitread_app/widget/custom_button.dart';
 import 'package:bitread_app/widget/star_rating.dart';
 import 'package:flutter/material.dart';
 
@@ -120,43 +121,22 @@ class BookDetailScreen extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         Expanded(
-                          child: Container(
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(vertical: 18),
-                            decoration: BoxDecoration(
-                              color: const Color(0xffFE0002),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Text(
-                              "Baca Buku",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600),
-                            ),
+                          child: CustomButton(
+                            onPressed: () {},
+                            text: 'Baca Buku',
+                            icon: const Icon(Icons.menu_book),
+                            color: const Color(0xffFE0002),
                           ),
                         ),
                         const SizedBox(
                           width: 20,
                         ),
                         Expanded(
-                          child: Container(
-                            alignment: Alignment.center,
-                            padding: const EdgeInsets.symmetric(vertical: 18),
-                            decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.grey, width: 2),
-                                borderRadius: BorderRadius.circular(12)),
-                            child: InkWell(
-                              onTap: () {},
-                              child: const Text(
-                                "Beli Buku",
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
+                          child: CustomButton(
+                            onPressed: () {},
+                            text: 'Beli Buku',
+                            icon: const Icon(Icons.trolley),
+                            color: Colors.grey,
                           ),
                         )
                       ],
