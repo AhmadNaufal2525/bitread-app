@@ -31,9 +31,9 @@ class AddPostScreenState extends State<AddPostScreen> {
           await FirebaseFirestore.instance.collection('Post Blog').add({
         'userId': userId,
         'judul': judul,
-        'isi_blog': isiBlog,
+        'isiBlog': isiBlog,
         'author': username,
-        'image': '',
+        'imageURL': '',
         'timestamp': FieldValue.serverTimestamp(),
       });
       final String id = newPost.id;
@@ -44,7 +44,7 @@ class AddPostScreenState extends State<AddPostScreen> {
       final image = await snapshot.ref.getDownloadURL();
       await FirebaseFirestore.instance.collection('Post Blog').doc(id).update({
         'id': id,
-        'image': image,
+        'imageURL': image,
       });
       FocusScope.of(context).unfocus();
       showDialog(
