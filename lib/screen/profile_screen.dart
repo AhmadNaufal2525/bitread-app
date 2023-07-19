@@ -14,6 +14,7 @@ class ProfilScreen extends StatefulWidget {
 
 class _ProfilScreenState extends State<ProfilScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
+  int postCount = 0;
   GoogleSignIn googleSignIn = GoogleSignIn();
   Future<void> logout() async {
     Navigator.pushAndRemoveUntil(
@@ -28,150 +29,200 @@ class _ProfilScreenState extends State<ProfilScreen> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    countUserPosts();
+  }
+
+  Future<void> countUserPosts() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('Post Blog')
+          .where('userId', isEqualTo: user.uid)
+          .get();
+      setState(
+        () {
+          postCount = snapshot.size;
+        },
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
     final username = user?.displayName ?? "User";
     final email = user?.email;
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            const Align(
-              alignment: Alignment.center,
-              child: Text(
-                'Profile',
-                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 22),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              const Align(
+                alignment: Alignment.center,
+                child: Text(
+                  'Profile',
+                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 22),
+                ),
               ),
-            ),
-            SizedBox(
-              height: 220,
-              child: Center(
-                child: SizedBox(
-                  child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('User')
-                        .where('id',
-                            isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-                        .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (snapshot.hasData && snapshot.data!.docs.isNotEmpty) {
-                        var data = snapshot.data!.docs[0];
-                        String image = data['image'];
-                        if (image.isNotEmpty) {
-                          return CircleAvatar(
-                            radius: 80,
-                            backgroundColor: Colors.grey,
-                            backgroundImage: NetworkImage(image),
-                          );
-                        } else {
-                          String? googleProfileImage =
-                              FirebaseAuth.instance.currentUser?.photoURL;
-                          if (googleProfileImage != null) {
+              SizedBox(
+                height: 220,
+                child: Center(
+                  child: SizedBox(
+                    child: StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('User')
+                          .where('id',
+                              isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.hasData &&
+                            snapshot.data!.docs.isNotEmpty) {
+                          var data = snapshot.data!.docs[0];
+                          String image = data['image'];
+                          if (image.isNotEmpty) {
                             return CircleAvatar(
                               radius: 80,
                               backgroundColor: Colors.grey,
-                              backgroundImage: NetworkImage(googleProfileImage),
+                              backgroundImage: NetworkImage(image),
                             );
+                          } else {
+                            String? googleProfileImage =
+                                FirebaseAuth.instance.currentUser?.photoURL;
+                            if (googleProfileImage != null) {
+                              return CircleAvatar(
+                                radius: 80,
+                                backgroundColor: Colors.grey,
+                                backgroundImage:
+                                    NetworkImage(googleProfileImage),
+                              );
+                            }
                           }
                         }
-                      }
-                      return const CircleAvatar(
-                        radius: 80,
-                        backgroundColor: Colors.grey,
-                        backgroundImage: AssetImage('assets/user.png'),
-                      );
-                    },
+                        return const CircleAvatar(
+                          radius: 80,
+                          backgroundColor: Colors.grey,
+                          backgroundImage: AssetImage('assets/user.png'),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
-            ),
-            Text(
-              username,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              '$email',
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      'Posts',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      '230',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                  ],
+              Text(
+                username,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
-            const SizedBox(height: 28),
-            Expanded(
-              child: Container(
+              ),
+              const SizedBox(height: 10),
+              Text(
+                '$email',
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    children: [
+                      const Text(
+                        'Post',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        postCount.toString(),
+                        style: const TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 28),
+              Container(
                 padding: const EdgeInsets.symmetric(horizontal: 36),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Social Media',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                    ExpansionTile(
+                      title: const Text('Social Media'),
+                      leading: Image.asset(
+                        "assets/social-media.png",
+                        height: 30,
+                        width: 30,
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    const Row(
                       children: [
-                        Icon(
-                          Icons.facebook,
-                          size: 24,
+                        Row(
+                          children: [
+                            Image.asset('assets/instagram.png',
+                                height: 24, width: 24),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'instagram.com/johndoe',
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
-                        SizedBox(width: 8),
-                        Text(
-                          'facebook.com/johndoe',
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Image.asset('assets/facebook.png',
+                                height: 24, width: 24),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'facebook.com/johndoe',
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Image.asset('assets/twitter.png',
+                                height: 24, width: 24),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'twitter.com/johndoe',
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            Image.asset('assets/youtube.png',
+                                height: 24, width: 24),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'youtube.com/johndoe',
+                              style: TextStyle(
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    const Row(
-                      children: [
-                        Icon(
-                          Icons.mail,
-                          size: 24,
-                        ),
-                        SizedBox(width: 8),
-                        Text(
-                          'twitter.com/johndoe',
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 60),
+                    const SizedBox(height: 30),
                     Center(
                       child: CustomButton(
                         icon: const Icon(Icons.logout_rounded),
@@ -185,8 +236,8 @@ class _ProfilScreenState extends State<ProfilScreen> {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
