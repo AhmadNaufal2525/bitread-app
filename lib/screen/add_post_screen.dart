@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'package:bitread_app/widget/custom_button.dart';
 import 'package:bitread_app/widget/failed_dialog.dart';
+import 'package:bitread_app/widget/success_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-
-import '../widget/success_dialog.dart';
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({super.key});
@@ -27,6 +26,19 @@ class AddPostScreenState extends State<AddPostScreen> {
       User? user = FirebaseAuth.instance.currentUser;
       String? userId = user?.uid;
       String? username = user?.displayName;
+      QuerySnapshot existingPosts = await FirebaseFirestore.instance
+          .collection('Post Blog')
+          .where('judul', isEqualTo: judul)
+          .get();
+      if (existingPosts.docs.isNotEmpty) {
+        showDialog(
+          context: context,
+          builder: (context) => const FailedDialog(
+            message: 'Postingan dengan judul ini sudah ada!',
+          ),
+        );
+        return;
+      }
       final newPost =
           await FirebaseFirestore.instance.collection('Post Blog').add({
         'userId': userId,
@@ -50,7 +62,8 @@ class AddPostScreenState extends State<AddPostScreen> {
       showDialog(
         context: context,
         builder: (context) => const SuccessDialog(
-            message: 'Postingan Blog Mu Berhasil di Upload!'),
+          message: 'Postingan Blog Mu Berhasil di Upload!',
+        ),
       );
     } catch (error) {
       showDialog(
