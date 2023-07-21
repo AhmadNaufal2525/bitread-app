@@ -6,13 +6,14 @@ class PopularBook extends StatelessWidget {
   final double rating;
   final String imageUrl;
 
-  const PopularBook({super.key, 
+  const PopularBook({
+    super.key,
     required this.title,
     required this.author,
     required this.rating,
     required this.imageUrl,
   });
-   @override
+  @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -21,9 +22,9 @@ class PopularBook extends StatelessWidget {
           padding: const EdgeInsets.only(right: 10.0),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
-            child: Image.asset(
+            child: Image.network(
               imageUrl,
-              height: 120,
+              height: 100,
               fit: BoxFit.cover,
             ),
           ),

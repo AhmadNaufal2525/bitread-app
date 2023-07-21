@@ -1,5 +1,6 @@
 import 'package:bitread_app/screen/book_detail_screen.dart';
 import 'package:bitread_app/widget/popular_book.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class PopularBookScreen extends StatefulWidget {
@@ -9,44 +10,21 @@ class PopularBookScreen extends StatefulWidget {
   State<PopularBookScreen> createState() => _PopularBookScreenState();
 }
 
-final List<Map<String, dynamic>> books = [
-  {
-    'title': 'Be Modest, Be Social, Earn The Best',
-    'author': 'Jenie Morgana',
-    'rating': 4.5,
-    'imageUrl': 'assets/book3.jpg',
-  },
-  {
-    'title': 'Time To Explore',
-    'author': 'Elie Kurien',
-    'rating': 4.5,
-    'imageUrl': 'assets/book2.jpg',
-  },
-  {
-    'title': 'Different Winter',
-    'author': 'Mia Jackson',
-    'rating': 4.5,
-    'imageUrl': 'assets/book1.jpg',
-  },
-  {
-    'title': 'The Best tips for Design',
-    'author': 'Ujang Lumajang',
-    'rating': 4.0,
-    'imageUrl': 'assets/book4.jpg',
-  },
-  {
-    'title': 'The Best tips for Design',
-    'author': 'Ujang Lumajang',
-    'rating': 4.0,
-    'imageUrl': 'assets/book4.jpg',
-  },
-  {
-    'title': 'The Best tips for Design',
-    'author': 'Ujang Lumajang',
-    'rating': 4.0,
-    'imageUrl': 'assets/book4.jpg',
-  },
-];
+Future<List<Map<String, dynamic>>> fetchBooks() async {
+  final collectionRef = FirebaseFirestore.instance.collection('Books');
+  final querySnapshot = await collectionRef.get();
+  return querySnapshot.docs
+      .map((doc) => {
+            'id': doc.id,
+            'title': doc['title'],
+            'imageUrl': doc['imageUrl'],
+            'ebook': doc['ebook'],
+            'author': doc['author'],
+            'rating': doc['rating'],
+            'description': doc['description'],
+          })
+      .toList();
+}
 
 class _PopularBookScreenState extends State<PopularBookScreen> {
   @override
@@ -76,13 +54,31 @@ class _PopularBookScreenState extends State<PopularBookScreen> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: GridView.builder(
+                child: FutureBuilder<List<Map<String, dynamic>>>(
+                          future: fetchBooks(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+
+                            if (snapshot.hasError) {
+                              return Center(
+                                child: Text('Error: ${snapshot.error}'),
+                              );
+                            }
+
+                            final List<Map<String, dynamic>>? books =
+                                snapshot.data;
+                return GridView.builder(
                   scrollDirection: Axis.vertical,
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 16.0,
                   ),
-                  itemCount: books.length,
+                  itemCount: books!.length,
                   itemBuilder: (BuildContext context, int index) {
                     final book = books[index];
                     return InkWell(
@@ -91,11 +87,12 @@ class _PopularBookScreenState extends State<PopularBookScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => BookDetailScreen(
-                              title: book['title'],
-                              author: book['author'],
-                              rating: book['rating'].toString(),
-                              imageUrl: book['imageUrl'],
-                            ),
+                                id: book['id'],
+                                title: book['title'],
+                                author: book['author'],
+                                rating: book['rating'].toString(),
+                                imageUrl: book['imageUrl'],
+                                desc: book['description']),
                           ),
                         );
                       },
@@ -107,10 +104,10 @@ class _PopularBookScreenState extends State<PopularBookScreen> {
                       ),
                     );
                   },
-                ),
+                );}
               ),
             ),
-          ],
+        ),],
         ),
       ),
     );

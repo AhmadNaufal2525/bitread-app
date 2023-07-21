@@ -21,7 +21,7 @@ class BookCard extends StatelessWidget {
         padding: const EdgeInsets.only(right: 16.0),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(8.0),
-          child: Image.asset(
+          child: Image.network(
             imageUrl,
             height: 160,
             fit: BoxFit.cover,
@@ -33,7 +33,7 @@ class BookCard extends StatelessWidget {
         children: [
           const SizedBox(height: 12.0),
           Text(
-            title.length > 16 ? '${title.substring(0, 16)}...' : title,
+            title.length > 12 ? '${title.substring(0, 12)}...' : title,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 14.0,
@@ -43,7 +43,7 @@ class BookCard extends StatelessWidget {
           ),
           const SizedBox(height: 8.0),
           Text(
-            author,
+            author.length > 14 ? '${author.substring(0, 14)}...' : author,
             style: const TextStyle(
               fontSize: 14.0,
               color: Colors.grey,

@@ -151,89 +151,67 @@ class _ProfilScreenState extends State<ProfilScreen> {
                 ],
               ),
               const SizedBox(height: 28),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 36),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ExpansionTile(
-                      title: const Text('Social Media'),
-                      leading: Image.asset(
-                        "assets/social-media.png",
-                        height: 30,
-                        width: 30,
-                      ),
-                      children: [
-                        Row(
-                          children: [
-                            Image.asset('assets/instagram.png',
-                                height: 24, width: 24),
-                            const SizedBox(width: 8),
-                            const Text(
-                              'instagram.com/johndoe',
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Image.asset('assets/facebook.png',
-                                height: 24, width: 24),
-                            const SizedBox(width: 8),
-                            const Text(
-                              'facebook.com/johndoe',
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Image.asset('assets/twitter.png',
-                                height: 24, width: 24),
-                            const SizedBox(width: 8),
-                            const Text(
-                              'twitter.com/johndoe',
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Image.asset('assets/youtube.png',
-                                height: 24, width: 24),
-                            const SizedBox(width: 8),
-                            const Text(
-                              'youtube.com/johndoe',
-                              style: TextStyle(
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                      ],
+              Row(
+                children: [
+                  Image.asset('assets/instagram.png', height: 24, width: 24),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'instagram.com/johndoe',
+                    style: TextStyle(
+                      fontSize: 16,
                     ),
-                    const SizedBox(height: 30),
-                    Center(
-                      child: CustomButton(
-                        icon: const Icon(Icons.logout_rounded),
-                        text: ('Logout'),
-                        onPressed: () {
-                          logout();
-                        },
-                        color: const Color(0xffFE0002),
-                      ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Image.asset('assets/facebook.png', height: 24, width: 24),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'facebook.com/johndoe',
+                    style: TextStyle(
+                      fontSize: 16,
                     ),
-                  ],
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Image.asset('assets/twitter.png', height: 24, width: 24),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'twitter.com/johndoe',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Image.asset('assets/youtube.png', height: 24, width: 24),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'youtube.com/johndoe',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              const SizedBox(height: 30),
+              Center(
+                child: CustomButton(
+                  icon: const Icon(Icons.logout_rounded),
+                  text: ('Logout'),
+                  onPressed: () {
+                    logout();
+                  },
+                  color: const Color(0xffFE0002),
                 ),
               ),
             ],
