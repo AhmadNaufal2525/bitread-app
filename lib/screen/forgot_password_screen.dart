@@ -35,83 +35,83 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Align(
-                  alignment: AlignmentDirectional.topStart,
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.arrow_back),
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.2,
-                ),
-                const Center(
-                  child: Text(
-                    'RESET PASSWORD',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 32),
-                  ),
-                ),
-                Form(
-                  key: formKey,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 1,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Form(
+              key: formKey,
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const SizedBox(
-                          height: 30,
+                        const Text(
+                          'Reset Password',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
                         ),
-                        CustomTextField(
-                          icon: Icons.email,
-                          hintText: 'Email',
-                          onChanged: (value) {
-                            email = value.trim();
-                          },
-                          validator: (value) {
-                            final emailRegex = RegExp(
-                                r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-                            if (value == null || value.isEmpty) {
-                              return 'Email Tidak Boleh Kosong!';
-                            } else if (!emailRegex.hasMatch(value)) {
-                              return 'Masukkan Alamat Email Dengan Benar!';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.all(5),
-                          child: Text('Pastikan Emailmu sudah terdaftar'),
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        CustomButton(
-                          color: const Color(0xffFE0002),
-                          text: 'Kirim',
+                        IconButton(
                           onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                              resetPassword(email);
-                            }
+                            Navigator.pop(
+                              context,
+                            );
                           },
+                          icon: const Icon(Icons.clear),
                         ),
                       ],
                     ),
-                  ),
-                )
-              ],
-            ),
-          ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    const Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Pastikan email akunmu sudah terdaftar',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 16),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 60,
+                    ),
+                    CustomTextField(
+                      icon: Icons.email,
+                      hintText: 'Email',
+                      onChanged: (value) {
+                        email = value.trim();
+                      },
+                      validator: (value) {
+                        final emailRegex = RegExp(
+                            r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                        if (value == null || value.isEmpty) {
+                          return 'Email Tidak Boleh Kosong!';
+                        } else if (!emailRegex.hasMatch(value)) {
+                          return 'Masukkan Alamat Email Dengan Benar!';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 60,
+                    ),
+                    CustomButton(
+                      color: const Color(0xffFE0002),
+                      text: 'Kirim',
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          resetPassword(email);
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );
