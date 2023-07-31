@@ -1,9 +1,11 @@
-import 'package:bitread_app/screen/login_screen.dart';
-import 'package:bitread_app/widget/custom_button.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:bitread_app/screen/opening_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:bitread_app/widget/profile_header_widget.dart';
+import 'package:bitread_app/widget/profile_liked_post.dart';
+import 'package:bitread_app/widget/profile_post.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilScreen extends StatefulWidget {
   const ProfilScreen({super.key});
@@ -16,11 +18,17 @@ class _ProfilScreenState extends State<ProfilScreen> {
   FirebaseAuth auth = FirebaseAuth.instance;
   int postCount = 0;
   GoogleSignIn googleSignIn = GoogleSignIn();
+  Future<void> setLoggedIn(bool isLoggedIn) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('isLoggedIn', isLoggedIn);
+  }
+
   Future<void> logout() async {
+    await setLoggedIn(false);
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-        builder: (BuildContext context) => const LoginScreen(),
+        builder: (BuildContext context) => const OpeningScreen(),
       ),
       (route) => false,
     );
@@ -29,193 +37,69 @@ class _ProfilScreenState extends State<ProfilScreen> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    countUserPosts();
-  }
-
-  Future<void> countUserPosts() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('Post Blog')
-          .where('userId', isEqualTo: user.uid)
-          .get();
-      setState(
-        () {
-          postCount = snapshot.size;
-        },
-      );
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser;
-    final username = user?.displayName ?? "User";
-    final email = user?.email;
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              const Align(
-                alignment: Alignment.center,
-                child: Text(
-                  'Profile',
-                  style: TextStyle(fontWeight: FontWeight.w900, fontSize: 22),
-                ),
-              ),
-              SizedBox(
-                height: 220,
-                child: Center(
-                  child: SizedBox(
-                    child: StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('User')
-                          .where('id',
-                              isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-                          .snapshots(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasData &&
-                            snapshot.data!.docs.isNotEmpty) {
-                          var data = snapshot.data!.docs[0];
-                          String image = data['image'];
-                          if (image.isNotEmpty) {
-                            return CircleAvatar(
-                              radius: 80,
-                              backgroundColor: Colors.grey,
-                              backgroundImage: NetworkImage(image),
-                            );
-                          } else {
-                            String? googleProfileImage =
-                                FirebaseAuth.instance.currentUser?.photoURL;
-                            if (googleProfileImage != null) {
-                              return CircleAvatar(
-                                radius: 80,
-                                backgroundColor: Colors.grey,
-                                backgroundImage:
-                                    NetworkImage(googleProfileImage),
-                              );
-                            }
-                          }
-                        }
-                        return const CircleAvatar(
-                          radius: 80,
-                          backgroundColor: Colors.grey,
-                          backgroundImage: AssetImage('assets/user.png'),
-                        );
-                      },
-                    ),
+        child: Column(
+          children: [
+            SizedBox(
+              child: Align(
+                alignment: Alignment.topRight,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.logout,
+                    color: Color(0xffFE0002),
                   ),
+                  onPressed: logout,
                 ),
               ),
-              Text(
-                username,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                '$email',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      const Text(
-                        'Post',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+            ),
+            Expanded(
+              child: DefaultTabController(
+                length: 2,
+                child: NestedScrollView(
+                  headerSliverBuilder: (context, _) {
+                    return [
+                      SliverList(
+                        delegate: SliverChildListDelegate(
+                          [
+                            const ProfileHeader(),
+                          ],
                         ),
                       ),
-                      Text(
-                        postCount.toString(),
-                        style: const TextStyle(
-                          fontSize: 18,
+                    ];
+                  },
+                  body: Column(
+                    children: [
+                      Material(
+                        color: Colors.white,
+                        child: TabBar(
+                          labelColor: Colors.black,
+                          unselectedLabelColor: Colors.grey[400],
+                          indicatorWeight: 1,
+                          indicatorColor: const Color(0xffFE0002),
+                          tabs: const [
+                            Tab(
+                              text: 'Post',
+                            ),
+                            Tab(
+                              text: 'Liked Post',
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Expanded(
+                        child: TabBarView(
+                          children: [ProfilePost(), ProfileLikedPost()],
                         ),
                       ),
                     ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 28),
-              Row(
-                children: [
-                  Image.asset('assets/instagram.png', height: 24, width: 24),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'instagram.com/johndoe',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Image.asset('assets/facebook.png', height: 24, width: 24),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'facebook.com/johndoe',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Image.asset('assets/twitter.png', height: 24, width: 24),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'twitter.com/johndoe',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Image.asset('assets/youtube.png', height: 24, width: 24),
-                  const SizedBox(width: 8),
-                  const Text(
-                    'youtube.com/johndoe',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              const SizedBox(height: 30),
-              Center(
-                child: CustomButton(
-                  icon: const Icon(Icons.logout_rounded),
-                  text: ('Logout'),
-                  onPressed: () {
-                    logout();
-                  },
-                  color: const Color(0xffFE0002),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
