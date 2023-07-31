@@ -94,83 +94,97 @@ class AddPostScreenState extends State<AddPostScreen> {
           },
         ),
         iconTheme: const IconThemeData(color: Colors.black),
+        shadowColor: Colors.transparent,
       ),
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  (selectedImagePath != '')
-                      ? Image.file(
-                          File(selectedImagePath),
-                          height: 200,
-                          width: 280,
-                          fit: BoxFit.fill,
-                        )
-                      : Image.asset(
-                          'assets/add_image.png',
-                          height: 120,
-                          width: 120,
-                          fit: BoxFit.fill,
-                        ),
-                  const SizedBox(height: 20),
-                  CustomButton(
-                    onPressed: () {
-                      selectImage();
-                    },
-                    text: 'Tambah Gambar',
-                    width: screenWidth * 0.5,
-                    color: const Color(0xffFE0002),
-                  ),
-                  const SizedBox(height: 30),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Judul Blog'),
-                    onChanged: (value) {
-                      judul = value.trim();
-                    },
-                    validator: (value) {
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                (selectedImagePath != '')
+                    ? Image.file(
+                        File(selectedImagePath),
+                        height: 200,
+                        width: 280,
+                        fit: BoxFit.fill,
+                      )
+                    : Image.asset(
+                        'assets/add_image.png',
+                        height: 120,
+                        width: 120,
+                        fit: BoxFit.fill,
+                      ),
+                const SizedBox(height: 20),
+                CustomButton(
+                  onPressed: () {
+                    selectImage();
+                  },
+                  text: 'Tambah Gambar',
+                  width: screenWidth * 0.5,
+                  color: const Color(0xffFE0002),
+                ),
+                const SizedBox(height: 30),
+                TextFormField(
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(), labelText: 'Judul Blog'),
+                  onChanged: (value) {
+                    judul = value.trim();
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Isi Judul Blog Anda!';
+                    } else if (value.length < 10) {
+                      return 'Judul minimal harus 10 karakter!';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 30),
+                TextFormField(
+                  maxLength: 2500,
+                  maxLines: 10,
+                  decoration: const InputDecoration(
+                      border: OutlineInputBorder(), labelText: 'Isi Post'),
+                  onChanged: (value) {
+                    isiBlog = value.trim();
+                  },
+                  validator: (value) {
+                    {
                       if (value == null || value.isEmpty) {
-                        return 'Isi Judul Blog Anda!';
-                      } else if (value.length < 10) {
-                        return 'Judul minimal harus 10 karakter!';
+                        return 'Isi post Anda!';
                       }
                       return null;
-                    },
-                  ),
-                  const SizedBox(height: 30),
-                  TextFormField(
-                    maxLength: 2500,
-                    maxLines: 10,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Isi Post'),
-                    onChanged: (value) {
-                      isiBlog = value.trim();
-                    },
-                    validator: (value) {
-                      {
-                        if (value == null || value.isEmpty) {
-                          return 'Isi post Anda!';
-                        }
-                        return null;
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 30),
-                  CustomButton(
-                    text: 'Post',
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        addNewPost();
-                      }
-                    },
-                    color: const Color(0xffFE0002),
-                  ),
-                ],
-              ),
+                    }
+                  },
+                ),
+                const SizedBox(height: 30),
+                CustomButton(
+                  text: 'Post',
+                  onPressed: () {
+                    if (selectedImagePath.isEmpty) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Upload gambar terlebih dahulu!'),
+                        ),
+                      );
+                      return;
+                    }
+                    if (formKey.currentState!.validate()) {
+                      addNewPost();
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Isi field yang masih kosong!'),
+                        ),
+                      );
+                    }
+                  },
+                  color: const Color(0xffFE0002),
+                ),
+              ],
             ),
           ),
         ),
