@@ -12,53 +12,53 @@ class PostScreen extends StatefulWidget {
   State<PostScreen> createState() => _PostScreenState();
 }
 
-
 class _PostScreenState extends State<PostScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        shadowColor: Colors.transparent,
+        toolbarHeight: 80,
+        title: const Text(
+          'Blog Harian',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(10),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                DateFormat("dd MMM, yyyy").format(DateTime.now()),
+                style: const TextStyle(fontSize: 16),
+              ),
+            ),
+          ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AddPostScreen(),
+                ),
+              );
+            },
+            icon: const Icon(Icons.post_add_outlined),
+            color: const Color(0xffFE0002),
+          ),
+        ],
+      ),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: ListView(
           children: [
-            const SizedBox(height: 16.0),
-            Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Blog Harian',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    IconButton(
-                      color: const Color(0xffFE0002),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AddPostScreen(),
-                          ),
-                        );
-                      },
-                      icon: const Icon(Icons.post_add_outlined),
-                    ),
-                  ],
-                )),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                DateFormat("dd MMM, yyyy").format(DateTime.now()),
-                style: const TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             SizedBox(
-              height: 620,
+              height: MediaQuery.of(context).size.height * 0.76,
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('Post Blog')
@@ -74,38 +74,37 @@ class _PostScreenState extends State<PostScreen> {
                       child: Text('Error: ${snapshot.error}'),
                     );
                   }
-
                   final docs = snapshot.data!.docs;
                   if (docs.isEmpty) {
                     return const Center(
-                        child: Text('Tidak ada data menu yang ditemukan'));
+                      child: Text('Post tidak ditemukan'),
+                    );
                   }
-
                   return ListView.separated(
                     separatorBuilder: (context, index) =>
                         const SizedBox(height: 20),
                     itemCount: docs.length,
                     itemBuilder: (context, index) {
-                      final news = docs[index];
+                      final post = docs[index];
                       return InkWell(
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => PostDetailScreen(
-                                title: news['judul'],
-                                description: news['isiBlog'],
-                                imageUrl: news['imageURL'],
-                                author: news['author'],
+                                title: post['judul'],
+                                description: post['isiBlog'],
+                                imageUrl: post['imageURL'],
+                                author: post['author'],
                               ),
                             ),
                           );
                         },
                         child: PostCard(
-                          title: news['judul'],
-                          description: news['isiBlog'],
-                          imageUrl: news['imageURL'],
-                          author: news['author'],
+                          title: post['judul'],
+                          description: post['isiBlog'],
+                          imageUrl: post['imageURL'],
+                          author: post['author'],
                         ),
                       );
                     },
