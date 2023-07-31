@@ -46,7 +46,14 @@ dependencies:
   firebase_database: ^10.2.4
   firebase_storage: ^11.2.5
   google_sign_in: ^6.1.4
-  flutter_pdfview: ^1.2.7
+  easy_pdf_viewer: ^1.0.7
+  flutter_rating_bar: ^4.0.1
+  flutter_spinkit: ^5.2.0
+  shared_preferences: ^2.2.0
+  shimmer: ^3.0.0
+  url_launcher: ^6.1.12
+  curved_navigation_bar: ^1.0.3
+ 
 
 dev_dependencies:
   flutter_test:
