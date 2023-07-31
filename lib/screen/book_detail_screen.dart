@@ -1,14 +1,18 @@
+import 'package:bitread_app/screen/pdfviewer.dart';
 import 'package:bitread_app/widget/custom_button.dart';
-import 'package:bitread_app/widget/star_rating.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class BookDetailScreen extends StatelessWidget {
+class BookDetailScreen extends StatefulWidget {
   final String id;
   final String title;
-  final String rating;
+  final double rating;
   final String imageUrl;
   final String author;
   final String desc;
+  final String url;
   const BookDetailScreen(
       {super.key,
       required this.title,
@@ -16,7 +20,35 @@ class BookDetailScreen extends StatelessWidget {
       required this.imageUrl,
       required this.author,
       required this.desc,
-      required this.id});
+      required this.id,
+      required this.url});
+
+  @override
+  State<BookDetailScreen> createState() => _BookDetailScreenState();
+}
+
+class _BookDetailScreenState extends State<BookDetailScreen> {
+  Future<void> openPdfFromFirebase(BuildContext context) async {
+    try {
+      CollectionReference booksCollection =
+          FirebaseFirestore.instance.collection('Books');
+      DocumentSnapshot bookSnapshot =
+          await booksCollection.doc(widget.id).get();
+      if (bookSnapshot.exists) {
+        String pdfUrl = bookSnapshot.get('ebook');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PdfViewer(pdfUrl: pdfUrl),
+          ),
+        );
+      } else {
+        throw Exception('Book document with ID $widget.id does not exist.');
+      }
+    } catch (e) {
+      throw Exception('Error loading PDF: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +74,7 @@ class BookDetailScreen extends StatelessWidget {
           child: Column(
             children: <Widget>[
               Image.network(
-                imageUrl,
+                widget.imageUrl,
                 width: MediaQuery.of(context).size.width,
                 fit: BoxFit.fitWidth,
               ),
@@ -55,7 +87,7 @@ class BookDetailScreen extends StatelessWidget {
                       children: <Widget>[
                         Expanded(
                           child: Text(
-                            title,
+                            widget.title,
                             style: const TextStyle(
                                 color: Colors.black87,
                                 fontWeight: FontWeight.w700,
@@ -70,7 +102,7 @@ class BookDetailScreen extends StatelessWidget {
                     Row(
                       children: <Widget>[
                         Text(
-                          author,
+                          widget.author,
                           style: const TextStyle(
                               color: Colors.grey,
                               fontSize: 16,
@@ -87,14 +119,20 @@ class BookDetailScreen extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: <Widget>[
-                            const StarRating(
-                              rating: 5,
-                            ),
-                            const SizedBox(
-                              height: 6,
+                            RatingBar.builder(
+                              initialRating: widget.rating,
+                              direction: Axis.horizontal,
+                              itemCount: 5,
+                              itemSize: 20.0,
+                              itemBuilder: (context, _) => const Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              ignoreGestures: true,
+                              onRatingUpdate: (double value) {},
                             ),
                             Text(
-                              rating,
+                              widget.rating.toString(),
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 0, 133, 69),
                                 fontSize: 14,
@@ -108,7 +146,7 @@ class BookDetailScreen extends StatelessWidget {
                       height: 30,
                     ),
                     Text(
-                      desc,
+                      widget.desc,
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 18,
@@ -124,7 +162,9 @@ class BookDetailScreen extends StatelessWidget {
                       children: <Widget>[
                         Expanded(
                           child: CustomButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              openPdfFromFirebase(context);
+                            },
                             text: 'Baca Buku',
                             icon: const Icon(Icons.menu_book),
                             color: const Color(0xffFE0002),
@@ -135,9 +175,12 @@ class BookDetailScreen extends StatelessWidget {
                         ),
                         Expanded(
                           child: CustomButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              final url = Uri.parse(widget.url);
+                              await launchUrl(url);
+                            },
                             text: 'Beli Buku',
-                            icon: const Icon(Icons.trolley),
+                            icon: const Icon(Icons.shopping_bag_sharp),
                             color: Colors.grey,
                           ),
                         )
