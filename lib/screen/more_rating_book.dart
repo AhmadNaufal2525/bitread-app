@@ -30,27 +30,27 @@ class _RatingBookState extends State<RatingBook> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 60,
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        title: const Text(
+          'Rating Teratas',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back),
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 80),
-                  child: Text(
-                    'Rating Teratas',
-                    style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
-                  ),
-                )
-              ],
-            ),
+            
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(16),
@@ -90,9 +90,9 @@ class _RatingBookState extends State<RatingBook> {
                                 id: book['id'],
                                 title: book['title'],
                                 author: book['author'],
-                                rating: book['rating'].toString(),
+                                rating: book['rating'],
                                 imageUrl: book['imageUrl'],
-                                desc: book['description']),
+                                desc: book['description'], url : book['url_book']),
                           ),
                         );
                       },
