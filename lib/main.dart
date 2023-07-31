@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Bit Read',
+      title: 'Bitread',
       theme: ThemeData(
         fontFamily: GoogleFonts.poppins().fontFamily,
       ),
