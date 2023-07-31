@@ -15,11 +15,12 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-Future<List<Map<String, dynamic>>> fetchBooks() async {
-  final collectionRef = FirebaseFirestore.instance.collection('Books');
-  final querySnapshot = await collectionRef.get();
-  return querySnapshot.docs
-      .map((doc) => {
+Stream<List<Map<String, dynamic>>> fetchBooks() {
+  return FirebaseFirestore.instance.collection('Books').snapshots().map(
+    (QuerySnapshot snapshot) {
+      return snapshot.docs.map(
+        (DocumentSnapshot doc) {
+          return {
             'id': doc.id,
             'title': doc['title'],
             'imageUrl': doc['imageUrl'],
@@ -27,8 +28,12 @@ Future<List<Map<String, dynamic>>> fetchBooks() async {
             'author': doc['author'],
             'rating': doc['rating'],
             'description': doc['description'],
-          })
-      .toList();
+            'url_book': doc['url_book']
+          };
+        },
+      ).toList();
+    },
+  );
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -37,8 +42,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        final user = snapshot.data;
-        final username = user?.displayName ?? "User";
         return Scaffold(
           body: SafeArea(
             child: ListView(
@@ -55,10 +58,41 @@ class _HomeScreenState extends State<HomeScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Row(
                             children: [
-                              Text(
-                                "Hallo ${username.length > 12 ? '${username.substring(0, 12)},' : '$username,'}",
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w800, fontSize: 20),
+                              StreamBuilder<
+                                  DocumentSnapshot<Map<String, dynamic>>>(
+                                stream: FirebaseFirestore.instance
+                                    .collection('User')
+                                    .doc(FirebaseAuth.instance.currentUser?.uid)
+                                    .snapshots(),
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<
+                                            DocumentSnapshot<
+                                                Map<String, dynamic>>>
+                                        snapshot) {
+                                  if (snapshot.hasData &&
+                                      snapshot.data!.exists) {
+                                    var data = snapshot.data!.data();
+                                    String? username = data?['username'];
+                                    if (username != null &&
+                                        username.isNotEmpty) {
+                                      return Center(
+                                        child: Text(
+                                          "Hallo ${username.length > 12 ? '${username.substring(0, 12)},' : '$username,'}",
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  }
+                                  return const Text(
+                                    "Hallo User",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 20),
+                                  );
+                                },
                               ),
                               const Spacer(),
                               SizedBox(
@@ -81,18 +115,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                           backgroundColor: Colors.grey,
                                           backgroundImage: NetworkImage(image),
                                         );
-                                      } else {
-                                        String? googleProfileImage =
-                                            FirebaseAuth
-                                                .instance.currentUser?.photoURL;
-                                        if (googleProfileImage != null) {
-                                          return CircleAvatar(
-                                            radius: 30,
-                                            backgroundColor: Colors.grey,
-                                            backgroundImage: NetworkImage(
-                                                googleProfileImage),
-                                          );
-                                        }
                                       }
                                     }
                                     return const CircleAvatar(
@@ -151,8 +173,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                         const SizedBox(height: 20),
-                        FutureBuilder<List<Map<String, dynamic>>>(
-                          future: fetchBooks(),
+                        StreamBuilder<List<Map<String, dynamic>>>(
+                          stream: fetchBooks(),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
@@ -190,9 +212,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                             id: book['id'],
                                             title: book['title'],
                                             author: book['author'],
-                                            rating: book['rating'].toString(),
+                                            rating: book['rating'],
                                             imageUrl: book['imageUrl'],
                                             desc: book['description'],
+                                            url : book['url_book']
                                           ),
                                         ),
                                       );
@@ -241,8 +264,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        FutureBuilder<List<Map<String, dynamic>>>(
-                          future: fetchBooks(),
+                        StreamBuilder<List<Map<String, dynamic>>>(
+                          stream: fetchBooks(),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
@@ -259,6 +282,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             final List<Map<String, dynamic>>? books =
                                 snapshot.data;
+                            if (books == null || books.isEmpty) {
+                              return const Center(
+                                child: Text('Tidak ada buku yang tersedia'),
+                              );
+                            }
+
                             return SizedBox(
                               height: 320,
                               child: GridView.builder(
@@ -268,7 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   crossAxisCount: 2,
                                   crossAxisSpacing: 16.0,
                                 ),
-                                itemCount: books!.length,
+                                itemCount: books.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   final book = books[index];
                                   return InkWell(
@@ -280,10 +309,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                               BookDetailScreen(
                                             title: book['title'],
                                             author: book['author'],
-                                            rating: book['rating'].toString(),
+                                            rating: book['rating'],
                                             imageUrl: book['imageUrl'],
                                             desc: book['description'],
                                             id: book['id'],
+                                            url : book['url_book']
                                           ),
                                         ),
                                       );
