@@ -4,15 +4,16 @@ class PopularBook extends StatelessWidget {
   final String title;
   final String author;
   final double rating;
-  final String imageUrl;
+  final String? imageUrl;
 
   const PopularBook({
     super.key,
     required this.title,
     required this.author,
     required this.rating,
-    required this.imageUrl,
+    this.imageUrl,
   });
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -22,34 +23,40 @@ class PopularBook extends StatelessWidget {
           padding: const EdgeInsets.only(right: 10.0),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
-            child: Image.network(
-              imageUrl,
-              height: 100,
-              fit: BoxFit.cover,
-            ),
+            child: imageUrl != null && imageUrl!.isNotEmpty
+                ? Image.network(
+                    imageUrl!,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  )
+                : Image.asset(
+                    'assets/book_images.png',
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
           ),
         ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              title.length > 10 ? '${title.substring(0, 10)}...' : title,
+              title.isNotEmpty
+                  ? '${title.substring(0, 10)}...'
+                  : 'Title',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 12.0,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 8.0),
             Text(
-              author.length > 10 ? '${author.substring(0, 10)}...' : author,
+              author.isNotEmpty
+                  ? '${author.substring(0, 9)}...'
+                  : 'Author',
               style: const TextStyle(
                 fontSize: 12.0,
                 color: Colors.grey,
               ),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
             ),
             const SizedBox(height: 8.0),
             Row(
