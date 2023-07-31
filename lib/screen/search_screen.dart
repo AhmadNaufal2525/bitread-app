@@ -1,6 +1,7 @@
 import 'package:bitread_app/screen/book_detail_screen.dart';
 import 'package:bitread_app/screen/more_new_book.dart';
 import 'package:bitread_app/screen/more_rating_book.dart';
+import 'package:bitread_app/screen/search_result_screen.dart';
 import 'package:bitread_app/widget/card_book.dart';
 import 'package:bitread_app/widget/searchbox.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,11 +14,12 @@ class SearchSreen extends StatefulWidget {
   State<SearchSreen> createState() => _SearchSreenState();
 }
 
-Future<List<Map<String, dynamic>>> fetchBooks() async {
-  final collectionRef = FirebaseFirestore.instance.collection('Books');
-  final querySnapshot = await collectionRef.get();
-  return querySnapshot.docs
-      .map((doc) => {
+Stream<List<Map<String, dynamic>>> fetchBooks() {
+  return FirebaseFirestore.instance.collection('Books').snapshots().map(
+    (QuerySnapshot snapshot) {
+      return snapshot.docs.map(
+        (DocumentSnapshot doc) {
+          return {
             'id': doc.id,
             'title': doc['title'],
             'imageUrl': doc['imageUrl'],
@@ -25,8 +27,36 @@ Future<List<Map<String, dynamic>>> fetchBooks() async {
             'author': doc['author'],
             'rating': doc['rating'],
             'description': doc['description'],
-          })
-      .toList();
+          };
+        },
+      ).toList();
+    },
+  );
+}
+
+Stream<List<Map<String, dynamic>>> searchBooks(String searchQuery) {
+  return FirebaseFirestore.instance.collection('Books').snapshots().map(
+    (QuerySnapshot snapshot) {
+      return snapshot.docs
+          .where((doc) => doc['title']
+              .toString()
+              .toLowerCase()
+              .contains(searchQuery.toLowerCase()))
+          .map(
+        (DocumentSnapshot doc) {
+          return {
+            'id': doc.id,
+            'title': doc['title'],
+            'imageUrl': doc['imageUrl'],
+            'ebook': doc['ebook'],
+            'author': doc['author'],
+            'rating': doc['rating'],
+            'description': doc['description'],
+          };
+        },
+      ).toList();
+    },
+  );
 }
 
 List<String> searchResults = [];
@@ -47,6 +77,21 @@ class _SearchSreenState extends State<SearchSreen> {
                     setState(() {
                       searchResults.add(query);
                     });
+                    showModalBottomSheet(
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(25),
+                        ),
+                      ),
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) {
+                        return FractionallySizedBox(
+                          heightFactor: 0.76,
+                          child: SearchResultScreen(searchQuery: query),
+                        );
+                      },
+                    );
                   },
                 ),
                 const SizedBox(height: 20),
@@ -129,8 +174,8 @@ class _SearchSreenState extends State<SearchSreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                FutureBuilder<List<Map<String, dynamic>>>(
-                  future: fetchBooks(),
+                StreamBuilder<List<Map<String, dynamic>>>(
+                  stream: fetchBooks(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
@@ -161,12 +206,14 @@ class _SearchSreenState extends State<SearchSreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => BookDetailScreen(
-                                      id: book['id'],
-                                      title: book['title'],
-                                      author: book['author'],
-                                      rating: book['rating'].toString(),
-                                      imageUrl: book['imageUrl'],
-                                      desc: book['description']),
+                                    id: book['id'],
+                                    title: book['title'],
+                                    author: book['author'],
+                                    rating: book['rating'],
+                                    imageUrl: book['imageUrl'],
+                                    desc: book['description'],
+                                    url: book['url_book'],
+                                  ),
                                 ),
                               );
                             },
@@ -208,8 +255,8 @@ class _SearchSreenState extends State<SearchSreen> {
                   ],
                 ),
                 const SizedBox(height: 20),
-                FutureBuilder<List<Map<String, dynamic>>>(
-                  future: fetchBooks(),
+                StreamBuilder<List<Map<String, dynamic>>>(
+                  stream: fetchBooks(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
@@ -243,9 +290,10 @@ class _SearchSreenState extends State<SearchSreen> {
                                     id: book['id'],
                                     title: book['title'],
                                     author: book['author'],
-                                    rating: book['rating'].toString(),
+                                    rating: book['rating'],
                                     imageUrl: book['imageUrl'],
                                     desc: book['description'],
+                                    url: book['url_book'],
                                   ),
                                 ),
                               );
