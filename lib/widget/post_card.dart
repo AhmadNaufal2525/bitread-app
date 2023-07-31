@@ -5,9 +5,15 @@ class PostCard extends StatelessWidget {
   final String description;
   final String author;
   final String imageUrl;
-  const PostCard({super.key, required this.title, required this.description, required this.imageUrl, required this.author, });
+  const PostCard({
+    super.key,
+    required this.title,
+    required this.description,
+    required this.imageUrl,
+    required this.author,
+  });
 
-    @override
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12.0),
