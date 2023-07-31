@@ -21,6 +21,7 @@ class PostDetailScreen extends StatelessWidget {
         toolbarHeight: 80,
         backgroundColor: Colors.white,
         centerTitle: true,
+        shadowColor: Colors.transparent,
         title: const Text(
           'Blog',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
@@ -33,6 +34,7 @@ class PostDetailScreen extends StatelessWidget {
           },
         ),
       ),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -64,7 +66,7 @@ class PostDetailScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'By $author',
+                          'Oleh $author',
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.grey,
