@@ -1,5 +1,5 @@
 import 'package:bitread_app/screen/book_detail_screen.dart';
-import 'package:bitread_app/widget/popular_book.dart';
+import 'package:bitread_app/widget/grid_card_book.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -95,7 +95,7 @@ class _PopularBookScreenState extends State<PopularBookScreen> {
                           ),
                         );
                       },
-                      child: PopularBook(
+                      child: GridCardBook(
                         title: book['title'],
                         author: book['author'],
                         rating: book['rating'],
