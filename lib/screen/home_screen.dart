@@ -1,9 +1,7 @@
-import 'package:bitread_app/screen/book_detail_screen.dart';
-import 'package:bitread_app/screen/more_popular_book.dart';
-import 'package:bitread_app/screen/more_recom_book.dart';
-import 'package:bitread_app/widget/card_book.dart';
 import 'package:bitread_app/widget/carousel.dart';
 import 'package:bitread_app/widget/popular_book.dart';
+import 'package:bitread_app/widget/recommended_book.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,27 +11,6 @@ class HomeScreen extends StatefulWidget {
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
-}
-
-Stream<List<Map<String, dynamic>>> fetchBooks() {
-  return FirebaseFirestore.instance.collection('Books').snapshots().map(
-    (QuerySnapshot snapshot) {
-      return snapshot.docs.map(
-        (DocumentSnapshot doc) {
-          return {
-            'id': doc.id,
-            'title': doc['title'],
-            'imageUrl': doc['imageUrl'],
-            'ebook': doc['ebook'],
-            'author': doc['author'],
-            'rating': doc['rating'],
-            'description': doc['description'],
-            'url_book': doc['url_book']
-          };
-        },
-      ).toList();
-    },
-  );
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -89,8 +66,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   return const Text(
                                     "Hallo User",
                                     style: TextStyle(
-                                        fontWeight: FontWeight.w800,
-                                        fontSize: 20),
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 20,
+                                    ),
                                   );
                                 },
                               ),
@@ -113,7 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                         return CircleAvatar(
                                           radius: 30,
                                           backgroundColor: Colors.grey,
-                                          backgroundImage: NetworkImage(image),
+                                          backgroundImage:
+                                              CachedNetworkImageProvider(image),
                                         );
                                       }
                                     }
@@ -129,207 +108,19 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 14),
-                              child: Text('Mau baca apa hari ini?'),
-                            )
-                          ],
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 12),
+                          child: Text('Mau baca apa hari ini?'),
                         ),
-                        const Column(
-                          children: [
-                            Carousel(),
-                            SizedBox(
-                              height: 26,
-                            ),
-                          ],
+                        const Carousel(),
+                        const SizedBox(
+                          height: 26,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Rekomendasi Buku',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w800, fontSize: 14),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const RecommendedBookScreen(),
-                                  ),
-                                );
-                              },
-                              child: const Text(
-                                'Lihat Semua',
-                                style: TextStyle(
-                                    fontSize: 14, color: Colors.black),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        StreamBuilder<List<Map<String, dynamic>>>(
-                          stream: fetchBooks(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-
-                            if (snapshot.hasError) {
-                              return Center(
-                                child: Text('Error: ${snapshot.error}'),
-                              );
-                            }
-
-                            final List<Map<String, dynamic>>? books =
-                                snapshot.data;
-
-                            return SizedBox(
-                              height: 260,
-                              child: ListView.separated(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(width: 20),
-                                itemCount: books!.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final book = books[index];
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              BookDetailScreen(
-                                            id: book['id'],
-                                            title: book['title'],
-                                            author: book['author'],
-                                            rating: book['rating'],
-                                            imageUrl: book['imageUrl'],
-                                            desc: book['description'],
-                                            url : book['url_book']
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: BookCard(
-                                      title: book['title'],
-                                      author: book['author'],
-                                      rating: book['rating'],
-                                      imageUrl: book['imageUrl'],
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                        ),
+                        const RecomBook(),
                         const SizedBox(
                           height: 20,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            const Text(
-                              'Buku Terpopuler',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w800, fontSize: 14),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PopularBookScreen(),
-                                  ),
-                                );
-                              },
-                              child: const Text(
-                                'Lihat Semua',
-                                style: TextStyle(
-                                    fontSize: 14, color: Colors.black),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        StreamBuilder<List<Map<String, dynamic>>>(
-                          stream: fetchBooks(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            }
-
-                            if (snapshot.hasError) {
-                              return Center(
-                                child: Text('Error: ${snapshot.error}'),
-                              );
-                            }
-
-                            final List<Map<String, dynamic>>? books =
-                                snapshot.data;
-                            if (books == null || books.isEmpty) {
-                              return const Center(
-                                child: Text('Tidak ada buku yang tersedia'),
-                              );
-                            }
-
-                            return SizedBox(
-                              height: 320,
-                              child: GridView.builder(
-                                physics: const NeverScrollableScrollPhysics(),
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 16.0,
-                                ),
-                                itemCount: books.length,
-                                itemBuilder: (BuildContext context, int index) {
-                                  final book = books[index];
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              BookDetailScreen(
-                                            title: book['title'],
-                                            author: book['author'],
-                                            rating: book['rating'],
-                                            imageUrl: book['imageUrl'],
-                                            desc: book['description'],
-                                            id: book['id'],
-                                            url : book['url_book']
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    child: PopularBook(
-                                      title: book['title'],
-                                      author: book['author'],
-                                      rating: book['rating'],
-                                      imageUrl: book['imageUrl'],
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                        ),
+                        const PopularBook()
                       ],
                     ),
                   ),
