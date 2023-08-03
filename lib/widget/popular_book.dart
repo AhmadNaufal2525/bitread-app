@@ -1,81 +1,115 @@
+import 'package:bitread_app/provider/books_provider.dart';
+import 'package:bitread_app/screen/book_detail_screen.dart';
+import 'package:bitread_app/screen/more_popular_book.dart';
+import 'package:bitread_app/widget/grid_card_book.dart';
+import 'package:bitread_app/widget/grid_card_shimmer.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class PopularBook extends StatelessWidget {
-  final String title;
-  final String author;
-  final double rating;
-  final String? imageUrl;
-
-  const PopularBook({
-    super.key,
-    required this.title,
-    required this.author,
-    required this.rating,
-    this.imageUrl,
-  });
+  const PopularBook({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(right: 10.0),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: imageUrl != null && imageUrl!.isNotEmpty
-                ? Image.network(
-                    imageUrl!,
-                    height: 100,
-                    fit: BoxFit.cover,
-                  )
-                : Image.asset(
-                    'assets/book_images.png',
-                    height: 100,
-                    fit: BoxFit.cover,
-                  ),
-          ),
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              title.isNotEmpty
-                  ? '${title.substring(0, 10)}...'
-                  : 'Title',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 12.0,
-              ),
+            const Text(
+              'Buku Terpopuler',
+              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 14),
             ),
-            const SizedBox(height: 8.0),
-            Text(
-              author.isNotEmpty
-                  ? '${author.substring(0, 9)}...'
-                  : 'Author',
-              style: const TextStyle(
-                fontSize: 12.0,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            Row(
-              children: [
-                const Icon(
-                  Icons.star,
-                  color: Colors.orange,
-                  size: 12.0,
-                ),
-                const SizedBox(width: 4.0),
-                Text(
-                  rating.toString(),
-                  style: const TextStyle(
-                    fontSize: 12.0,
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const PopularBookScreen(),
                   ),
-                ),
-              ],
+                );
+              },
+              child: const Text(
+                'Lihat Semua',
+                style: TextStyle(fontSize: 14, color: Colors.black),
+              ),
             ),
           ],
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        StreamBuilder<List<Map<String, dynamic>>>(
+          stream: Provider.of<BooksProvider>(context).fetchBooks(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return SizedBox(
+                height: 320,
+                child: GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16.0,
+                  ),
+                  itemCount: 4,
+                  itemBuilder: (BuildContext context, int index) {
+                    return const GridCardBookShimmer();
+                  },
+                ),
+              );
+            }
+
+            if (snapshot.hasError) {
+              return Center(
+                child: Text('Error: ${snapshot.error}'),
+              );
+            }
+
+            final List<Map<String, dynamic>>? books = snapshot.data;
+            if (books == null || books.isEmpty) {
+              return const Center(
+                child: Text('Tidak ada buku yang tersedia'),
+              );
+            }
+
+            return SizedBox(
+              height: 320,
+              child: GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16.0,
+                ),
+                itemCount: books.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final book = books[index];
+                  return InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BookDetailScreen(
+                              title: book['title'],
+                              author: book['author'],
+                              rating: book['rating'],
+                              imageUrl: book['imageUrl'],
+                              desc: book['description'],
+                              id: book['id'],
+                              url: book['url_book']),
+                        ),
+                      );
+                    },
+                    child: GridCardBook(
+                      title: book['title'],
+                      author: book['author'],
+                      rating: book['rating'],
+                      imageUrl: book['imageUrl'],
+                    ),
+                  );
+                },
+              ),
+            );
+          },
         ),
       ],
     );
