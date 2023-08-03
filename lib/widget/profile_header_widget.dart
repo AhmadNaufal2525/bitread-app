@@ -11,28 +11,6 @@ class ProfileHeader extends StatefulWidget {
 }
 
 class _ProfileHeaderState extends State<ProfileHeader> {
-  int postCount = 0;
-  @override
-  void initState() {
-    super.initState();
-    countUserPosts();
-  }
-
-  Future<void> countUserPosts() async {
-    User? user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      QuerySnapshot snapshot = await FirebaseFirestore.instance
-          .collection('Post Blog')
-          .where('userId', isEqualTo: user.uid)
-          .get();
-      setState(
-        () {
-          postCount = snapshot.size;
-        },
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -87,23 +65,31 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             final email = userData?['email'] ?? '';
                             final image = userData?['image'] ?? '';
 
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => EditProfile(
-                                  username: username,
-                                  email: email,
-                                  image: image,
-                                  id: user.uid,
-                                ),
-                              ),
+                            setState(
+                              () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EditProfile(
+                                      username: username,
+                                      email: email,
+                                      image: image,
+                                      id: user.uid,
+                                    ),
+                                  ),
+                                );
+                              },
                             );
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('User data does not exist.'),
-                                backgroundColor: Colors.red,
-                              ),
+                            setState(
+                              () {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('User data does not exist.'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              },
                             );
                           }
                         } catch (error) {
@@ -165,34 +151,6 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                     ),
                   );
                 },
-              ),
-              const SizedBox(height: 15.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    children: [
-                      Text(
-                        postCount.toString(),
-                        style: const TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 15.0),
-                      const Text('Post')
-                    ],
-                  ),
-                  const Column(
-                    children: [
-                      Text(
-                        '0',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(height: 15.0),
-                      Text('Liked Post')
-                    ],
-                  ),
-                ],
               ),
               const SizedBox(height: 20.0),
             ],
