@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:bitread_app/screen/login_screen.dart';
 import 'package:bitread_app/widget/custom_button.dart';
 import 'package:bitread_app/widget/custom_text_field.dart';
@@ -54,19 +55,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
         {'id': id, 'username': username, 'email': email, 'image': ''},
       );
 
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => const LoginScreen(),
-        ),
-        (route) => false,
-      );
+      setState(
+        () {
+          FocusScope.of(context).unfocus();
+          Navigator.pop(context);
+          Fluttertoast.showToast(
+            msg: "Daftar Akun Berhasil!",
+            gravity: ToastGravity.TOP,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+          );
 
-      Fluttertoast.showToast(
-        msg: "Daftar Akun Berhasil!",
-        gravity: ToastGravity.TOP,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
+          showModalBottomSheet(
+            context: context,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(25),
+              ),
+            ),
+            isScrollControlled: true,
+            builder: (context) {
+              return const FractionallySizedBox(
+                heightFactor: 0.862,
+                child: LoginScreen(),
+              );
+            },
+          );
+        },
       );
     } on FirebaseAuthException catch (error) {
       if (error.code == 'email-already-in-use') {
@@ -137,11 +152,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
     if (isLoggedIn) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (BuildContext context) => const BottomNav()),
-        (route) => false,
-      );
+      setState(() {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => const BottomNav()),
+          (route) => false,
+        );
+      });
     }
   }
 
@@ -167,11 +185,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'Register',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
+                                FadeInUp(
+                                  child: const Text(
+                                    'Register',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
                                 ),
                                 IconButton(
                                   onPressed: () {
@@ -186,200 +206,220 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             const SizedBox(
                               height: 8,
                             ),
-                            const Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                'Silahkan isi kelengkapan akunmu di bawah ini',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 14),
+                            FadeInUp(
+                              child: const Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'Silahkan isi kelengkapan akunmu di bawah ini',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14),
+                                ),
                               ),
                             ),
                             const SizedBox(
                               height: 18,
                             ),
-                            CustomTextField(
-                              icon: Icons.person,
-                              hintText: 'Username',
-                              onChanged: (value) {
-                                username = value.trim();
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Username Tidak Boleh Kosong!';
-                                } else if (value.length < 6) {
-                                  return 'Username harus terdiri dari 6 karakter!';
-                                }
-                                return null;
-                              },
+                            FadeInUp(
+                              child: CustomTextField(
+                                icon: Icons.person_2_rounded,
+                                hintText: 'Username',
+                                onChanged: (value) {
+                                  username = value.trim();
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Username Tidak Boleh Kosong!';
+                                  } else if (value.length < 6) {
+                                    return 'Username harus terdiri dari 6 karakter!';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
                             const SizedBox(
                               height: 20,
                             ),
-                            CustomTextField(
-                              icon: Icons.email,
-                              hintText: 'Email',
-                              onChanged: (value) {
-                                email = value.trim();
-                              },
-                              validator: (value) {
-                                final emailRegex = RegExp(
-                                    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-                                if (value == null || value.isEmpty) {
-                                  return 'Email Tidak Boleh Kosong!';
-                                } else if (!emailRegex.hasMatch(value)) {
-                                  return 'Masukkan Alamat Email Dengan Benar!';
-                                }
-                                return null;
-                              },
+                            FadeInUp(
+                              child: CustomTextField(
+                                icon: Icons.email_rounded,
+                                hintText: 'Email',
+                                onChanged: (value) {
+                                  email = value.trim();
+                                },
+                                validator: (value) {
+                                  final emailRegex = RegExp(
+                                      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                                  if (value == null || value.isEmpty) {
+                                    return 'Email Tidak Boleh Kosong!';
+                                  } else if (!emailRegex.hasMatch(value)) {
+                                    return 'Masukkan Alamat Email Dengan Benar!';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
                             const SizedBox(
                               height: 20,
                             ),
-                            PasswordTextField(
-                              hintText: 'Password',
-                              icon: Icons.lock,
-                              onChanged: (value) {
-                                password = value.trim();
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Password Tidak Boleh Kosong!';
-                                } else if (value.length < 6) {
-                                  return 'Password harus terdiri dari 6 karakter atau lebih';
-                                }
-                                return null;
-                              },
+                            FadeInUp(
+                              child: PasswordTextField(
+                                hintText: 'Password',
+                                icon: Icons.lock,
+                                onChanged: (value) {
+                                  password = value.trim();
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Password Tidak Boleh Kosong!';
+                                  } else if (value.length < 6) {
+                                    return 'Password harus terdiri dari 6 karakter atau lebih';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
                             const SizedBox(
                               height: 20,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(5),
-                              child: RichText(
-                                textAlign: TextAlign.justify,
-                                text: TextSpan(
-                                  text:
-                                      'Dengan mendaftarkan akun, anda telah menyetujui untuk menerima ',
-                                  style: TextStyle(
-                                      color: Colors.black,
-                                      fontFamily:
-                                          GoogleFonts.poppins().fontFamily,
-                                      fontSize: 14),
-                                  children: [
-                                    TextSpan(
-                                      text: 'Privacy Policy Bitread',
-                                      style: TextStyle(
-                                        color: Colors.blue,
+                            FadeInUp(
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: RichText(
+                                  textAlign: TextAlign.justify,
+                                  text: TextSpan(
+                                    text:
+                                        'Dengan mendaftarkan akun, anda telah menyetujui untuk menerima ',
+                                    style: TextStyle(
+                                        color: Colors.black,
                                         fontFamily:
                                             GoogleFonts.poppins().fontFamily,
-                                        fontSize: 14,
+                                        fontSize: 14),
+                                    children: [
+                                      TextSpan(
+                                        text: 'Privacy Policy Bitread',
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                          fontFamily:
+                                              GoogleFonts.poppins().fontFamily,
+                                          fontSize: 14,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                             const SizedBox(
                               height: 16,
                             ),
-                            CustomButton(
-                              color: const Color(0xffFE0002),
-                              text: 'Daftar',
-                              onPressed: () {
-                                if (formKey.currentState!.validate()) {
-                                  registerUser(
-                                      context, username, email, password);
-                                }
-                              },
+                            FadeInUp(
+                              child: CustomButton(
+                                color: const Color(0xffFE0002),
+                                text: 'Daftar',
+                                onPressed: () {
+                                  if (formKey.currentState!.validate()) {
+                                    registerUser(
+                                        context, username, email, password);
+                                  }
+                                },
+                              ),
                             ),
                             const SizedBox(
                               height: 16,
                             ),
-                            Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 10.0, right: 20.0),
-                                    child: const Divider(
-                                      color: Colors.grey,
-                                      height: 36,
-                                    ),
-                                  ),
-                                ),
-                                const Text(
-                                  "atau",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 20.0, right: 10.0),
-                                    child: const Divider(
-                                      color: Colors.grey,
-                                      height: 36,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 16,
-                            ),
-                            GoogleButton(
-                              press: () {
-                                signInWithGoogle().then(
-                                  (userCredential) {
-                                    if (userCredential != null) {
-                                      Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              const BottomNav(),
-                                        ),
-                                        (route) => false,
-                                      );
-                                    } else {
-                                      Navigator.pop(context);
-                                    }
-                                  },
-                                );
-                              },
-                              textColor: const Color.fromARGB(255, 12, 12, 12),
-                              color: const Color(0xffFFFFFF),
-                              text: 'Sign In with Google',
-                            ),
-                            const SizedBox(
-                              height: 16,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                const Text("Sudah punya akun?"),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    showModalBottomSheet(
-                                      context: context,
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(25),
-                                        ),
+                            FadeInUp(
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 10.0, right: 20.0),
+                                      child: const Divider(
+                                        color: Colors.grey,
+                                        height: 36,
                                       ),
-                                      isScrollControlled: true,
-                                      builder: (context) {
-                                        return const FractionallySizedBox(
-                                          heightFactor: 0.862,
-                                          child: LoginScreen(),
+                                    ),
+                                  ),
+                                  const Text(
+                                    "atau",
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 20.0, right: 10.0),
+                                      child: const Divider(
+                                        color: Colors.grey,
+                                        height: 36,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            FadeInUp(
+                              child: GoogleButton(
+                                press: () {
+                                  signInWithGoogle().then(
+                                    (userCredential) {
+                                      if (userCredential != null) {
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                const BottomNav(),
+                                          ),
+                                          (route) => false,
                                         );
-                                      },
-                                    );
-                                  },
-                                  child: const Text("Masuk disini"),
-                                ),
-                              ],
+                                      } else {
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                  );
+                                },
+                                textColor:
+                                    const Color.fromARGB(255, 12, 12, 12),
+                                color: const Color(0xffFFFFFF),
+                                text: 'Sign In with Google',
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            FadeInUp(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  const Text("Sudah punya akun?"),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      showModalBottomSheet(
+                                        context: context,
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(25),
+                                          ),
+                                        ),
+                                        isScrollControlled: true,
+                                        builder: (context) {
+                                          return const FractionallySizedBox(
+                                            heightFactor: 0.862,
+                                            child: LoginScreen(),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: const Text("Masuk disini"),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
