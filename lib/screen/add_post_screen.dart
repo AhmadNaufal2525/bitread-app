@@ -25,27 +25,39 @@ class AddPostScreenState extends State<AddPostScreen> {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       String? userId = user?.uid;
-      String? username = user?.displayName;
+      DocumentSnapshot userSnapshot =
+          await FirebaseFirestore.instance.collection('User').doc(userId).get();
+
+      if (!userSnapshot.exists) {
+        throw Exception('Pengguna tidak ditemukan');
+      }
+
+      String? displayName = userSnapshot.get('username');
+
       QuerySnapshot existingPosts = await FirebaseFirestore.instance
           .collection('Post Blog')
           .where('judul', isEqualTo: judul)
           .get();
       if (existingPosts.docs.isNotEmpty) {
-        showDialog(
-          context: context,
-          builder: (context) => const FailedDialog(
-            message: 'Postingan dengan judul ini sudah ada!',
-          ),
+        setState(
+          () {
+            showDialog(
+              context: context,
+              builder: (context) => const FailedDialog(
+                message: 'Postingan dengan judul ini sudah ada!',
+              ),
+            );
+          },
         );
-        return;
       }
       final newPost =
           await FirebaseFirestore.instance.collection('Post Blog').add({
         'userId': userId,
         'judul': judul,
         'isiBlog': isiBlog,
-        'author': username,
-        'imageURL': '',
+        'author': displayName,
+        'image_filename': '',
+        'imageURL': selectedImagePath,
         'timestamp': FieldValue.serverTimestamp(),
       });
       final String id = newPost.id;
@@ -57,19 +69,25 @@ class AddPostScreenState extends State<AddPostScreen> {
       await FirebaseFirestore.instance.collection('Post Blog').doc(id).update({
         'id': id,
         'imageURL': image,
+        'image_filename': '$id.jpg',
       });
-      FocusScope.of(context).unfocus();
-      showDialog(
-        context: context,
-        builder: (context) => const SuccessDialog(
-          message: 'Postingan Blog Mu Berhasil di Upload!',
-        ),
+
+      setState(
+        () {
+          FocusScope.of(context).unfocus();
+          showDialog(
+            context: context,
+            builder: (context) => const SuccessDialog(
+              message: 'Postingan Blog Mu Berhasil di Upload!',
+            ),
+          );
+        },
       );
     } catch (error) {
       showDialog(
         context: context,
         builder: (context) =>
-            FailedDialog(message: 'Terjadi kesalahan: $error'),
+            const FailedDialog(message: 'Terjadi kesalahan, Coba lagi nanti'),
       );
     }
   }
@@ -79,6 +97,7 @@ class AddPostScreenState extends State<AddPostScreen> {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
     double screenWidth = mediaQueryData.size.width;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         toolbarHeight: 80,
         backgroundColor: Colors.white,
@@ -86,12 +105,6 @@ class AddPostScreenState extends State<AddPostScreen> {
         title: const Text(
           'Posting Blog',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.clear),
-          onPressed: () {
-            Navigator.pop(context);
-          },
         ),
         iconTheme: const IconThemeData(color: Colors.black),
         shadowColor: Colors.transparent,
@@ -147,14 +160,14 @@ class AddPostScreenState extends State<AddPostScreen> {
                   maxLength: 2500,
                   maxLines: 10,
                   decoration: const InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Isi Post'),
+                      border: OutlineInputBorder(), labelText: 'Isi Blog'),
                   onChanged: (value) {
                     isiBlog = value.trim();
                   },
                   validator: (value) {
                     {
                       if (value == null || value.isEmpty) {
-                        return 'Isi post Anda!';
+                        return 'Isi blog Anda!';
                       }
                       return null;
                     }
@@ -167,7 +180,8 @@ class AddPostScreenState extends State<AddPostScreen> {
                     if (selectedImagePath.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Upload gambar terlebih dahulu!'),
+                          backgroundColor: Color(0xffFE0002),
+                          content: Text('Pilih gambar terlebih dahulu!'),
                         ),
                       );
                       return;
@@ -177,6 +191,7 @@ class AddPostScreenState extends State<AddPostScreen> {
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
+                          backgroundColor: Color(0xffFE0002),
                           content: Text('Isi field yang masih kosong!'),
                         ),
                       );
