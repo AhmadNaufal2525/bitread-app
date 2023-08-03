@@ -1,3 +1,4 @@
+import 'package:bitread_app/screen/event_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -38,17 +39,23 @@ class CarouselState extends State<Carousel> {
             },
           ),
           items: images.map((image) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                  child: Image.asset(
-                    image,
-                    fit: BoxFit.fitWidth,
+            return InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const EventScreen(),
                   ),
                 );
               },
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                child: Image.asset(
+                  image,
+                  fit: BoxFit.fitWidth,
+                ),
+              ),
             );
           }).toList(),
         ),
