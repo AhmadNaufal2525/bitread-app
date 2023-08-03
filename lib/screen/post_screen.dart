@@ -37,20 +37,6 @@ class _PostScreenState extends State<PostScreen> {
             ),
           ),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AddPostScreen(),
-                ),
-              );
-            },
-            icon: const Icon(Icons.post_add_outlined),
-            color: const Color(0xffFE0002),
-          ),
-        ],
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -62,6 +48,7 @@ class _PostScreenState extends State<PostScreen> {
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('Post Blog')
+                    .orderBy('timestamp', descending: false)
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -77,7 +64,8 @@ class _PostScreenState extends State<PostScreen> {
                   final docs = snapshot.data!.docs;
                   if (docs.isEmpty) {
                     return const Center(
-                      child: Text('Post tidak ditemukan'),
+                      child: Text(
+                          'Belum ada postingan blog, Jadilah yang pertama!'),
                     );
                   }
                   return ListView.separated(
@@ -96,6 +84,8 @@ class _PostScreenState extends State<PostScreen> {
                                 description: post['isiBlog'],
                                 imageUrl: post['imageURL'],
                                 author: post['author'],
+                                authorUserId: post['userId'],
+                                id: post['id'],
                               ),
                             ),
                           );
@@ -114,6 +104,21 @@ class _PostScreenState extends State<PostScreen> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddPostScreen(),
+            ),
+          );
+        },
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        backgroundColor: const Color(0xffFE0002),
+        child: const Icon(Icons.post_add_outlined),
       ),
     );
   }
