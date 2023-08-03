@@ -2,6 +2,7 @@ import 'package:bitread_app/screen/home_screen.dart';
 import 'package:bitread_app/screen/post_screen.dart';
 import 'package:bitread_app/screen/profile_screen.dart';
 import 'package:bitread_app/screen/search_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
@@ -105,7 +106,7 @@ class _BottomNavState extends State<BottomNav> {
               return CircleAvatar(
                 radius: 20,
                 backgroundColor: Colors.grey,
-                backgroundImage: NetworkImage(imageURL),
+                backgroundImage: CachedNetworkImageProvider(imageURL),
               );
             }
           }
