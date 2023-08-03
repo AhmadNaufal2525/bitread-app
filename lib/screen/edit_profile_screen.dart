@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:bitread_app/widget/custom_button.dart';
+import 'package:bitread_app/widget/custom_text_field.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -49,13 +50,29 @@ class EditProfileState extends State<EditProfile> {
         dataToUpdate['image'] = image;
       }
       await docRef.update(dataToUpdate);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Data berhasil diperbarui')),
+      setState(
+        () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Data berhasil diperbarui',
+                style: TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pop(context);
+        },
       );
-      Navigator.pop(context);
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Terjadi kesalahan: $error')),
+        const SnackBar(
+          content: Text(
+            'Terjadi kesalahan, coba lagi nanti',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
@@ -73,6 +90,7 @@ class EditProfileState extends State<EditProfile> {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
     double screenWidth = mediaQueryData.size.width;
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           toolbarHeight: 60,
           backgroundColor: Colors.white,
@@ -80,12 +98,6 @@ class EditProfileState extends State<EditProfile> {
           title: const Text(
             'Edit Profile',
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
-          ),
-          leading: IconButton(
-            icon: const Icon(Icons.clear),
-            onPressed: () {
-              Navigator.pop(context);
-            },
           ),
           iconTheme: const IconThemeData(color: Colors.black),
           shadowColor: Colors.transparent,
@@ -126,11 +138,11 @@ class EditProfileState extends State<EditProfile> {
                     color: const Color(0xffFE0002),
                   ),
                   const SizedBox(height: 30),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Email'),
+                  CustomTextField(
+                    isReadOnly: true,
                     initialValue: email,
-                    readOnly: true,
+                    icon: Icons.email_rounded,
+                    hintText: "Email",
                     onChanged: (value) {
                       email = value.trim();
                     },
@@ -146,16 +158,16 @@ class EditProfileState extends State<EditProfile> {
                     },
                   ),
                   const SizedBox(height: 30),
-                  TextFormField(
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(), labelText: 'Username'),
+                  CustomTextField(
                     initialValue: username,
+                    icon: Icons.person_2_rounded,
+                    hintText: 'Username',
                     onChanged: (value) {
                       username = value.trim();
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Username tidak boleh kosong!';
+                        return 'Username Tidak Boleh Kosong!';
                       } else if (value.length < 6) {
                         return 'Username harus terdiri dari 6 karakter!';
                       }
