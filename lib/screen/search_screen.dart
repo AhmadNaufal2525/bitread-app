@@ -1,62 +1,19 @@
+import 'package:bitread_app/provider/books_provider.dart';
 import 'package:bitread_app/screen/book_detail_screen.dart';
 import 'package:bitread_app/screen/more_new_book.dart';
 import 'package:bitread_app/screen/more_rating_book.dart';
 import 'package:bitread_app/screen/search_result_screen.dart';
 import 'package:bitread_app/widget/card_book.dart';
+import 'package:bitread_app/widget/card_book_shimmer.dart';
 import 'package:bitread_app/widget/searchbox.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SearchSreen extends StatefulWidget {
   const SearchSreen({super.key});
 
   @override
   State<SearchSreen> createState() => _SearchSreenState();
-}
-
-Stream<List<Map<String, dynamic>>> fetchBooks() {
-  return FirebaseFirestore.instance.collection('Books').snapshots().map(
-    (QuerySnapshot snapshot) {
-      return snapshot.docs.map(
-        (DocumentSnapshot doc) {
-          return {
-            'id': doc.id,
-            'title': doc['title'],
-            'imageUrl': doc['imageUrl'],
-            'ebook': doc['ebook'],
-            'author': doc['author'],
-            'rating': doc['rating'],
-            'description': doc['description'],
-          };
-        },
-      ).toList();
-    },
-  );
-}
-
-Stream<List<Map<String, dynamic>>> searchBooks(String searchQuery) {
-  return FirebaseFirestore.instance.collection('Books').snapshots().map(
-    (QuerySnapshot snapshot) {
-      return snapshot.docs
-          .where((doc) => doc['title']
-              .toString()
-              .toLowerCase()
-              .contains(searchQuery.toLowerCase()))
-          .map(
-        (DocumentSnapshot doc) {
-          return {
-            'id': doc.id,
-            'title': doc['title'],
-            'imageUrl': doc['imageUrl'],
-            'ebook': doc['ebook'],
-            'author': doc['author'],
-            'rating': doc['rating'],
-            'description': doc['description'],
-          };
-        },
-      ).toList();
-    },
-  );
 }
 
 List<String> searchResults = [];
@@ -175,11 +132,21 @@ class _SearchSreenState extends State<SearchSreen> {
                 ),
                 const SizedBox(height: 20),
                 StreamBuilder<List<Map<String, dynamic>>>(
-                  stream: fetchBooks(),
+                  stream: Provider.of<BooksProvider>(context).fetchBooks(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                      return SizedBox(
+                        height: 260,
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(width: 20),
+                          itemCount: 5,
+                          itemBuilder: (BuildContext context, int index) {
+                            return const CardBookShimmer();
+                          },
+                        ),
                       );
                     }
 
@@ -256,11 +223,21 @@ class _SearchSreenState extends State<SearchSreen> {
                 ),
                 const SizedBox(height: 20),
                 StreamBuilder<List<Map<String, dynamic>>>(
-                  stream: fetchBooks(),
+                  stream: Provider.of<BooksProvider>(context).fetchBooks(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
+                      return SizedBox(
+                        height: 260,
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(width: 20),
+                          itemCount: 5,
+                          itemBuilder: (BuildContext context, int index) {
+                            return const CardBookShimmer();
+                          },
+                        ),
                       );
                     }
 
