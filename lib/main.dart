@@ -1,7 +1,9 @@
+import 'package:bitread_app/provider/books_provider.dart';
 import 'package:bitread_app/screen/splashscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,15 +13,19 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Bitread',
-      theme: ThemeData(
-        fontFamily: GoogleFonts.poppins().fontFamily,
+    return ChangeNotifierProvider(
+      create: (_) => BooksProvider(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Bitread',
+        theme: ThemeData(
+          fontFamily: GoogleFonts.poppins().fontFamily,
+        ),
+        home: const SplashScreen(),
       ),
-      home: const SplashScreen(),
     );
   }
 }
