@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:bitread_app/screen/forgot_password_screen.dart';
 import 'package:bitread_app/screen/register_screen.dart';
 import 'package:bitread_app/widget/bottom_navigation.dart';
@@ -39,12 +40,16 @@ class _LoginScreenState extends State<LoginScreen> {
         isLoading = true;
       });
       await auth.signInWithEmailAndPassword(email: email, password: password);
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => const BottomNav(),
-        ),
-        (route) => false,
+      setState(
+        () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => const BottomNav(),
+            ),
+            (route) => false,
+          );
+        },
       );
       await setLoggedIn(true);
     } on FirebaseAuthException catch (error) {
@@ -105,10 +110,15 @@ class _LoginScreenState extends State<LoginScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
     if (isLoggedIn) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (BuildContext context) => const BottomNav()),
-        (route) => false,
+      setState(
+        () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => const BottomNav()),
+            (route) => false,
+          );
+        },
       );
     }
   }
@@ -135,11 +145,13 @@ class _LoginScreenState extends State<LoginScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'Login',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
+                                FadeInUp(
+                                  child: const Text(
+                                    'Login',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
                                 ),
                                 IconButton(
                                   onPressed: () {
@@ -154,157 +166,66 @@ class _LoginScreenState extends State<LoginScreen> {
                             const SizedBox(
                               height: 10,
                             ),
-                            const Align(
-                              alignment: Alignment.topLeft,
-                              child: Text(
-                                'Masukkan email dan kata sandi akunmu disini',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 14),
+                            FadeInUp(
+                              child: const Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  'Masukkan email dan kata sandi akunmu disini',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 14),
+                                ),
                               ),
                             ),
                             SizedBox(
                               height: MediaQuery.of(context).size.height * 0.05,
                             ),
-                            CustomTextField(
-                              icon: Icons.email,
-                              hintText: 'Email',
-                              onChanged: (value) {
-                                email = value.trim();
-                              },
-                              validator: (value) {
-                                final emailRegex = RegExp(
-                                    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-                                if (value == null || value.isEmpty) {
-                                  return 'Email Tidak Boleh Kosong!';
-                                } else if (!emailRegex.hasMatch(value)) {
-                                  return 'Masukkan Alamat Email Dengan Benar!';
-                                }
-                                return null;
-                              },
+                            FadeInUp(
+                              child: CustomTextField(
+                                icon: Icons.email_rounded,
+                                hintText: 'Email',
+                                onChanged: (value) {
+                                  email = value.trim();
+                                },
+                                validator: (value) {
+                                  final emailRegex = RegExp(
+                                      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                                  if (value == null || value.isEmpty) {
+                                    return 'Email Tidak Boleh Kosong!';
+                                  } else if (!emailRegex.hasMatch(value)) {
+                                    return 'Masukkan Alamat Email Dengan Benar!';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
                             SizedBox(
                               height: MediaQuery.of(context).size.height * 0.04,
                             ),
-                            PasswordTextField(
-                              hintText: 'Password',
-                              icon: Icons.lock,
-                              onChanged: (value) {
-                                password = value.trim();
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Masukkan Password Anda';
-                                } else if (value.length < 6) {
-                                  return 'Password harus terdiri dari 6 karakter!';
-                                }
-                                return null;
-                              },
+                            FadeInUp(
+                              child: PasswordTextField(
+                                hintText: 'Password',
+                                icon: Icons.lock,
+                                onChanged: (value) {
+                                  password = value.trim();
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Masukkan Password Anda';
+                                  } else if (value.length < 6) {
+                                    return 'Password harus terdiri dari 6 karakter!';
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
                             const SizedBox(
                               height: 30,
                             ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  showModalBottomSheet(
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(25),
-                                      ),
-                                    ),
-                                    context: context,
-                                    builder: (context) =>
-                                        const ForgotPassScreen(),
-                                  );
-                                },
-                                child: const Text(
-                                  'Lupa Password?',
-                                  style: TextStyle(
-                                      color: Colors.black, fontSize: 14),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            CustomButton(
-                              color: const Color(0xffFE0002),
-                              text: 'Masuk',
-                              onPressed: () {
-                                if (formKey.currentState!.validate()) {
-                                  signin(context, email, password);
-                                }
-                              },
-                            ),
-                            const SizedBox(
-                              height: 16,
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Expanded(
-                                  child: Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 10.0, right: 20.0),
-                                    child: const Divider(
-                                      color: Colors.grey,
-                                      height: 36,
-                                    ),
-                                  ),
-                                ),
-                                const Text(
-                                  "atau",
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Container(
-                                    margin: const EdgeInsets.only(
-                                        left: 20.0, right: 10.0),
-                                    child: const Divider(
-                                      color: Colors.grey,
-                                      height: 36,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 16,
-                            ),
-                            GoogleButton(
-                              press: () {
-                                signInWithGoogle().then(
-                                  (userCredential) {
-                                    if (userCredential != null) {
-                                      Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (BuildContext context) =>
-                                              const BottomNav(),
-                                        ),
-                                        (route) => false,
-                                      );
-                                    } else {
-                                      Navigator.pop(context);
-                                    }
-                                  },
-                                );
-                              },
-                              textColor: const Color.fromARGB(255, 12, 12, 12),
-                              color: const Color(0xffFFFFFF),
-                              text: 'Sign In with Google',
-                            ),
-                            const SizedBox(
-                              height: 26,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                const Text("Tidak punya akun?"),
-                                TextButton(
+                            FadeInUp(
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: TextButton(
                                   onPressed: () {
                                     Navigator.pop(context);
                                     showModalBottomSheet(
@@ -313,19 +234,128 @@ class _LoginScreenState extends State<LoginScreen> {
                                           top: Radius.circular(25),
                                         ),
                                       ),
-                                      isScrollControlled: true,
                                       context: context,
-                                      builder: (context) {
-                                        return const FractionallySizedBox(
-                                          heightFactor: 0.862,
-                                          child: RegisterScreen(),
-                                        );
-                                      },
+                                      builder: (context) =>
+                                          const ForgotPassScreen(),
                                     );
                                   },
-                                  child: const Text("Daftar disini"),
+                                  child: const Text(
+                                    'Lupa Password?',
+                                    style: TextStyle(
+                                        color: Colors.black, fontSize: 14),
+                                  ),
                                 ),
-                              ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            FadeInUp(
+                              child: CustomButton(
+                                color: const Color(0xffFE0002),
+                                text: 'Masuk',
+                                onPressed: () {
+                                  if (formKey.currentState!.validate()) {
+                                    signin(context, email, password);
+                                  }
+                                },
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            FadeInUp(
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 10.0, right: 20.0),
+                                      child: const Divider(
+                                        color: Colors.grey,
+                                        height: 36,
+                                      ),
+                                    ),
+                                  ),
+                                  const Text(
+                                    "atau",
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 20.0, right: 10.0),
+                                      child: const Divider(
+                                        color: Colors.grey,
+                                        height: 36,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 16,
+                            ),
+                            FadeInUp(
+                              child: GoogleButton(
+                                press: () {
+                                  signInWithGoogle().then(
+                                    (userCredential) {
+                                      if (userCredential != null) {
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                const BottomNav(),
+                                          ),
+                                          (route) => false,
+                                        );
+                                      } else {
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                  );
+                                },
+                                textColor:
+                                    const Color.fromARGB(255, 12, 12, 12),
+                                color: const Color(0xffFFFFFF),
+                                text: 'Sign In with Google',
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 26,
+                            ),
+                            FadeInUp(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  const Text("Tidak punya akun?"),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      showModalBottomSheet(
+                                        shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.vertical(
+                                            top: Radius.circular(25),
+                                          ),
+                                        ),
+                                        isScrollControlled: true,
+                                        context: context,
+                                        builder: (context) {
+                                          return const FractionallySizedBox(
+                                            heightFactor: 0.862,
+                                            child: RegisterScreen(),
+                                          );
+                                        },
+                                      );
+                                    },
+                                    child: const Text("Daftar disini"),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
