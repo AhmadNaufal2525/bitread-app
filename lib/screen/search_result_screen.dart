@@ -1,6 +1,7 @@
+import 'package:bitread_app/provider/books_provider.dart';
 import 'package:bitread_app/screen/book_detail_screen.dart';
-import 'package:bitread_app/screen/search_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SearchResultScreen extends StatelessWidget {
   final String searchQuery;
@@ -37,7 +38,7 @@ class SearchResultScreen extends StatelessWidget {
         SliverPadding(
           padding: const EdgeInsets.all(8),
           sliver: StreamBuilder<List<Map<String, dynamic>>>(
-            stream: searchBooks(searchQuery),
+            stream: Provider.of<BooksProvider>(context).searchBooks(searchQuery),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const SliverFillRemaining(
