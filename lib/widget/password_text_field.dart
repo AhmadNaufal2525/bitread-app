@@ -14,7 +14,8 @@ class PasswordTextField extends StatefulWidget {
     required this.hintText,
     this.validator,
     this.initialValue,
-    this.controller, required this.onChanged,
+    this.controller,
+    required this.onChanged,
   }) : super(key: key);
 
   @override
@@ -35,51 +36,52 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 20.0),
-      decoration: BoxDecoration(
-        border: Border.all(color: const Color.fromARGB(255, 235, 231, 231)),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            widget.icon,
+    return TextFormField(
+      onChanged: widget.onChanged,
+      controller: widget.controller,
+      validator: widget.validator,
+      obscureText: obscureText,
+      decoration: InputDecoration(
+        labelText: widget.hintText,
+        hintText: widget.hintText,
+        labelStyle: const TextStyle(
+          color: Colors.black,
+          fontSize: 14,
+          fontWeight: FontWeight.w400,
+        ),
+        prefixIcon: Icon(
+          widget.icon,
+          color: Colors.black,
+          size: 18,
+        ),
+        suffixIcon: GestureDetector(
+          onTap: () {
+            setState(() {
+              obscureText = !obscureText;
+            });
+          },
+          child: Icon(
+            obscureText ? Icons.visibility : Icons.visibility_off,
             color: Colors.grey,
           ),
-          const Expanded(
-            child: SizedBox(
-              height: 24.0,
-              child: VerticalDivider(color: Colors.grey),
-            ),
-          ),
-          Expanded(
-            flex: 8,
-            child: TextFormField(
-              onChanged: widget.onChanged,
-              controller: widget.controller,
-              validator: widget.validator,
-              obscureText: obscureText,
-              decoration: InputDecoration(
-                suffixIcon: GestureDetector(
-                  onTap: () {
-                    setState(
-                      () {
-                        obscureText = !obscureText;
-                      },
-                    );
-                  },
-                  child: Icon(
-                    obscureText ? Icons.visibility : Icons.visibility_off,
-                    color: Colors.grey,
-                  ),
-                ),
-                hintText: widget.hintText,
-                border: InputBorder.none,
-                hintStyle: const TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-        ],
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.grey, width: 2),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        floatingLabelStyle: const TextStyle(color: Colors.black, fontSize: 18),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.black, width: 1.5),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.red, width: 1.5),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(color: Colors.red, width: 1.5),
+          borderRadius: BorderRadius.circular(10),
+        ),
       ),
     );
   }
