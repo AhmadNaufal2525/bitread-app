@@ -43,7 +43,6 @@ class _ProfilScreenState extends State<ProfilScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 46,
         backgroundColor: Colors.white,
         shadowColor: Colors.transparent,
         centerTitle: true,
@@ -77,6 +76,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
                       delegate: SliverChildListDelegate(
                         [
                           const ProfileHeader(),
+                          const SizedBox(height: 20),
                         ],
                       ),
                     ),

@@ -1,9 +1,9 @@
 import 'package:bitread_app/screen/edit_post_screen.dart';
-import 'package:bitread_app/widget/failed_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:quickalert/quickalert.dart';
 
 class PostDetailScreen extends StatefulWidget {
   final String title;
@@ -28,18 +28,39 @@ class PostDetailScreen extends StatefulWidget {
 }
 
 class _PostDetailScreenState extends State<PostDetailScreen> {
+  bool isLiked = false;
   void deletePost(BuildContext context) async {
     try {
       final storageRef = FirebaseStorage.instance.ref();
       await storageRef.child('post_images').child('${widget.id}.jpg').delete();
       final postCollection = FirebaseFirestore.instance.collection('Post Blog');
       await postCollection.doc(widget.id).delete();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Artikel Berhasil Dihapus! ',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.green,
+        ),
+      );
       Navigator.pop(context);
     } catch (e) {
-      const FailedDialog(
-        message: 'Gagal menghapus blog, coba lagi nanti',
-      );
+      errorAlert();
     }
+  }
+
+  void errorAlert() {
+    QuickAlert.show(
+      context: context,
+      title: 'Gagal',
+      text: 'Gagal menghapus artikel, coba lagi nanti',
+      type: QuickAlertType.error,
+      confirmBtnText: 'OK',
+      onConfirmBtnTap: () {
+        Navigator.of(context).pop();
+      },
+    );
   }
 
   @override
@@ -47,157 +68,196 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     final currentUser = FirebaseAuth.instance.currentUser;
     final isCurrentUserAuthor = currentUser?.uid == widget.authorUserId;
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 80,
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        shadowColor: Colors.transparent,
-        title: const Text(
-          'Blog',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          color: Colors.black,
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        actions: [
-          if (isCurrentUserAuthor)
-            PopupMenuButton<String>(
-              icon: const Icon(
-                Icons.more_vert_rounded,
-                color: Colors.black,
+      backgroundColor: Colors.transparent,
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
-              onSelected: (String value) async {
-                if (value == 'edit') {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditPost(
-                        description: widget.description,
-                        id: widget.id,
-                        image: widget.imageUrl,
-                        title: widget.title,
-                      ),
+              actions: [
+                IconButton(
+                  icon: Icon(
+                    isLiked
+                        ? Icons.favorite_border_rounded
+                        : Icons.favorite_border_rounded,
+                    color: isLiked ? Colors.red : Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      isLiked = !isLiked;
+                    });
+                  },
+                ),
+                if (isCurrentUserAuthor)
+                  PopupMenuButton<String>(
+                    icon: const Icon(
+                      Icons.more_vert_rounded,
+                      color: Colors.white,
                     ),
-                  );
-                } else if (value == 'delete') {
-                  final confirmed = await showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Hapus Blog'),
-                      content: const Text(
-                          'Apakah Anda yakin ingin menghapus blog ini?'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(false),
-                          child: const Text(
-                            'Batal',
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.of(context).pop(true),
-                          child: const Text(
-                            'Hapus',
-                            style: TextStyle(
-                              color: Colors.red,
+                    onSelected: (String value) async {
+                      if (value == 'edit') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditPost(
+                              description: widget.description,
+                              id: widget.id,
+                              image: widget.imageUrl,
+                              title: widget.title,
                             ),
                           ),
+                        );
+                      } else if (value == 'delete') {
+                        final confirmed = await showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Hapus Artikel'),
+                            content: const Text(
+                                'Apakah Anda yakin ingin menghapus artikel ini?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(false),
+                                child: const Text(
+                                  'Batal',
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                child: const Text(
+                                  'Hapus',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                        if (confirmed) {
+                          deletePost(context);
+                        }
+                      }
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        const PopupMenuItem<String>(
+                          value: 'edit',
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.edit_rounded,
+                                color: Colors.blue,
+                              ),
+                              SizedBox(width: 8),
+                              Text('Edit'),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  );
-                  if (confirmed) {
-                    deletePost(context);
-                  }
-                }
-              },
-              itemBuilder: (BuildContext context) {
-                return [
-                  const PopupMenuItem<String>(
-                    value: 'edit',
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.edit_rounded,
-                          color: Colors.blue,
+                        const PopupMenuItem<String>(
+                          value: 'delete',
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.delete_rounded,
+                                color: Colors.red,
+                              ),
+                              SizedBox(width: 8),
+                              Text('Delete'),
+                            ],
+                          ),
                         ),
-                        SizedBox(width: 8),
-                        Text('Edit'),
-                      ],
-                    ),
+                      ];
+                    },
                   ),
-                  const PopupMenuItem<String>(
-                    value: 'delete',
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.delete_rounded,
-                          color: Colors.red,
-                        ),
-                        SizedBox(width: 8),
-                        Text('Delete'),
-                      ],
+              ],
+              expandedHeight: MediaQuery.of(context).size.height * 0.45,
+              flexibleSpace: FlexibleSpaceBar(
+                background: Stack(
+                  children: [
+                    Positioned.fill(
+                      child: Image.network(
+                        widget.imageUrl,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                ];
-              },
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withOpacity(0.7),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'Oleh ${widget.author}',
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-        ],
-      ),
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final maxWidth = constraints.maxWidth;
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Image.network(
-                      widget.imageUrl,
-                      fit: BoxFit.cover,
-                      width: maxWidth,
-                      height: maxWidth * 0.6,
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Container(
+                    padding: const EdgeInsets.all(20.0),
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10.0),
+                        topRight: Radius.circular(10.0),
+                      ),
+                      color: Colors.white,
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          widget.title,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Oleh ${widget.author}',
-                          style: const TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
                           widget.description,
-                          style: const TextStyle(fontSize: 16),
                           textAlign: TextAlign.justify,
+                          style: const TextStyle(fontSize: 16),
                         ),
                       ],
                     ),
                   ),
                 ],
               ),
-            );
-          },
+            ),
+          ],
         ),
       ),
     );

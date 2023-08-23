@@ -1,10 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:bitread_app/widget/custom_button.dart';
 import 'package:bitread_app/widget/custom_text_field.dart';
-import 'package:bitread_app/widget/failed_dialog.dart';
-import 'package:bitread_app/widget/success_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:quickalert/quickalert.dart';
 
 class ForgotPassScreen extends StatefulWidget {
   const ForgotPassScreen({super.key});
@@ -21,21 +20,39 @@ class _ForgotPassScreenState extends State<ForgotPassScreen> {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
       setState(
         () {
-          showDialog(
-            context: context,
-            builder: (context) => const SuccessDialog(
-                message:
-                    'Silahkan cek email anda untuk melakukan perubahan password'),
-          );
+          successAlert();
         },
       );
     } catch (error) {
-      showDialog(
-        context: context,
-        builder: (context) =>
-            const FailedDialog(message: 'Cek Kembali email anda'),
-      );
+      errorAlert();
     }
+  }
+
+  void successAlert() {
+    QuickAlert.show(
+      context: context,
+      title: 'Success',
+      text: "Silahkan cek email anda untuk melakukan perubahan password",
+      type: QuickAlertType.success,
+      confirmBtnText: 'OK',
+      onConfirmBtnTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  void errorAlert() {
+    QuickAlert.show(
+      context: context,
+      title: 'Gagal',
+      text: 'Periksa Kembali Email Anda',
+      type: QuickAlertType.error,
+      confirmBtnText: 'OK',
+      onConfirmBtnTap: () {
+        Navigator.of(context).pop();
+      },
+    );
   }
 
   @override

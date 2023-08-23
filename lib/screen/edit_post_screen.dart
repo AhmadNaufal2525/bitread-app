@@ -54,7 +54,7 @@ class _EditPostState extends State<EditPost> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Blog berhasil diperbarui dengan judul $judul',
+                'Artikel berhasil diperbarui dengan judul $judul',
                 style: const TextStyle(color: Colors.white),
               ),
               backgroundColor: Colors.green,

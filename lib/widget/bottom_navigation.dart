@@ -2,11 +2,10 @@ import 'package:bitread_app/screen/home_screen.dart';
 import 'package:bitread_app/screen/post_screen.dart';
 import 'package:bitread_app/screen/profile_screen.dart';
 import 'package:bitread_app/screen/search_screen.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class BottomNav extends StatefulWidget {
   const BottomNav({super.key});
@@ -31,11 +30,6 @@ class _BottomNavState extends State<BottomNav> {
   void bottomTapped(int index) {
     setState(() {
       selectedIndex = index;
-      pageController.animateToPage(
-        index,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
     });
   }
 
@@ -51,48 +45,57 @@ class _BottomNavState extends State<BottomNav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        controller: pageController,
-        onPageChanged: (index) {
-          pageChanged(index);
-        },
+      body: IndexedStack(
+        index: selectedIndex,
         children: buildPages(),
       ),
-      bottomNavigationBar: CurvedNavigationBar(
-        backgroundColor: Colors.white,
-        color: const Color(0xffFE0002),
-        buttonBackgroundColor: const Color(0xffFE0002),
-        height: 60,
-        animationDuration: const Duration(milliseconds: 300),
-        animationCurve: Curves.easeInOut,
-        index: selectedIndex,
-        onTap: (index) {
-          bottomTapped(index);
-        },
-        items: buildBottomNavBarItems(),
+      bottomNavigationBar: SizedBox(
+        height: 76,
+        child: BottomNavigationBar(
+          unselectedFontSize: 12,
+          selectedFontSize: 12,
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.white,
+          selectedItemColor: const Color(0xffFE0002),
+          unselectedItemColor: Colors.black,
+          showUnselectedLabels: true,
+          currentIndex: selectedIndex,
+          onTap: (index) {
+            bottomTapped(index);
+          },
+          items: buildBottomNavBarItems(),
+        ),
       ),
     );
   }
 
-  List<Widget> buildBottomNavBarItems() {
+  List<BottomNavigationBarItem> buildBottomNavBarItems() {
     return [
-      const Icon(
-        Icons.home_rounded,
-        size: 30,
-        color: Colors.white,
+      const BottomNavigationBarItem(
+        icon: Icon(
+          Icons.home_rounded,
+        ),
+        label: 'Home',
       ),
-      const Icon(
-        Icons.search_rounded,
-        size: 30,
-        color: Colors.white,
+      const BottomNavigationBarItem(
+        icon: Icon(
+          Icons.search_rounded,
+        ),
+        label: 'Search',
       ),
-      const Icon(
-        Icons.newspaper_rounded,
-        size: 30,
-        color: Colors.white,
+      const BottomNavigationBarItem(
+        icon: Icon(
+          Icons.article_rounded,
+        ),
+        label: 'Artikel',
       ),
-      StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+      buildProfileNavigationBarItem(),
+    ];
+  }
+
+  BottomNavigationBarItem buildProfileNavigationBarItem() {
+    return BottomNavigationBarItem(
+      icon: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
             .collection('User')
             .doc(FirebaseAuth.instance.currentUser?.uid)
@@ -104,7 +107,7 @@ class _BottomNavState extends State<BottomNav> {
             String? imageURL = userData?['image'];
             if (imageURL != null && imageURL.isNotEmpty) {
               return CircleAvatar(
-                radius: 20,
+                radius: 16,
                 backgroundColor: Colors.grey,
                 backgroundImage: CachedNetworkImageProvider(imageURL),
               );
@@ -112,11 +115,10 @@ class _BottomNavState extends State<BottomNav> {
           }
           return const Icon(
             Icons.person_2_rounded,
-            size: 30,
-            color: Colors.white,
           );
         },
-      )
-    ];
+      ),
+      label: 'Profile',
+    );
   }
 }

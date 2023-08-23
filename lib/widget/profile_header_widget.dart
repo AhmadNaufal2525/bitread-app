@@ -11,6 +11,7 @@ class ProfileHeader extends StatefulWidget {
 }
 
 class _ProfileHeaderState extends State<ProfileHeader> {
+  int postCount = 0;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -152,7 +153,47 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                   );
                 },
               ),
-              const SizedBox(height: 20.0),
+              const SizedBox(height: 26.0),
+              StreamBuilder<QuerySnapshot>(
+                stream: FirebaseFirestore.instance
+                    .collection('Post Blog')
+                    .where('userId',
+                        isEqualTo: FirebaseAuth.instance.currentUser?.uid)
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasData) {
+                    postCount = snapshot.data!.size;
+                  }
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            postCount.toString(),
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          const SizedBox(height: 15.0),
+                          const Text('Post')
+                        ],
+                      ),
+                      const Column(
+                        children: [
+                          Text(
+                            '0',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(height: 15.0),
+                          Text('Likes')
+                        ],
+                      ),
+                    ],
+                  );
+                },
+              )
             ],
           ),
         ),

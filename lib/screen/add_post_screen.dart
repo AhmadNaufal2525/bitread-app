@@ -1,12 +1,11 @@
 import 'dart:io';
 import 'package:bitread_app/widget/custom_button.dart';
-import 'package:bitread_app/widget/failed_dialog.dart';
-import 'package:bitread_app/widget/success_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:quickalert/quickalert.dart';
 
 class AddPostScreen extends StatefulWidget {
   const AddPostScreen({super.key});
@@ -41,55 +40,88 @@ class AddPostScreenState extends State<AddPostScreen> {
       if (existingPosts.docs.isNotEmpty) {
         setState(
           () {
-            showDialog(
-              context: context,
-              builder: (context) => const FailedDialog(
-                message: 'Postingan dengan judul ini sudah ada!',
-              ),
-            );
+            warningAlert();
+          },
+        );
+      } else {
+        final newPost =
+            await FirebaseFirestore.instance.collection('Post Blog').add({
+          'userId': userId,
+          'judul': judul,
+          'isiBlog': isiBlog,
+          'author': displayName,
+          'image_filename': '',
+          'imageURL': selectedImagePath,
+          'likedPost': 0,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+        final String id = newPost.id;
+        final ref = FirebaseStorage.instance
+            .ref()
+            .child('post_images')
+            .child('$id.jpg');
+        final uploadTask = ref.putFile(File(selectedImagePath));
+        final snapshot = await uploadTask.whenComplete(() => null);
+        final image = await snapshot.ref.getDownloadURL();
+        await FirebaseFirestore.instance
+            .collection('Post Blog')
+            .doc(id)
+            .update({
+          'id': id,
+          'imageURL': image,
+          'image_filename': '$id.jpg',
+        });
+
+        setState(
+          () {
+            FocusScope.of(context).unfocus();
+            successAlert();
           },
         );
       }
-      final newPost =
-          await FirebaseFirestore.instance.collection('Post Blog').add({
-        'userId': userId,
-        'judul': judul,
-        'isiBlog': isiBlog,
-        'author': displayName,
-        'image_filename': '',
-        'imageURL': selectedImagePath,
-        'timestamp': FieldValue.serverTimestamp(),
-      });
-      final String id = newPost.id;
-      final ref =
-          FirebaseStorage.instance.ref().child('post_images').child('$id.jpg');
-      final uploadTask = ref.putFile(File(selectedImagePath));
-      final snapshot = await uploadTask.whenComplete(() => null);
-      final image = await snapshot.ref.getDownloadURL();
-      await FirebaseFirestore.instance.collection('Post Blog').doc(id).update({
-        'id': id,
-        'imageURL': image,
-        'image_filename': '$id.jpg',
-      });
-
-      setState(
-        () {
-          FocusScope.of(context).unfocus();
-          showDialog(
-            context: context,
-            builder: (context) => const SuccessDialog(
-              message: 'Postingan Blog Mu Berhasil di Upload!',
-            ),
-          );
-        },
-      );
     } catch (error) {
-      showDialog(
-        context: context,
-        builder: (context) =>
-            const FailedDialog(message: 'Terjadi kesalahan, Coba lagi nanti'),
-      );
+      errorAlert();
     }
+  }
+
+  void successAlert() {
+    QuickAlert.show(
+      context: context,
+      title: 'Success',
+      text: "Postingan Blog Mu Berhasil di Upload!",
+      type: QuickAlertType.success,
+      confirmBtnText: 'OK',
+      onConfirmBtnTap: () {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  void errorAlert() {
+    QuickAlert.show(
+      context: context,
+      title: 'Gagal',
+      text: 'Terjadi kesalahan, Coba untuk upload ulang kembali',
+      type: QuickAlertType.error,
+      confirmBtnText: 'OK',
+      onConfirmBtnTap: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  void warningAlert() {
+    QuickAlert.show(
+      context: context,
+      title: 'Peringatan!',
+      text: 'Postingan dengan judul ini sudah ada!',
+      type: QuickAlertType.warning,
+      confirmBtnText: 'OK',
+      onConfirmBtnTap: () {
+        Navigator.of(context).pop();
+      },
+    );
   }
 
   @override
