@@ -1,4 +1,5 @@
 import 'package:bitread_app/screen/edit_post_screen.dart';
+import 'package:bitread_app/widget/like_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -12,6 +13,7 @@ class PostDetailScreen extends StatefulWidget {
   final String author;
   final String authorUserId;
   final String id;
+  final List<String> likes;
 
   const PostDetailScreen({
     super.key,
@@ -21,6 +23,7 @@ class PostDetailScreen extends StatefulWidget {
     required this.author,
     required this.authorUserId,
     required this.id,
+    required this.likes,
   });
 
   @override
@@ -28,7 +31,40 @@ class PostDetailScreen extends StatefulWidget {
 }
 
 class _PostDetailScreenState extends State<PostDetailScreen> {
+  final currentUser = FirebaseAuth.instance.currentUser;
   bool isLiked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    isLiked = widget.likes.contains(currentUser!.uid);
+  }
+
+  void toggleLike() {
+    setState(() {
+      isLiked = !isLiked;
+    });
+    DocumentReference postRef =
+        FirebaseFirestore.instance.collection('Post Blog').doc(widget.id);
+    if (isLiked) {
+      postRef.update(
+        {
+          'Likes': FieldValue.arrayUnion(
+            [currentUser!.uid],
+          ),
+        },
+      );
+    } else {
+      postRef.update(
+        {
+          'Likes': FieldValue.arrayRemove(
+            [currentUser!.uid],
+          ),
+        },
+      );
+    }
+  }
+
   void deletePost(BuildContext context) async {
     try {
       final storageRef = FirebaseStorage.instance.ref();
@@ -38,7 +74,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'Artikel Berhasil Dihapus! ',
+            'Blog Berhasil Dihapus! ',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: Colors.green,
@@ -54,18 +90,35 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
     QuickAlert.show(
       context: context,
       title: 'Gagal',
-      text: 'Gagal menghapus artikel, coba lagi nanti',
+      text: 'Gagal menghapus blog, coba lagi nanti',
       type: QuickAlertType.error,
-      confirmBtnText: 'OK',
+      confirmBtnText: 'Ok',
       onConfirmBtnTap: () {
         Navigator.of(context).pop();
       },
     );
   }
 
+  void confirmDeleteAlert() {
+    QuickAlert.show(
+      context: context,
+      title: 'Hapus Blog',
+      text: 'Apakah anda yakin untuk menghapus blog ini?',
+      type: QuickAlertType.confirm,
+      confirmBtnText: 'Ok',
+      cancelBtnText: 'Cancel',
+      onConfirmBtnTap: () {
+       deletePost(context);
+       Navigator.pop(context);
+      },
+      onCancelBtnTap: () {
+        Navigator.pop(context);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final currentUser = FirebaseAuth.instance.currentUser;
     final isCurrentUserAuthor = currentUser?.uid == widget.authorUserId;
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -83,18 +136,39 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 },
               ),
               actions: [
-                IconButton(
-                  icon: Icon(
-                    isLiked
-                        ? Icons.favorite_border_rounded
-                        : Icons.favorite_border_rounded,
-                    color: isLiked ? Colors.red : Colors.white,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      isLiked = !isLiked;
-                    });
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 14,),
+                      LikeButton(
+                        isLiked: isLiked,
+                        onTap: toggleLike,
+                      ),
+                      StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('Post Blog')
+                      .snapshots(),
+                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasData) {
+                      int totalLikesCount = 0;
+                      
+                      for (QueryDocumentSnapshot doc in snapshot.data!.docs) {
+                        Map<String, dynamic> postData = doc.data() as Map<String, dynamic>;
+                        List<dynamic> likes = postData['Likes'] ?? [];
+                        totalLikesCount += likes.length;
+                      }
+                      
+                      return Text('$totalLikesCount');
+                    } else if (snapshot.hasError) {
+                      return const Text('Error loading likes count');
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
                   },
+                )
+                
+                    ],
+                  ),
                 ),
                 if (isCurrentUserAuthor)
                   PopupMenuButton<String>(
@@ -116,36 +190,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                           ),
                         );
                       } else if (value == 'delete') {
-                        final confirmed = await showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            title: const Text('Hapus Artikel'),
-                            content: const Text(
-                                'Apakah Anda yakin ingin menghapus artikel ini?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(false),
-                                child: const Text(
-                                  'Batal',
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () =>
-                                    Navigator.of(context).pop(true),
-                                child: const Text(
-                                  'Hapus',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                        if (confirmed) {
-                          deletePost(context);
-                        }
+                       confirmDeleteAlert();
                       }
                     },
                     itemBuilder: (BuildContext context) {

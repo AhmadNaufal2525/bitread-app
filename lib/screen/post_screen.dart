@@ -21,7 +21,7 @@ class _PostScreenState extends State<PostScreen> {
         shadowColor: Colors.transparent,
         toolbarHeight: 80,
         title: const Text(
-          'Artikel Harian',
+          'Blog Harian',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         bottom: PreferredSize(
@@ -65,7 +65,7 @@ class _PostScreenState extends State<PostScreen> {
                   if (docs.isEmpty) {
                     return const Center(
                       child: Text(
-                          'Belum ada postingan artikel, Jadilah yang pertama!'),
+                          'Belum ada postingan blog, Jadilah yang pertama!'),
                     );
                   }
                   return ListView.separated(
@@ -86,6 +86,9 @@ class _PostScreenState extends State<PostScreen> {
                                 author: post['author'],
                                 authorUserId: post['userId'],
                                 id: post['id'],
+                                likes: List<String>.from(
+                                  post['Likes'] ?? [],
+                                ),
                               ),
                             ),
                           );

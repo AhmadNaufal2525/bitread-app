@@ -52,7 +52,7 @@ class AddPostScreenState extends State<AddPostScreen> {
           'author': displayName,
           'image_filename': '',
           'imageURL': selectedImagePath,
-          'likedPost': 0,
+          'Likes': [],
           'timestamp': FieldValue.serverTimestamp(),
         });
         final String id = newPost.id;
@@ -90,7 +90,7 @@ class AddPostScreenState extends State<AddPostScreen> {
       title: 'Success',
       text: "Postingan Blog Mu Berhasil di Upload!",
       type: QuickAlertType.success,
-      confirmBtnText: 'OK',
+      confirmBtnText: 'Ok',
       onConfirmBtnTap: () {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
@@ -104,7 +104,7 @@ class AddPostScreenState extends State<AddPostScreen> {
       title: 'Gagal',
       text: 'Terjadi kesalahan, Coba untuk upload ulang kembali',
       type: QuickAlertType.error,
-      confirmBtnText: 'OK',
+      confirmBtnText: 'Ok',
       onConfirmBtnTap: () {
         Navigator.of(context).pop();
       },
@@ -117,7 +117,7 @@ class AddPostScreenState extends State<AddPostScreen> {
       title: 'Peringatan!',
       text: 'Postingan dengan judul ini sudah ada!',
       type: QuickAlertType.warning,
-      confirmBtnText: 'OK',
+      confirmBtnText: 'Ok',
       onConfirmBtnTap: () {
         Navigator.of(context).pop();
       },

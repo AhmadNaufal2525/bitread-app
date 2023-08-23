@@ -59,147 +59,150 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: 280,
-            flexibleSpace: FlexibleSpaceBar(
-              background: CachedNetworkImage(
-                imageUrl: widget.imageUrl,
-                fit: BoxFit.contain,
-                errorWidget: (context, url, error) => const Icon(Icons.error),
-              ),
-            ),
-            backgroundColor: Colors.white,
-            leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back,
-                color: Colors.black,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ),
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Text(
-                              widget.title,
-                              style: const TextStyle(
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 21),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Text(
-                            widget.author,
-                            style: const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Row(
-                        children: <Widget>[
-                          const Spacer(),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              RatingBar.builder(
-                                initialRating: widget.rating,
-                                direction: Axis.horizontal,
-                                itemCount: 5,
-                                itemSize: 20.0,
-                                itemBuilder: (context, _) => const Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
-                                ),
-                                ignoreGestures: true,
-                                onRatingUpdate: (double value) {},
-                              ),
-                              Text(
-                                widget.rating.toString(),
-                                style: const TextStyle(
-                                  color: Color.fromARGB(255, 0, 133, 69),
-                                  fontSize: 14,
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                      Text(
-                        widget.desc,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 18,
-                          letterSpacing: 0.6,
-                          wordSpacing: 0.6,
-                        ),
-                        textAlign: TextAlign.justify,
-                      ),
-                      const SizedBox(
-                        height: 80,
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: CustomButton(
-                              onPressed: () {
-                                openPdfFromFirebase(context);
-                              },
-                              text: 'Baca Buku',
-                              icon: const Icon(Icons.menu_book),
-                              color: const Color(0xffFE0002),
-                            ),
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Expanded(
-                            child: CustomButton(
-                              onPressed: () async {
-                                final url = Uri.parse(widget.url);
-                                await launchUrl(url);
-                              },
-                              text: 'Beli Buku',
-                              icon: const Icon(Icons.shopping_bag_sharp),
-                              color: Colors.grey,
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              pinned: true,
+              shadowColor: Colors.transparent,
+              expandedHeight: 280,
+              flexibleSpace: FlexibleSpaceBar(
+                background: CachedNetworkImage(
+                  imageUrl: widget.imageUrl,
+                  fit: BoxFit.contain,
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
-              ],
+              ),
+              backgroundColor: Colors.white,
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
             ),
-          ),
-        ],
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                widget.title,
+                                style: const TextStyle(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 21),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Text(
+                              widget.author,
+                              style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            const Spacer(),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                RatingBar.builder(
+                                  initialRating: widget.rating,
+                                  direction: Axis.horizontal,
+                                  itemCount: 5,
+                                  itemSize: 20.0,
+                                  itemBuilder: (context, _) => const Icon(
+                                    Icons.star,
+                                    color: Colors.amber,
+                                  ),
+                                  ignoreGestures: true,
+                                  onRatingUpdate: (double value) {},
+                                ),
+                                Text(
+                                  widget.rating.toString(),
+                                  style: const TextStyle(
+                                    color: Color.fromARGB(255, 0, 133, 69),
+                                    fontSize: 14,
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        ),
+                        Text(
+                          widget.desc,
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 18,
+                            letterSpacing: 0.6,
+                            wordSpacing: 0.6,
+                          ),
+                          textAlign: TextAlign.justify,
+                        ),
+                        const SizedBox(
+                          height: 80,
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: CustomButton(
+                                onPressed: () {
+                                  openPdfFromFirebase(context);
+                                },
+                                text: 'Baca Buku',
+                                icon: const Icon(Icons.menu_book),
+                                color: const Color(0xffFE0002),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Expanded(
+                              child: CustomButton(
+                                onPressed: () async {
+                                  final url = Uri.parse(widget.url);
+                                  await launchUrl(url);
+                                },
+                                text: 'Beli Buku',
+                                icon: const Icon(Icons.shopping_bag_sharp),
+                                color: Colors.grey,
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

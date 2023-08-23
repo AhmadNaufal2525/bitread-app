@@ -11,7 +11,6 @@ class ProfileHeader extends StatefulWidget {
 }
 
 class _ProfileHeaderState extends State<ProfileHeader> {
-  int postCount = 0;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -162,8 +161,18 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                     .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
+                  int postCount = 0;
+                  int totalLikesCount = 0;
+
                   if (snapshot.hasData) {
                     postCount = snapshot.data!.size;
+
+                    for (QueryDocumentSnapshot doc in snapshot.data!.docs) {
+                      Map<String, dynamic> postData =
+                          doc.data() as Map<String, dynamic>;
+                      List<dynamic> likes = postData['Likes'] ?? [];
+                      totalLikesCount += likes.length;
+                    }
                   }
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -179,21 +188,42 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                           const Text('Post')
                         ],
                       ),
-                      const Column(
+                      Column(
                         children: [
                           Text(
-                            '0',
-                            style: TextStyle(
+                            '$totalLikesCount',
+                            style: const TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(height: 15.0),
-                          Text('Likes')
+                          const SizedBox(height: 15.0),
+                          const Text('Likes')
                         ],
                       ),
                     ],
                   );
                 },
-              )
+              ),
+              const SizedBox(height: 26.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(
+                    children: [
+                      Image.asset('assets/instagram.png', height: 40, width: 40)
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Image.asset('assets/twitter.png', height: 40, width: 40)
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      Image.asset('assets/facebook.png', height: 40, width: 40)
+                    ],
+                  ),
+                ],
+              ),
             ],
           ),
         ),

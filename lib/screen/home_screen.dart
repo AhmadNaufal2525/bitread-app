@@ -31,45 +31,54 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: <Widget>[
                         const SizedBox(height: 16),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Row(
                             children: [
-                              StreamBuilder<
-                                  DocumentSnapshot<Map<String, dynamic>>>(
-                                stream: FirebaseFirestore.instance
-                                    .collection('User')
-                                    .doc(FirebaseAuth.instance.currentUser?.uid)
-                                    .snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<
-                                            DocumentSnapshot<
-                                                Map<String, dynamic>>>
-                                        snapshot) {
-                                  if (snapshot.hasData &&
-                                      snapshot.data!.exists) {
-                                    var data = snapshot.data!.data();
-                                    String? username = data?['username'];
-                                    if (username != null &&
-                                        username.isNotEmpty) {
-                                      return Center(
-                                        child: Text(
-                                          "Hallo ${username.length > 12 ? '${username.substring(0, 12)},' : '$username,'}",
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                              Column(
+                                children: [
+                                  StreamBuilder<
+                                      DocumentSnapshot<Map<String, dynamic>>>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('User')
+                                        .doc(FirebaseAuth
+                                            .instance.currentUser?.uid)
+                                        .snapshots(),
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<
+                                                DocumentSnapshot<
+                                                    Map<String, dynamic>>>
+                                            snapshot) {
+                                      if (snapshot.hasData &&
+                                          snapshot.data!.exists) {
+                                        var data = snapshot.data!.data();
+                                        String? username = data?['username'];
+                                        if (username != null &&
+                                            username.isNotEmpty) {
+                                          return Center(
+                                            child: Text(
+                                              "Hallo ${username.length > 12 ? '${username.substring(0, 12)},' : '$username,'}",
+                                              style: const TextStyle(
+                                                fontSize: 18.8,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      }
+                                      return const Text(
+                                        "Hallo User",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 18.8,
                                         ),
                                       );
-                                    }
-                                  }
-                                  return const Text(
-                                    "Hallo User",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 20,
-                                    ),
-                                  );
-                                },
+                                    },
+                                  ),
+                                  const SizedBox(
+                                      height:
+                                          10,),
+                                  const Text('Mau baca apa hari ini?'),
+                                ],
                               ),
                               const Spacer(),
                               SizedBox(
@@ -89,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       if (image.isNotEmpty) {
                                         return CircleAvatar(
                                           backgroundColor: Colors.grey,
-                                          radius: 30,
+                                          radius: 35,
                                           backgroundImage: NetworkImage(image),
                                         );
                                       } else {
@@ -99,7 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         if (googleProfileImage != null) {
                                           return CircleAvatar(
                                             backgroundColor: Colors.grey,
-                                            radius: 30,
+                                            radius: 35,
                                             backgroundImage: NetworkImage(
                                               googleProfileImage,
                                             ),
@@ -108,7 +117,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       }
                                     }
                                     return const CircleAvatar(
-                                      radius: 30,
+                                      radius: 35,
                                       backgroundColor: Colors.grey,
                                       backgroundImage:
                                           AssetImage('assets/user.png'),
@@ -118,10 +127,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ],
                           ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 14),
-                          child: Text('Mau baca apa hari ini?'),
                         ),
                         const SizedBox(
                           height: 26,
