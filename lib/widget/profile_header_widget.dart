@@ -281,7 +281,76 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                   ),
                 ],
               ),
-              const SizedBox(height: 10)
+              const SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 60),
+                child: Column(
+                  children: [
+                    StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                      stream: FirebaseFirestore.instance
+                          .collection('User')
+                          .doc(FirebaseAuth.instance.currentUser?.uid)
+                          .snapshots(),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                              userSnapshot) {
+                        if (userSnapshot.hasData && userSnapshot.data!.exists) {
+                          var userData = userSnapshot.data!.data();
+                          String? currentUsername = userData?['username'];
+
+                          return StreamBuilder<QuerySnapshot>(
+                            stream: FirebaseFirestore.instance
+                                .collection('Books')
+                                .where('author', isEqualTo: currentUsername)
+                                .snapshots(),
+                            builder: (BuildContext context,
+                                AsyncSnapshot<QuerySnapshot> bookSnapshot) {
+                              if (bookSnapshot.hasData &&
+                                  bookSnapshot.data!.docs.isNotEmpty) {
+                                var bookData = bookSnapshot.data!.docs[0].data()
+                                    as Map<String, dynamic>;
+                                String imageUrl = bookData['imageUrl'];
+                                int imageCount = bookSnapshot.data!.docs.length;
+
+                                return Row(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 20,
+                                      backgroundColor: Colors.grey,
+                                      backgroundImage: NetworkImage(imageUrl),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '+${imageCount.toString()}',
+                                          style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        const Text('Buku penulis'),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              } else {
+                                return const SizedBox.shrink();
+                              }
+                            },
+                          );
+                        } else {
+                          return const SizedBox.shrink();
+                        }
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
             ],
           ),
         ),

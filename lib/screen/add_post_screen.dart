@@ -169,7 +169,7 @@ class AddPostScreenState extends State<AddPostScreen> {
                   onPressed: () {
                     selectImage();
                   },
-                  text: 'Tambah Gambar',
+                  text: 'Pilih Gambar',
                   width: screenWidth * 0.5,
                   color: const Color(0xffFE0002),
                 ),
@@ -222,7 +222,7 @@ class AddPostScreenState extends State<AddPostScreen> {
                     }
                     if (formKey.currentState!.validate()) {
                       addNewPost();
-                    } 
+                    }
                   },
                   color: const Color(0xffFE0002),
                 ),

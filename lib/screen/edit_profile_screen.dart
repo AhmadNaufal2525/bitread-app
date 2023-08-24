@@ -43,6 +43,8 @@ class EditProfileState extends State<EditProfile> {
     try {
       final docRef =
           FirebaseFirestore.instance.collection('User').doc(widget.id);
+      final postCollectionRef =
+          FirebaseFirestore.instance.collection('Post Blog');
       Map<String, dynamic> dataToUpdate = {
         'username': username,
         'email': email,
@@ -50,6 +52,7 @@ class EditProfileState extends State<EditProfile> {
         'twitter': twitterLink,
         'facebook': facebookLink,
       };
+      String newImage = '';
 
       if (selectedImagePath != '') {
         final ref = FirebaseStorage.instance
@@ -58,10 +61,27 @@ class EditProfileState extends State<EditProfile> {
             .child('${widget.id}.jpg');
         final uploadTask = ref.putFile(File(selectedImagePath));
         final snapshot = await uploadTask.whenComplete(() => null);
-        final image = await snapshot.ref.getDownloadURL();
-        dataToUpdate['image'] = image;
+        newImage = await snapshot.ref.getDownloadURL();
+        dataToUpdate['image'] = newImage;
       }
+
       await docRef.update(dataToUpdate);
+
+      final querySnapshot =
+          await postCollectionRef.where('userId', isEqualTo: widget.id).get();
+
+      for (final postDoc in querySnapshot.docs) {
+        Map<String, dynamic> postUpdateData = {
+          'author': username,
+        };
+
+        if (newImage.isNotEmpty) {
+          postUpdateData['authorImage'] = newImage;
+        }
+
+        await postDoc.reference.update(postUpdateData);
+      }
+
       setState(
         () {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -147,7 +167,7 @@ class EditProfileState extends State<EditProfile> {
                   onPressed: () {
                     selectImage();
                   },
-                  text: 'Tambah Gambar',
+                  text: 'Pilih Gambar',
                   width: screenWidth * 0.5,
                   color: const Color(0xffFE0002),
                 ),
@@ -217,7 +237,7 @@ class EditProfileState extends State<EditProfile> {
                 ),
                 const SizedBox(height: 40),
                 CustomButton(
-                  text: 'Edit',
+                  text: 'Update',
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       updateProfile();

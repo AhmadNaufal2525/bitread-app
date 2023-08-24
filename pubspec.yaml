@@ -57,6 +57,7 @@ dependencies:
   cached_network_image: ^3.2.3
   permission_handler: ^10.4.3
   quickalert: ^1.0.1
+  liquid_pull_to_refresh: ^3.0.1
   
 
 dev_dependencies:

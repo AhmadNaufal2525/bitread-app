@@ -26,12 +26,14 @@ class _PdfViewerState extends State<PdfViewer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         toolbarHeight: 60,
         backgroundColor: Colors.white,
+        shadowColor: Colors.transparent,
         centerTitle: true,
         title: const Text(
-          'E-Books Viewer',
+          'E-Book Reader',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
         ),
         leading: IconButton(

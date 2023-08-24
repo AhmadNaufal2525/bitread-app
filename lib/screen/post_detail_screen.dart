@@ -287,7 +287,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                 isScrollControlled: true,
                                 builder: (context) {
                                   return FractionallySizedBox(
-                                    heightFactor: 0.3,
+                                    heightFactor: 0.32,
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
                                       child: Column(
@@ -307,7 +307,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                                 child: Column(
                                                   children: [
                                                     Text(
-                                                      widget.author,
+                                                      " ${widget.author.length > 12 ? widget.author.substring(0, 12) : widget.author}",
                                                       style: const TextStyle(
                                                         color: Colors.black,
                                                         fontWeight:
@@ -489,6 +489,121 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                                 ],
                                               ),
                                             ],
+                                          ),
+                                          const SizedBox(
+                                            height: 26,
+                                          ),
+                                          Padding(
+                                            padding:
+                                                const EdgeInsets.only(left: 80),
+                                            child: Column(
+                                              children: [
+                                                StreamBuilder<
+                                                    DocumentSnapshot<
+                                                        Map<String, dynamic>>>(
+                                                  stream: FirebaseFirestore
+                                                      .instance
+                                                      .collection('User')
+                                                      .doc(FirebaseAuth.instance
+                                                          .currentUser?.uid)
+                                                      .snapshots(),
+                                                  builder: (BuildContext
+                                                          context,
+                                                      AsyncSnapshot<
+                                                              DocumentSnapshot<
+                                                                  Map<String,
+                                                                      dynamic>>>
+                                                          userSnapshot) {
+                                                    if (userSnapshot.hasData &&
+                                                        userSnapshot
+                                                            .data!.exists) {
+                                                      var userData =
+                                                          userSnapshot.data!
+                                                              .data();
+                                                      String? currentUsername =
+                                                          userData?['username'];
+
+                                                      return StreamBuilder<
+                                                          QuerySnapshot>(
+                                                        stream: FirebaseFirestore
+                                                            .instance
+                                                            .collection('Books')
+                                                            .where('author',
+                                                                isEqualTo:
+                                                                    currentUsername)
+                                                            .snapshots(),
+                                                        builder: (BuildContext
+                                                                context,
+                                                            AsyncSnapshot<
+                                                                    QuerySnapshot>
+                                                                bookSnapshot) {
+                                                          if (bookSnapshot
+                                                                  .hasData &&
+                                                              bookSnapshot
+                                                                  .data!
+                                                                  .docs
+                                                                  .isNotEmpty) {
+                                                            var bookData =
+                                                                bookSnapshot
+                                                                        .data!
+                                                                        .docs[0]
+                                                                        .data()
+                                                                    as Map<
+                                                                        String,
+                                                                        dynamic>;
+                                                            String imageUrl =
+                                                                bookData[
+                                                                    'imageUrl'];
+                                                            int imageCount =
+                                                                bookSnapshot
+                                                                    .data!
+                                                                    .docs
+                                                                    .length;
+
+                                                            return Row(
+                                                              children: [
+                                                                CircleAvatar(
+                                                                  radius: 20,
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .grey,
+                                                                  backgroundImage:
+                                                                      NetworkImage(
+                                                                          imageUrl),
+                                                                ),
+                                                                const SizedBox(
+                                                                    width: 10),
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    Text(
+                                                                      '+${imageCount.toString()} Buku Penulis',
+                                                                      style: const TextStyle(
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            );
+                                                          } else {
+                                                            return const SizedBox
+                                                                .shrink();
+                                                          }
+                                                        },
+                                                      );
+                                                    } else {
+                                                      return const SizedBox
+                                                          .shrink();
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ],
                                       ),

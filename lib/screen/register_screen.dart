@@ -230,8 +230,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Username Tidak Boleh Kosong!';
-                                  } else if (value.length < 6) {
-                                    return 'Username harus terdiri dari 6 karakter!';
+                                  } else if (value.length < 8) {
+                                    return 'Username harus terdiri dari 8 karakter!';
                                   }
                                   return null;
                                 },

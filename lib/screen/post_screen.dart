@@ -4,12 +4,17 @@ import 'package:bitread_app/widget/post_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
 
   @override
   State<PostScreen> createState() => _PostScreenState();
+}
+
+Future<void> handleRefresh() async {
+  return await Future.delayed(const Duration(milliseconds: 200));
 }
 
 class _PostScreenState extends State<PostScreen> {
@@ -39,7 +44,10 @@ class _PostScreenState extends State<PostScreen> {
         ),
       ),
       backgroundColor: Colors.white,
-      body: SafeArea(
+      body: LiquidPullToRefresh(
+        color: const Color(0xffFE0002),
+        backgroundColor: Colors.white,
+        onRefresh: handleRefresh,
         child: ListView(
           children: [
             const SizedBox(height: 16),
@@ -99,7 +107,8 @@ class _PostScreenState extends State<PostScreen> {
                           title: post['judul'],
                           description: post['isiBlog'],
                           imageUrl: post['imageURL'],
-                          author: post['author'], authorImage: post['authorImage'],
+                          author: post['author'],
+                          authorImage: post['authorImage'],
                         ),
                       );
                     },

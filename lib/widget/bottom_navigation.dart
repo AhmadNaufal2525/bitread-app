@@ -87,7 +87,7 @@ class _BottomNavState extends State<BottomNav> {
         icon: Icon(
           Icons.article_rounded,
         ),
-        label: 'Artikel',
+        label: 'Blog',
       ),
       buildProfileNavigationBarItem(),
     ];
