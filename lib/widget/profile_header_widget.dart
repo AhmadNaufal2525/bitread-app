@@ -200,6 +200,15 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                           }
                         },
                       ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      const Text(
+                        'Instagram',
+                        style: TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
                     ],
                   ),
                   Column(
@@ -237,6 +246,15 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             }
                           }
                         },
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      const Text(
+                        'Twitter',
+                        style: TextStyle(
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
@@ -276,6 +294,15 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             }
                           }
                         },
+                      ),
+                      const SizedBox(
+                        height: 4,
+                      ),
+                      const Text(
+                        'Facebook',
+                        style: TextStyle(
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
