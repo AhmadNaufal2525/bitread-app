@@ -59,6 +59,8 @@ class ListProfilePostState extends State<ListProfilePost> {
                           likes: List<String>.from(
                             post['Likes'] ?? [],
                           ),
+                          authorImage: post['authorImage'],
+                          timestamp: post['timestamp'],
                         ),
                       ),
                     );

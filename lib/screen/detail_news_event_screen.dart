@@ -22,7 +22,7 @@ class NewsEventDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int maxLineLength = 300;
+    int maxLineLength = 500;
     List<String> words = description.split(' ');
     List<String> paragraphs = [];
     String currentParagraph = '';
@@ -137,6 +137,7 @@ class NewsEventDetailScreen extends StatelessWidget {
               delegate: SliverChildListDelegate(
                 [
                   Container(
+                    height: MediaQuery.of(context).size.height * 2.4,
                     padding: const EdgeInsets.all(20.0),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(

@@ -168,9 +168,9 @@ class EditProfileState extends State<EditProfile> {
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Username Tidak Boleh Kosong!';
-                      } else if (value.length < 6) {
-                        return 'Username harus terdiri dari 6 karakter!';
-                      }
+                      } else if (value.length != 10) {
+                        return 'Username harus terdiri dari 10 karakter!';
+                      } 
                       return null;
                     },
                   ),

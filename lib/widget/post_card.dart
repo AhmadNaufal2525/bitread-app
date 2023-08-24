@@ -5,6 +5,7 @@ class PostCard extends StatelessWidget {
   final String description;
   final String author;
   final String imageUrl;
+  final String authorImage;
 
   const PostCard({
     Key? key,
@@ -12,6 +13,7 @@ class PostCard extends StatelessWidget {
     required this.description,
     required this.imageUrl,
     required this.author,
+    required this.authorImage,
   }) : super(key: key);
 
   @override
@@ -71,13 +73,23 @@ class PostCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Text(
-                          'Oleh: $author',
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.white,
-                          ),
+                        Row(
+                          children: [
+                            CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                    authorImage), // Display author image
+                                radius: 14,
+                                backgroundColor: Colors.grey),
+                            const SizedBox(width: 8),
+                            Text(
+                              author,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 8),
                         Text(

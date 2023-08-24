@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:quickalert/quickalert.dart';
 
 class PostDetailScreen extends StatefulWidget {
@@ -14,6 +15,8 @@ class PostDetailScreen extends StatefulWidget {
   final String authorUserId;
   final String id;
   final List<String> likes;
+  final String authorImage;
+  final Timestamp timestamp;
 
   const PostDetailScreen({
     super.key,
@@ -24,6 +27,8 @@ class PostDetailScreen extends StatefulWidget {
     required this.authorUserId,
     required this.id,
     required this.likes,
+    required this.authorImage,
+    required this.timestamp,
   });
 
   @override
@@ -108,8 +113,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
       confirmBtnText: 'Ok',
       cancelBtnText: 'Cancel',
       onConfirmBtnTap: () {
-       deletePost(context);
-       Navigator.pop(context);
+        deletePost(context);
+        Navigator.pop(context);
       },
       onCancelBtnTap: () {
         Navigator.pop(context);
@@ -139,34 +144,38 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                 SingleChildScrollView(
                   child: Column(
                     children: [
-                      const SizedBox(height: 14,),
+                      const SizedBox(
+                        height: 14,
+                      ),
                       LikeButton(
                         isLiked: isLiked,
                         onTap: toggleLike,
                       ),
                       StreamBuilder<QuerySnapshot>(
-                  stream: FirebaseFirestore.instance
-                      .collection('Post Blog')
-                      .snapshots(),
-                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasData) {
-                      int totalLikesCount = 0;
-                      
-                      for (QueryDocumentSnapshot doc in snapshot.data!.docs) {
-                        Map<String, dynamic> postData = doc.data() as Map<String, dynamic>;
-                        List<dynamic> likes = postData['Likes'] ?? [];
-                        totalLikesCount += likes.length;
-                      }
-                      
-                      return Text('$totalLikesCount');
-                    } else if (snapshot.hasError) {
-                      return const Text('Error loading likes count');
-                    } else {
-                      return const CircularProgressIndicator();
-                    }
-                  },
-                )
-                
+                        stream: FirebaseFirestore.instance
+                            .collection('Post Blog')
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasData) {
+                            int totalLikesCount = 0;
+
+                            for (QueryDocumentSnapshot doc
+                                in snapshot.data!.docs) {
+                              Map<String, dynamic> postData =
+                                  doc.data() as Map<String, dynamic>;
+                              List<dynamic> likes = postData['Likes'] ?? [];
+                              totalLikesCount += likes.length;
+                            }
+
+                            return Text('$totalLikesCount');
+                          } else if (snapshot.hasError) {
+                            return const Text('Error loading likes count');
+                          } else {
+                            return const CircularProgressIndicator();
+                          }
+                        },
+                      )
                     ],
                   ),
                 ),
@@ -190,7 +199,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                           ),
                         );
                       } else if (value == 'delete') {
-                       confirmDeleteAlert();
+                        confirmDeleteAlert();
                       }
                     },
                     itemBuilder: (BuildContext context) {
@@ -262,8 +271,29 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                             ),
                           ),
                           const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: NetworkImage(
+                                    widget.authorImage), // Display author image
+                                radius: 14,
+                                backgroundColor: Colors.grey,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                widget.author,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 10),
                           Text(
-                            'Oleh ${widget.author}',
+                            DateFormat('dd MMM yyyy')
+                                .format(widget.timestamp.toDate()),
                             style: const TextStyle(
                               color: Colors.white,
                             ),
@@ -280,6 +310,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
               delegate: SliverChildListDelegate(
                 [
                   Container(
+                    height: MediaQuery.of(context).size.height * 1.93,
                     padding: const EdgeInsets.all(20.0),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
@@ -288,17 +319,20 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                       ),
                       color: Colors.white,
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.description,
-                          textAlign: TextAlign.justify,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
+                    child: Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.description,
+                            textAlign: TextAlign.justify,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                  
                 ],
               ),
             ),

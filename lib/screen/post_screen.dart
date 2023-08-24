@@ -89,6 +89,8 @@ class _PostScreenState extends State<PostScreen> {
                                 likes: List<String>.from(
                                   post['Likes'] ?? [],
                                 ),
+                                authorImage: post['authorImage'],
+                                timestamp: post['timestamp'],
                               ),
                             ),
                           );
@@ -97,7 +99,7 @@ class _PostScreenState extends State<PostScreen> {
                           title: post['judul'],
                           description: post['isiBlog'],
                           imageUrl: post['imageURL'],
-                          author: post['author'],
+                          author: post['author'], authorImage: post['authorImage'],
                         ),
                       );
                     },

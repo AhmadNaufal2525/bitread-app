@@ -32,6 +32,7 @@ class AddPostScreenState extends State<AddPostScreen> {
       }
 
       String? displayName = userSnapshot.get('username');
+      String? authorImageURL = userSnapshot.get('image');
 
       QuerySnapshot existingPosts = await FirebaseFirestore.instance
           .collection('Post Blog')
@@ -50,6 +51,7 @@ class AddPostScreenState extends State<AddPostScreen> {
           'judul': judul,
           'isiBlog': isiBlog,
           'author': displayName,
+          'authorImage': authorImageURL,
           'image_filename': '',
           'imageURL': selectedImagePath,
           'Likes': [],
@@ -220,14 +222,7 @@ class AddPostScreenState extends State<AddPostScreen> {
                     }
                     if (formKey.currentState!.validate()) {
                       addNewPost();
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          backgroundColor: Color(0xffFE0002),
-                          content: Text('Isi field yang masih kosong!'),
-                        ),
-                      );
-                    }
+                    } 
                   },
                   color: const Color(0xffFE0002),
                 ),

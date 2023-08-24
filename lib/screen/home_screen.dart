@@ -58,7 +58,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             child: Text(
                                               "Hallo ${username.length > 12 ? '${username.substring(0, 12)},' : '$username,'}",
                                               style: const TextStyle(
-                                                fontSize: 18.8,
+                                                fontSize: 18,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -74,10 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       );
                                     },
                                   ),
-                                  const SizedBox(
-                                      height:
-                                          10,),
-                                  const Text('Mau baca apa hari ini?'),
+                                 
                                 ],
                               ),
                               const Spacer(),
@@ -127,6 +124,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ],
                           ),
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10),
+                          child: Text('Mau baca apa hari ini?'),
                         ),
                         const SizedBox(
                           height: 26,

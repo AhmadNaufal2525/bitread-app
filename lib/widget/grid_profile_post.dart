@@ -56,6 +56,8 @@ class _GridProfilePostState extends State<GridProfilePost> {
                       likes: List<String>.from(
                         post['Likes'] ?? [],
                       ),
+                      authorImage: post['authorImage'],
+                      timestamp: post['timestamp'],
                     ),
                   ),
                 );
