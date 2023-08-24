@@ -2,6 +2,7 @@ import 'package:bitread_app/screen/edit_profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileHeader extends StatefulWidget {
   const ProfileHeader({super.key});
@@ -64,6 +65,9 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             final username = userData?['username'] ?? '';
                             final email = userData?['email'] ?? '';
                             final image = userData?['image'] ?? '';
+                            final instagram = userData?['instagram'] ?? '';
+                            final twitter = userData?['twitter'] ?? '';
+                            final facebook = userData?['facebook'] ?? '';
 
                             setState(
                               () {
@@ -75,6 +79,9 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                       email: email,
                                       image: image,
                                       id: user.uid,
+                                      facebook: facebook,
+                                      instagram: instagram,
+                                      twitter: twitter,
                                     ),
                                   ),
                                 );
@@ -153,77 +160,128 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                 },
               ),
               const SizedBox(height: 26.0),
-              StreamBuilder<QuerySnapshot>(
-                stream: FirebaseFirestore.instance
-                    .collection('Post Blog')
-                    .where('userId',
-                        isEqualTo: FirebaseAuth.instance.currentUser?.uid)
-                    .snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  int postCount = 0;
-                  int totalLikesCount = 0;
-
-                  if (snapshot.hasData) {
-                    postCount = snapshot.data!.size;
-
-                    for (QueryDocumentSnapshot doc in snapshot.data!.docs) {
-                      Map<String, dynamic> postData =
-                          doc.data() as Map<String, dynamic>;
-                      List<dynamic> likes = postData['Likes'] ?? [];
-                      totalLikesCount += likes.length;
-                    }
-                  }
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            postCount.toString(),
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 15.0),
-                          const Text('Post')
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Text(
-                            '$totalLikesCount',
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 15.0),
-                          const Text('Likes')
-                        ],
-                      ),
-                    ],
-                  );
-                },
-              ),
-              const SizedBox(height: 26.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Column(
                     children: [
-                      Image.asset('assets/instagram.png', height: 40, width: 40)
+                      GestureDetector(
+                        child: Image.asset('assets/instagram.png',
+                            height: 40, width: 40),
+                        onTap: () async {
+                          final userId = FirebaseAuth.instance.currentUser?.uid;
+
+                          if (userId != null) {
+                            final userDoc = await FirebaseFirestore.instance
+                                .collection('User')
+                                .doc(userId)
+                                .get();
+
+                            if (userDoc.exists) {
+                              final userData = userDoc.data();
+                              final instagramUrl = userData?['instagram'];
+
+                              if (instagramUrl != null &&
+                                  instagramUrl.isNotEmpty) {
+                                final url = Uri.parse(instagramUrl);
+                                await launchUrl(url);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    showCloseIcon: true,
+                                    closeIconColor: Colors.white,
+                                    content: Text(
+                                        'Kamu belum menambahkan link Instagram mu!'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            }
+                          }
+                        },
+                      ),
                     ],
                   ),
                   Column(
                     children: [
-                      Image.asset('assets/twitter.png', height: 40, width: 40)
+                      GestureDetector(
+                        child: Image.asset('assets/twitter.png',
+                            height: 40, width: 40),
+                        onTap: () async {
+                          final userId = FirebaseAuth.instance.currentUser?.uid;
+
+                          if (userId != null) {
+                            final userDoc = await FirebaseFirestore.instance
+                                .collection('User')
+                                .doc(userId)
+                                .get();
+
+                            if (userDoc.exists) {
+                              final userData = userDoc.data();
+                              final twitterUrl = userData?['twitter'];
+
+                              if (twitterUrl != null && twitterUrl.isNotEmpty) {
+                                final url = Uri.parse(twitterUrl);
+                                await launchUrl(url);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    showCloseIcon: true,
+                                    closeIconColor: Colors.white,
+                                    content: Text(
+                                        'Kamu belum menambahkan link Twitter mu!'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            }
+                          }
+                        },
+                      ),
                     ],
                   ),
                   Column(
                     children: [
-                      Image.asset('assets/facebook.png', height: 40, width: 40)
+                      GestureDetector(
+                        child: Image.asset('assets/facebook.png',
+                            height: 40, width: 40),
+                        onTap: () async {
+                          final userId = FirebaseAuth.instance.currentUser?.uid;
+
+                          if (userId != null) {
+                            final userDoc = await FirebaseFirestore.instance
+                                .collection('User')
+                                .doc(userId)
+                                .get();
+
+                            if (userDoc.exists) {
+                              final userData = userDoc.data();
+                              final facebookUrl = userData?['facebook'];
+
+                              if (facebookUrl != null &&
+                                  facebookUrl.isNotEmpty) {
+                                final url = Uri.parse(facebookUrl);
+                                await launchUrl(url);
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    showCloseIcon: true,
+                                    closeIconColor: Colors.white,
+                                    content: Text(
+                                        'Kamu belum menambahkan link Facebook mu!'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            }
+                          }
+                        },
+                      ),
                     ],
                   ),
                 ],
               ),
+              const SizedBox(height: 10)
             ],
           ),
         ),

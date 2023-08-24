@@ -76,8 +76,7 @@ class PostCard extends StatelessWidget {
                         Row(
                           children: [
                             CircleAvatar(
-                                backgroundImage: NetworkImage(
-                                    authorImage), // Display author image
+                                backgroundImage: NetworkImage(authorImage),
                                 radius: 14,
                                 backgroundColor: Colors.grey),
                             const SizedBox(width: 8),

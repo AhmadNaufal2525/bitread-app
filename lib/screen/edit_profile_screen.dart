@@ -11,12 +11,18 @@ class EditProfile extends StatefulWidget {
   final String username;
   final String email;
   final String image;
+  final String instagram;
+  final String twitter;
+  final String facebook;
   const EditProfile({
     super.key,
     required this.username,
     required this.email,
     required this.image,
     required this.id,
+    required this.instagram,
+    required this.twitter,
+    required this.facebook,
   });
 
   @override
@@ -28,6 +34,9 @@ class EditProfileState extends State<EditProfile> {
   late String username;
   late String email;
   late String image;
+  late String instagramLink;
+  late String twitterLink;
+  late String facebookLink;
   final formKey = GlobalKey<FormState>();
 
   Future<void> updateProfile() async {
@@ -37,6 +46,9 @@ class EditProfileState extends State<EditProfile> {
       Map<String, dynamic> dataToUpdate = {
         'username': username,
         'email': email,
+        'instagram': instagramLink,
+        'twitter': twitterLink,
+        'facebook': facebookLink,
       };
 
       if (selectedImagePath != '') {
@@ -82,6 +94,9 @@ class EditProfileState extends State<EditProfile> {
     username = widget.username;
     email = widget.email;
     image = widget.image;
+    instagramLink = widget.instagram;
+    twitterLink = widget.twitter;
+    facebookLink = widget.facebook;
     super.initState();
   }
 
@@ -90,105 +105,133 @@ class EditProfileState extends State<EditProfile> {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
     double screenWidth = mediaQueryData.size.width;
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          toolbarHeight: 60,
-          backgroundColor: Colors.white,
-          centerTitle: true,
-          title: const Text(
-            'Edit Profile',
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
-          ),
-          iconTheme: const IconThemeData(color: Colors.black),
-          shadowColor: Colors.transparent,
-        ),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        toolbarHeight: 60,
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: formKey,
-              child: Column(
-                children: [
-                  (image != '' && selectedImagePath == '')
-                      ? CircleAvatar(
-                          radius: 50,
-                          backgroundColor: Colors.grey,
-                          backgroundImage: NetworkImage(image),
-                        )
-                      : (selectedImagePath != '')
-                          ? CircleAvatar(
-                              radius: 50,
-                              backgroundColor: Colors.grey,
-                              backgroundImage:
-                                  FileImage(File(selectedImagePath)),
-                            )
-                          : const CircleAvatar(
-                              radius: 50,
-                              backgroundColor: Colors.grey,
-                              backgroundImage: AssetImage('assets/user.png'),
-                            ),
-                  const SizedBox(height: 20),
-                  CustomButton(
-                    onPressed: () {
-                      selectImage();
-                    },
-                    text: 'Tambah Gambar',
-                    width: screenWidth * 0.5,
-                    color: const Color(0xffFE0002),
-                  ),
-                  const SizedBox(height: 30),
-                  CustomTextField(
-                    isReadOnly: true,
-                    initialValue: email,
-                    icon: Icons.email_rounded,
-                    hintText: "Email",
-                    onChanged: (value) {
-                      email = value.trim();
-                    },
-                    validator: (value) {
-                      final emailRegex = RegExp(
-                          r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
-                      if (value == null || value.isEmpty) {
-                        return 'Email Tidak Boleh Kosong!';
-                      } else if (!emailRegex.hasMatch(value)) {
-                        return 'Masukkan Alamat Email Dengan Benar!';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 30),
-                  CustomTextField(
-                    initialValue: username,
-                    icon: Icons.person_2_rounded,
-                    hintText: 'Username',
-                    onChanged: (value) {
-                      username = value.trim();
-                    },
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Username Tidak Boleh Kosong!';
-                      } else if (value.length != 10) {
-                        return 'Username harus terdiri dari 10 karakter!';
-                      } 
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 30),
-                  CustomButton(
-                    text: 'Edit',
-                    onPressed: () {
-                      if (formKey.currentState!.validate()) {
-                        updateProfile();
-                      }
-                    },
-                    color: const Color(0xffFE0002),
-                  ),
-                ],
-              ),
+        centerTitle: true,
+        title: const Text(
+          'Edit Profile',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
+        ),
+        iconTheme: const IconThemeData(color: Colors.black),
+        shadowColor: Colors.transparent,
+      ),
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: formKey,
+            child: Column(
+              children: [
+                (image != '' && selectedImagePath == '')
+                    ? CircleAvatar(
+                        radius: 50,
+                        backgroundColor: Colors.grey,
+                        backgroundImage: NetworkImage(image),
+                      )
+                    : (selectedImagePath != '')
+                        ? CircleAvatar(
+                            radius: 50,
+                            backgroundColor: Colors.grey,
+                            backgroundImage: FileImage(File(selectedImagePath)),
+                          )
+                        : const CircleAvatar(
+                            radius: 50,
+                            backgroundColor: Colors.grey,
+                            backgroundImage: AssetImage('assets/user.png'),
+                          ),
+                const SizedBox(height: 20),
+                CustomButton(
+                  onPressed: () {
+                    selectImage();
+                  },
+                  text: 'Tambah Gambar',
+                  width: screenWidth * 0.5,
+                  color: const Color(0xffFE0002),
+                ),
+                const SizedBox(height: 30),
+                CustomTextField(
+                  isReadOnly: true,
+                  initialValue: email,
+                  icon: Icons.email_rounded,
+                  hintText: "Email",
+                  onChanged: (value) {
+                    email = value.trim();
+                  },
+                  validator: (value) {
+                    final emailRegex = RegExp(
+                        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                    if (value == null || value.isEmpty) {
+                      return 'Email Tidak Boleh Kosong!';
+                    } else if (!emailRegex.hasMatch(value)) {
+                      return 'Masukkan Alamat Email Dengan Benar!';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 30),
+                CustomTextField(
+                  initialValue: username,
+                  icon: Icons.person_2_rounded,
+                  hintText: 'Username',
+                  onChanged: (value) {
+                    username = value.trim();
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Username Tidak Boleh Kosong!';
+                    } else if (value.length < 8) {
+                      return 'Username harus terdiri dari 8 karakter!';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 30),
+                CustomTextField(
+                  initialValue: instagramLink,
+                  icon: Icons.link,
+                  hintText: 'Link Instagram ',
+                  onChanged: (value) {
+                    instagramLink = value.trim();
+                  },
+                ),
+                const SizedBox(height: 30),
+                CustomTextField(
+                  initialValue: twitterLink,
+                  icon: Icons.link,
+                  hintText: 'Link Twitter',
+                  onChanged: (value) {
+                    twitterLink = value.trim();
+                  },
+                ),
+                const SizedBox(height: 30),
+                CustomTextField(
+                  initialValue: facebookLink,
+                  icon: Icons.link,
+                  hintText: 'Link Facebook',
+                  onChanged: (value) {
+                    facebookLink = value.trim();
+                  },
+                ),
+                const SizedBox(height: 40),
+                CustomButton(
+                  text: 'Edit',
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      updateProfile();
+                    }
+                  },
+                  color: const Color(0xffFE0002),
+                ),
+                const SizedBox(height: 30),
+              ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   void selectImage() async {
