@@ -1,11 +1,13 @@
 import 'package:bitread_app/screen/opening_screen.dart';
+import 'package:bitread_app/widget/book_author.dart';
 import 'package:bitread_app/widget/grid_profile_post.dart';
 import 'package:flutter/material.dart';
 import 'package:bitread_app/widget/profile_header_widget.dart';
 import 'package:bitread_app/widget/list_profile_post.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilScreen extends StatefulWidget {
@@ -44,11 +46,27 @@ class _ProfilScreenState extends State<ProfilScreen> {
     return await Future.delayed(const Duration(milliseconds: 200));
   }
 
+  void confirmLogoutAlert() {
+    QuickAlert.show(
+      context: context,
+      title: 'Logout',
+      text: 'Apakah anda yakin untuk logout?',
+      type: QuickAlertType.confirm,
+      confirmBtnText: 'Ok',
+      cancelBtnText: 'Cancel',
+      onConfirmBtnTap: () {
+        logout();
+      },
+      onCancelBtnTap: () {
+        Navigator.pop(context);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        
         backgroundColor: Colors.white,
         shadowColor: const Color.fromRGBO(0, 0, 0, 0),
         centerTitle: true,
@@ -62,67 +80,69 @@ class _ProfilScreenState extends State<ProfilScreen> {
               Icons.logout,
               color: Color(0xffFE0002),
             ),
-            onPressed: logout,
+            onPressed: confirmLogoutAlert,
           ),
         ],
       ),
       backgroundColor: Colors.white,
-      body: LiquidPullToRefresh(
-        color: const Color(0xffFE0002),
-        backgroundColor: Colors.white,
-        onRefresh: handleRefresh,
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 20,
-            ),
-            Expanded(
-              child: DefaultTabController(
-                length: 2,
-                child: NestedScrollView(
-                  headerSliverBuilder: (context, _) {
-                    return [
-                      SliverList(
-                        delegate: SliverChildListDelegate(
-                          [
-                            const ProfileHeader(),
-                            const SizedBox(height: 20),
-                          ],
-                        ),
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          Expanded(
+            child: DefaultTabController(
+              length: 3,
+              child: NestedScrollView(
+                headerSliverBuilder: (context, _) {
+                  return [
+                    SliverList(
+                      delegate: SliverChildListDelegate(
+                        [
+                          const ProfileHeader(),
+                          const SizedBox(height: 20),
+                        ],
                       ),
-                    ];
-                  },
-                  body: Column(
-                    children: [
-                      Material(
-                        color: Colors.white,
-                        child: TabBar(
-                          labelColor: Colors.black,
-                          unselectedLabelColor: Colors.grey[400],
-                          indicatorWeight: 2,
-                          indicatorColor: const Color(0xffFE0002),
-                          tabs: const [
-                            Tab(
-                              icon: Icon(Icons.view_list_rounded),
-                            ),
-                            Tab(
-                              icon: Icon(Icons.grid_view_rounded),
-                            ),
-                          ],
-                        ),
+                    ),
+                  ];
+                },
+                body: Column(
+                  children: [
+                    Material(
+                      color: Colors.white,
+                      child: TabBar(
+                        labelColor: Colors.black,
+                        unselectedLabelColor: Colors.grey[400],
+                        indicatorWeight: 3,
+                        indicatorColor: const Color(0xffFE0002),
+                        tabs: const [
+                          Tab(
+                            icon: Icon(Icons.view_list_rounded),
+                          ),
+                          Tab(
+                            icon: Icon(Icons.grid_view_rounded),
+                          ),
+                          Tab(
+                            icon: Icon(Icons.book_rounded),
+                          ),
+                        ],
                       ),
-                      const Expanded(
-                        child: TabBarView(
-                          children: [ListProfilePost(), GridProfilePost()],
-                        ),
+                    ),
+                    const Expanded(
+                      child: TabBarView(
+                        children: [
+                          ListProfilePost(),
+                          GridProfilePost(),
+                          BookAuthor()
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

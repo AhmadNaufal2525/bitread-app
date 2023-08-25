@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:quickalert/quickalert.dart';
 
 class AddPostScreen extends StatefulWidget {
@@ -210,18 +211,28 @@ class AddPostScreenState extends State<AddPostScreen> {
                 const SizedBox(height: 30),
                 CustomButton(
                   text: 'Post',
-                  onPressed: () {
-                    if (selectedImagePath.isEmpty) {
+                  onPressed: () async {
+                    if (await Permission.storage.request().isGranted) {
+                      if (selectedImagePath.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            backgroundColor: Color(0xffFE0002),
+                            content: Text('Pilih gambar terlebih dahulu!'),
+                          ),
+                        );
+                        return;
+                      }
+                      if (formKey.currentState!.validate()) {
+                        addNewPost();
+                      }
+                    } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           backgroundColor: Color(0xffFE0002),
-                          content: Text('Pilih gambar terlebih dahulu!'),
+                          content: Text(
+                              'Izinkan akses penyimpanan untuk memilih gambar!'),
                         ),
                       );
-                      return;
-                    }
-                    if (formKey.currentState!.validate()) {
-                      addNewPost();
                     }
                   },
                   color: const Color(0xffFE0002),

@@ -27,7 +27,13 @@ class _GridProfilePostState extends State<GridProfilePost> {
         if (!snapshot.hasData) {
           return const SizedBox.shrink();
         }
+        
         final docs = snapshot.data!.docs;
+        if (docs.isEmpty) {
+          return const Center(
+            child: Text('Kamu belum memposting blog apapun'),
+          );
+        }
         return GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,

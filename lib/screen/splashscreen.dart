@@ -3,7 +3,6 @@ import 'package:bitread_app/screen/opening_screen.dart';
 import 'package:bitread_app/widget/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -33,27 +32,22 @@ class _SplashScreenState extends State<SplashScreen> {
     return Timer(
       durasiSplash,
       () async {
-        var storagePermissionStatus = await Permission.storage.request();
-        var cameraPermissionStatus = await Permission.camera.request();
-
-         if (storagePermissionStatus.isGranted && cameraPermissionStatus.isGranted) { 
-          if (isLoggedIn) {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (_) {
-                  return const BottomNav();
-                },
-              ),
-            );
-          } else {
-            Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder: (_) {
-                  return const OpeningScreen();
-                },
-              ),
-            );
-          }
+        if (isLoggedIn) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) {
+                return const BottomNav();
+              },
+            ),
+          );
+        } else {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) {
+                return const OpeningScreen();
+              },
+            ),
+          );
         }
       },
     );

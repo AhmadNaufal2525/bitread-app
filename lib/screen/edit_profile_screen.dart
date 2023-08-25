@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class EditProfile extends StatefulWidget {
   final String id;
@@ -255,57 +256,88 @@ class EditProfileState extends State<EditProfile> {
   }
 
   void selectImage() {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: const Text("Pilih Gambar"),
-        content: SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              GestureDetector(
-                child: const Text("Dari Kamera"),
-                onTap: () async {
-                  Navigator.of(context).pop();
-                  selectedImagePath = (await getImageFromCamera())!;
-                  if (selectedImagePath != '') {
-                    setState(() {});
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Tidak Ada Gambar Yang Dipilih!"),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                },
-              ),
-              const Padding(padding: EdgeInsets.all(10.0)),
-              GestureDetector(
-                child: const Text("Dari Galeri"),
-                onTap: () async {
-                  Navigator.of(context).pop();
-                  selectedImagePath = (await selectImageFromGallery())!;
-                  if (selectedImagePath != '') {
-                    setState(() {});
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Tidak Ada Gambar Yang Dipilih!"),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                },
-              ),
-            ],
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Pilih Gambar"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector(
+                  child: const Row(
+                    children: [
+                      Icon(Icons.photo_camera),
+                      SizedBox(width: 10),
+                      Text("Kamera"),
+                    ],
+                  ),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    if (await Permission.camera.request().isGranted) {
+                      selectedImagePath = (await getImageFromCamera())!;
+                      if (selectedImagePath != '') {
+                        setState(() {});
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Tidak Ada Gambar Yang Dipilih!"),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              "Izinkan akses kamera untuk mengambil gambar."),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
+                ),
+                const Padding(padding: EdgeInsets.all(10.0)),
+                GestureDetector(
+                  child: const Row(
+                    children: [
+                      Icon(Icons.photo),
+                      SizedBox(width: 10),
+                      Text("Galeri"),
+                    ],
+                  ),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    if (await Permission.storage.request().isGranted) {
+                      selectedImagePath = (await selectImageFromGallery())!;
+                      if (selectedImagePath != '') {
+                        setState(() {});
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Tidak Ada Gambar Yang Dipilih!"),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                              "Izinkan akses penyimpanan untuk memilih gambar."),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ],
+            ),
           ),
-        ),
-      );
-    },
-  );
-}
-
+        );
+      },
+    );
+  }
 
   Future<String?> selectImageFromGallery() async {
     final XFile? file = await ImagePicker()
@@ -316,6 +348,7 @@ class EditProfileState extends State<EditProfile> {
       return null;
     }
   }
+
   Future<String?> getImageFromCamera() async {
     final XFile? file = await ImagePicker()
         .pickImage(source: ImageSource.camera, imageQuality: 10);
