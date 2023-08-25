@@ -166,6 +166,7 @@ class _SearchSreenState extends State<SearchSreen> {
                       }
 
                       final List<Map<String, dynamic>>? books = snapshot.data;
+                      books?.sort((a, b) => b['rating'].compareTo(a['rating']));
                       return SizedBox(
                         height: 260,
                         child: ListView.separated(
@@ -257,6 +258,21 @@ class _SearchSreenState extends State<SearchSreen> {
                       }
 
                       final List<Map<String, dynamic>>? books = snapshot.data;
+                      books?.sort(
+                          (a, b) => b['uploadTime'].compareTo(a['uploadTime']));
+                      final now = DateTime.now();
+                      final cutoffDate = now.subtract(const Duration(days: 7));
+                      final newBooks = books?.where((book) => book['uploadTime']
+                              .toDate()
+                              .isAfter(cutoffDate)) ??
+                          [];
+
+                      if (newBooks.isEmpty) {
+                        return const Center(
+                          child: Text('Belum ada buku terbaru'),
+                        );
+                      }
+
                       return SizedBox(
                         height: 260,
                         child: ListView.separated(

@@ -254,29 +254,71 @@ class EditProfileState extends State<EditProfile> {
     );
   }
 
-  void selectImage() async {
-    selectedImagePath = (await selectImageFromGallery())!;
-    if (selectedImagePath != '') {
-      setState(
-        () {},
+  void selectImage() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: const Text("Pilih Gambar"),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              GestureDetector(
+                child: const Text("Dari Kamera"),
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  selectedImagePath = (await getImageFromCamera())!;
+                  if (selectedImagePath != '') {
+                    setState(() {});
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Tidak Ada Gambar Yang Dipilih!"),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                },
+              ),
+              const Padding(padding: EdgeInsets.all(10.0)),
+              GestureDetector(
+                child: const Text("Dari Galeri"),
+                onTap: () async {
+                  Navigator.of(context).pop();
+                  selectedImagePath = (await selectImageFromGallery())!;
+                  if (selectedImagePath != '') {
+                    setState(() {});
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Tidak Ada Gambar Yang Dipilih!"),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
       );
-    } else {
-      setState(
-        () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Tidak Ada Gambar Yang Dipilih!"),
-              backgroundColor: Colors.red,
-            ),
-          );
-        },
-      );
-    }
-  }
+    },
+  );
+}
+
 
   Future<String?> selectImageFromGallery() async {
     final XFile? file = await ImagePicker()
         .pickImage(source: ImageSource.gallery, imageQuality: 10);
+    if (file != null) {
+      return file.path;
+    } else {
+      return null;
+    }
+  }
+  Future<String?> getImageFromCamera() async {
+    final XFile? file = await ImagePicker()
+        .pickImage(source: ImageSource.camera, imageQuality: 10);
     if (file != null) {
       return file.path;
     } else {

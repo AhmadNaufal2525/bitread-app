@@ -40,77 +40,79 @@ class PopularBook extends StatelessWidget {
           height: 20,
         ),
         StreamBuilder<List<Map<String, dynamic>>>(
-          stream: Provider.of<BooksProvider>(context).fetchBooks(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return SizedBox(
-                height: 320,
-                child: GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16.0,
-                  ),
-                  itemCount: 4,
-                  itemBuilder: (BuildContext context, int index) {
-                    return const GridCardBookShimmer();
-                  },
-                ),
-              );
-            }
+  stream: Provider.of<BooksProvider>(context).fetchBooks(),
+  builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return SizedBox(
+        height: 320,
+        child: GridView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 16.0,
+          ),
+          itemCount: 4,
+          itemBuilder: (BuildContext context, int index) {
+            return const GridCardBookShimmer();
+          },
+        ),
+      );
+    }
 
-            if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.error}'),
-              );
-            }
+    if (snapshot.hasError) {
+      return Center(
+        child: Text('Error: ${snapshot.error}'),
+      );
+    }
 
-            final List<Map<String, dynamic>>? books = snapshot.data;
-            if (books == null || books.isEmpty) {
-              return const Center(
-                child: Text('Tidak ada buku yang tersedia'),
-              );
-            }
+    final List<Map<String, dynamic>>? books = snapshot.data;
+    if (books == null || books.isEmpty) {
+      return const Center(
+        child: Text('Tidak ada buku yang tersedia'),
+      );
+    }
+    books.sort((a, b) => b['rating'].compareTo(a['rating']));
 
-            return SizedBox(
-              height: 320,
-              child: GridView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 16.0,
-                ),
-                itemCount: books.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final book = books[index];
-                  return InkWell(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BookDetailScreen(
-                              title: book['title'],
-                              author: book['author'],
-                              rating: book['rating'],
-                              imageUrl: book['imageUrl'],
-                              desc: book['description'],
-                              id: book['id'],
-                              url: book['url_book']),
-                        ),
-                      );
-                    },
-                    child: GridCardBook(
+    return SizedBox(
+      height: 320,
+      child: GridView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 16.0,
+        ),
+        itemCount: books.length,
+        itemBuilder: (BuildContext context, int index) {
+          final book = books[index];
+          return InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BookDetailScreen(
                       title: book['title'],
                       author: book['author'],
                       rating: book['rating'],
                       imageUrl: book['imageUrl'],
-                    ),
-                  );
-                },
-              ),
-            );
-          },
-        ),
+                      desc: book['description'],
+                      id: book['id'],
+                      url: book['url_book']),
+                ),
+              );
+            },
+            child: GridCardBook(
+              title: book['title'],
+              author: book['author'],
+              rating: book['rating'],
+              imageUrl: book['imageUrl'],
+            ),
+          );
+        },
+      ),
+    );
+  },
+),
+
       ],
     );
   }

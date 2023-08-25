@@ -323,7 +323,9 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                       builder: (BuildContext context,
                           AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
                               userSnapshot) {
-                        if (userSnapshot.hasData && userSnapshot.data!.exists) {
+                        if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
+                          return const SizedBox();
+                        } else {
                           var userData = userSnapshot.data!.data();
                           String? currentUsername = userData?['username'];
 
@@ -354,10 +356,13 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          '+${imageCount.toString()}',
+                                          imageCount > 1
+                                              ? '+${imageCount.toString()} Buku Penulis'
+                                              : 'Buku Penulis',
                                           style: const TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                         const Text('Buku penulis'),
                                       ],
@@ -365,12 +370,10 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                                   ],
                                 );
                               } else {
-                                return const SizedBox.shrink();
+                                return const SizedBox();
                               }
                             },
                           );
-                        } else {
-                          return const SizedBox.shrink();
                         }
                       },
                     ),

@@ -34,11 +34,9 @@ class _SplashScreenState extends State<SplashScreen> {
       durasiSplash,
       () async {
         var storagePermissionStatus = await Permission.storage.request();
+        var cameraPermissionStatus = await Permission.camera.request();
 
-        if (storagePermissionStatus.isGranted) {
-          setState(() {
-            isLoading = false;
-          });
+         if (storagePermissionStatus.isGranted && cameraPermissionStatus.isGranted) { 
           if (isLoggedIn) {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(

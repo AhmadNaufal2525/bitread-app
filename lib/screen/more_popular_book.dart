@@ -51,8 +51,10 @@ class _PopularBookScreenState extends State<PopularBookScreen> {
                         child: Text('Error: ${snapshot.error}'),
                       );
                     }
+                    
 
                     final List<Map<String, dynamic>>? books = snapshot.data;
+                    books?.sort((a, b) => b['rating'].compareTo(a['rating']));
                     return GridView.builder(
                       scrollDirection: Axis.vertical,
                       gridDelegate:

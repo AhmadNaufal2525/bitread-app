@@ -15,7 +15,8 @@ class BooksProvider extends ChangeNotifier {
               'author': doc['author'],
               'rating': doc['rating'],
               'description': doc['description'],
-              'url_book': doc['url_book']
+              'url_book': doc['url_book'],
+              'uploadTime': doc['uploadTime']
             };
           },
         ).toList();

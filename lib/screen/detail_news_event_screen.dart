@@ -137,7 +137,7 @@ class NewsEventDetailScreen extends StatelessWidget {
               delegate: SliverChildListDelegate(
                 [
                   Container(
-                    height: MediaQuery.of(context).size.height * 2.4,
+                    height: MediaQuery.of(context).size.height * 3,
                     padding: const EdgeInsets.all(20.0),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(

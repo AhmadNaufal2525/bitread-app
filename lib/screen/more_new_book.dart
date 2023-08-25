@@ -53,9 +53,23 @@ class _NewBookState extends State<NewBook> {
                     }
 
                     final List<Map<String, dynamic>>? books = snapshot.data;
+                    books?.sort(
+                        (a, b) => b['uploadTime'].compareTo(a['uploadTime']));
+                    final now = DateTime.now();
+                    final cutoffDate = now.subtract(const Duration(days: 7));
+                    final newBooks = books?.where((book) =>
+                            book['uploadTime'].toDate().isAfter(cutoffDate)) ??
+                        [];
+
+                    if (newBooks.isEmpty) {
+                      return const Center(
+                        child: Text('Belum ada buku terbaru'),
+                      );
+                    }
                     return GridView.builder(
                       scrollDirection: Axis.vertical,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 16.0,
                       ),

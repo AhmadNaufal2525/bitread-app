@@ -1,4 +1,6 @@
+import 'package:bitread_app/screen/author_booklist_screen.dart';
 import 'package:bitread_app/screen/edit_post_screen.dart';
+import 'package:bitread_app/widget/author_info.dart';
 import 'package:bitread_app/widget/like_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -6,7 +8,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class PostDetailScreen extends StatefulWidget {
   final String title;
@@ -287,325 +288,25 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                 isScrollControlled: true,
                                 builder: (context) {
                                   return FractionallySizedBox(
-                                    heightFactor: 0.32,
+                                    heightFactor: 0.4,
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            children: [
-                                              CircleAvatar(
-                                                backgroundImage: NetworkImage(
-                                                    widget.authorImage),
-                                                radius: 40,
-                                                backgroundColor: Colors.grey,
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 20),
-                                                child: Column(
-                                                  children: [
-                                                    Text(
-                                                      " ${widget.author.length > 12 ? widget.author.substring(0, 12) : widget.author}",
-                                                      style: const TextStyle(
-                                                        color: Colors.black,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 18,
-                                                      ),
-                                                    ),
-                                                    const Text(
-                                                      'Follow Saya di Media Sosial',
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 20),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              Column(
-                                                children: [
-                                                  GestureDetector(
-                                                    child: Column(
-                                                      children: [
-                                                        Image.asset(
-                                                          'assets/instagram.png',
-                                                          height: 40,
-                                                          width: 40,
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 4,
-                                                        ),
-                                                        const Text(
-                                                          'Instagram',
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    onTap: () async {
-                                                      final userId =
-                                                          widget.authorUserId;
-
-                                                      final userDoc =
-                                                          await FirebaseFirestore
-                                                              .instance
-                                                              .collection(
-                                                                  'User')
-                                                              .doc(userId)
-                                                              .get();
-
-                                                      if (userDoc.exists) {
-                                                        final userData =
-                                                            userDoc.data();
-                                                        final instagramUrl =
-                                                            userData?[
-                                                                'instagram'];
-
-                                                        if (instagramUrl !=
-                                                                null &&
-                                                            instagramUrl
-                                                                .isNotEmpty) {
-                                                          final url = Uri.parse(
-                                                              instagramUrl);
-                                                          await launchUrl(url);
-                                                        }
-                                                      }
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  GestureDetector(
-                                                    child: Column(
-                                                      children: [
-                                                        Image.asset(
-                                                          'assets/twitter.png',
-                                                          height: 40,
-                                                          width: 40,
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 4,
-                                                        ),
-                                                        const Text(
-                                                          'Twitter',
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    onTap: () async {
-                                                      final userId =
-                                                          widget.authorUserId;
-
-                                                      final userDoc =
-                                                          await FirebaseFirestore
-                                                              .instance
-                                                              .collection(
-                                                                  'User')
-                                                              .doc(userId)
-                                                              .get();
-
-                                                      if (userDoc.exists) {
-                                                        final userData =
-                                                            userDoc.data();
-                                                        final twitterUrl =
-                                                            userData?[
-                                                                'twitter'];
-
-                                                        if (twitterUrl !=
-                                                                null &&
-                                                            twitterUrl
-                                                                .isNotEmpty) {
-                                                          final url = Uri.parse(
-                                                            twitterUrl,
-                                                          );
-                                                          await launchUrl(url);
-                                                        }
-                                                      }
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  GestureDetector(
-                                                    child: Column(
-                                                      children: [
-                                                        Image.asset(
-                                                          'assets/facebook.png',
-                                                          height: 40,
-                                                          width: 40,
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 4,
-                                                        ),
-                                                        const Text(
-                                                          'Facebook',
-                                                          style: TextStyle(
-                                                            fontSize: 12,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    onTap: () async {
-                                                      final userId =
-                                                          widget.authorUserId;
-
-                                                      final userDoc =
-                                                          await FirebaseFirestore
-                                                              .instance
-                                                              .collection(
-                                                                  'User')
-                                                              .doc(userId)
-                                                              .get();
-
-                                                      if (userDoc.exists) {
-                                                        final userData =
-                                                            userDoc.data();
-                                                        final facebookUrl =
-                                                            userData?[
-                                                                'facebook'];
-
-                                                        if (facebookUrl !=
-                                                                null &&
-                                                            facebookUrl
-                                                                .isNotEmpty) {
-                                                          final url = Uri.parse(
-                                                              facebookUrl);
-                                                          await launchUrl(url);
-                                                        }
-                                                      }
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 26,
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 80),
-                                            child: Column(
-                                              children: [
-                                                StreamBuilder<
-                                                    DocumentSnapshot<
-                                                        Map<String, dynamic>>>(
-                                                  stream: FirebaseFirestore
-                                                      .instance
-                                                      .collection('User')
-                                                      .doc(FirebaseAuth.instance
-                                                          .currentUser?.uid)
-                                                      .snapshots(),
-                                                  builder: (BuildContext
-                                                          context,
-                                                      AsyncSnapshot<
-                                                              DocumentSnapshot<
-                                                                  Map<String,
-                                                                      dynamic>>>
-                                                          userSnapshot) {
-                                                    if (userSnapshot.hasData &&
-                                                        userSnapshot
-                                                            .data!.exists) {
-                                                      var userData =
-                                                          userSnapshot.data!
-                                                              .data();
-                                                      String? currentUsername =
-                                                          userData?['username'];
-
-                                                      return StreamBuilder<
-                                                          QuerySnapshot>(
-                                                        stream: FirebaseFirestore
-                                                            .instance
-                                                            .collection('Books')
-                                                            .where('author',
-                                                                isEqualTo:
-                                                                    currentUsername)
-                                                            .snapshots(),
-                                                        builder: (BuildContext
-                                                                context,
-                                                            AsyncSnapshot<
-                                                                    QuerySnapshot>
-                                                                bookSnapshot) {
-                                                          if (bookSnapshot
-                                                                  .hasData &&
-                                                              bookSnapshot
-                                                                  .data!
-                                                                  .docs
-                                                                  .isNotEmpty) {
-                                                            var bookData =
-                                                                bookSnapshot
-                                                                        .data!
-                                                                        .docs[0]
-                                                                        .data()
-                                                                    as Map<
-                                                                        String,
-                                                                        dynamic>;
-                                                            String imageUrl =
-                                                                bookData[
-                                                                    'imageUrl'];
-                                                            int imageCount =
-                                                                bookSnapshot
-                                                                    .data!
-                                                                    .docs
-                                                                    .length;
-
-                                                            return Row(
-                                                              children: [
-                                                                CircleAvatar(
-                                                                  radius: 20,
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .grey,
-                                                                  backgroundImage:
-                                                                      NetworkImage(
-                                                                          imageUrl),
-                                                                ),
-                                                                const SizedBox(
-                                                                    width: 10),
-                                                                Column(
-                                                                  crossAxisAlignment:
-                                                                      CrossAxisAlignment
-                                                                          .start,
-                                                                  children: [
-                                                                    Text(
-                                                                      '+${imageCount.toString()} Buku Penulis',
-                                                                      style: const TextStyle(
-                                                                          fontSize:
-                                                                              16,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              ],
-                                                            );
-                                                          } else {
-                                                            return const SizedBox
-                                                                .shrink();
-                                                          }
-                                                        },
-                                                      );
-                                                    } else {
-                                                      return const SizedBox
-                                                          .shrink();
-                                                    }
-                                                  },
-                                                ),
-                                              ],
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  BookListByAuthor(
+                                                      author: widget.author),
                                             ),
-                                          ),
-                                        ],
+                                          );
+                                        },
+                                        child: AuthorInfo(
+                                          authorImage: widget.authorImage,
+                                          author: widget.author,
+                                          authorUserId: widget.authorUserId,
+                                        ),
                                       ),
                                     ),
                                   );
@@ -652,7 +353,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
               delegate: SliverChildListDelegate(
                 [
                   Container(
-                    height: MediaQuery.of(context).size.height * 1.93,
+                    height: MediaQuery.of(context).size.height * 2.6,
                     padding: const EdgeInsets.all(20.0),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
