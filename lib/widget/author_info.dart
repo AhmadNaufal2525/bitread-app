@@ -1,3 +1,4 @@
+import 'package:bitread_app/screen/author_booklist_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -198,35 +199,52 @@ class AuthorInfo extends StatelessWidget {
                     String imageUrl = bookData['imageUrl'];
                     int imageCount = bookSnapshot.data!.docs.length;
 
-                    return Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 20,
-                          backgroundColor: Colors.grey,
-                          backgroundImage: NetworkImage(imageUrl),
-                        ),
-                        const SizedBox(width: 20),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              imageCount > 1
-                                  ? '+${imageCount.toString()} Buku Penulis'
-                                  : 'Buku Penulis',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookListByAuthor(
+                              author: author,
                             ),
-                          ],
-                        ),
-                      ],
+                          ),
+                        );
+                      },
+                      child: Row(
+                        children: [
+                          Stack(
+                            alignment: Alignment.bottomRight,
+                            children: [
+                              CircleAvatar(
+                                radius: 26,
+                                backgroundColor: Colors.grey,
+                                backgroundImage: NetworkImage(imageUrl),
+                              ),
+                              const SizedBox(width: 20),
+                              CircleAvatar(
+                                backgroundColor: Colors.red.withAlpha(160),
+                                radius: 12,
+                                child: Text(
+                                  '+${imageCount.toString()}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(width: 16),
+                          const Text('Lihat Buku Penulis')
+                        ],
+                      ),
                     );
                   } else {
                     return const SizedBox.shrink();
                   }
                 },
-              )
+              ),
             ],
           ),
         ),

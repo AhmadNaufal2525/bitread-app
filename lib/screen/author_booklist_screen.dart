@@ -19,7 +19,7 @@ class _BookListByAuthorState extends State<BookListByAuthor> {
         centerTitle: true,
         backgroundColor: Colors.white,
         title: Text(
-          widget.author,
+          'Buku ${widget.author}',
           style: const TextStyle(color: Colors.black),
         ),
         iconTheme: const IconThemeData(color: Colors.black),

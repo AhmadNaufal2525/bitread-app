@@ -170,6 +170,8 @@ class _EditPostState extends State<EditPost> {
                     {
                       if (value == null || value.isEmpty) {
                         return 'Isi blog Anda!';
+                      } else if (value.length < 100) {
+                        return 'Isi Blog minimal 100 karakter!';
                       }
                       return null;
                     }

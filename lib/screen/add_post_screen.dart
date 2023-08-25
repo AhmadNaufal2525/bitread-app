@@ -127,6 +127,20 @@ class AddPostScreenState extends State<AddPostScreen> {
     );
   }
 
+  void deniedAlert() {
+    QuickAlert.show(
+      context: context,
+      title: 'Izin Ditolak',
+      text:
+          'Izin untuk mengakses penyimpanan secara permanen ditolak. Anda dapat mengaktifkannya di pengaturan aplikasi.',
+      type: QuickAlertType.error,
+      confirmBtnText: 'Ok',
+      onConfirmBtnTap: () {
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     MediaQueryData mediaQueryData = MediaQuery.of(context);
@@ -203,6 +217,8 @@ class AddPostScreenState extends State<AddPostScreen> {
                     {
                       if (value == null || value.isEmpty) {
                         return 'Isi blog Anda!';
+                      } else if (value.length < 100) {
+                        return 'Isi Blog minimal 100 karakter!';
                       }
                       return null;
                     }
@@ -246,22 +262,40 @@ class AddPostScreenState extends State<AddPostScreen> {
   }
 
   void selectImage() async {
-    selectedImagePath = (await selectImageFromGallery())!;
-    if (selectedImagePath != '') {
-      setState(
-        () {},
-      );
-    } else {
-      setState(
-        () {
+    var storageStatus = await Permission.storage.request();
+
+    if (storageStatus.isGranted) {
+      selectedImagePath = (await selectImageFromGallery())!;
+
+      if (selectedImagePath != '') {
+        setState(() {});
+      } else {
+        setState(() {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text("Tidak Ada Gambar Yang Dipilih!"),
               backgroundColor: Colors.red,
             ),
           );
-        },
-      );
+        });
+      }
+    } else {
+      if (storageStatus.isPermanentlyDenied) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+                "Permission to access storage is required to select an image."),
+            action: SnackBarAction(
+              label: 'Enable',
+              onPressed: () {
+                openAppSettings();
+              },
+            ),
+          ),
+        );
+      } else {
+        deniedAlert();
+      }
     }
   }
 

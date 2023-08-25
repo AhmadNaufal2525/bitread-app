@@ -1,4 +1,3 @@
-import 'package:bitread_app/screen/author_booklist_screen.dart';
 import 'package:bitread_app/screen/edit_post_screen.dart';
 import 'package:bitread_app/widget/author_info.dart';
 import 'package:bitread_app/widget/like_button.dart';
@@ -40,6 +39,7 @@ class PostDetailScreen extends StatefulWidget {
 class _PostDetailScreenState extends State<PostDetailScreen> {
   final currentUser = FirebaseAuth.instance.currentUser;
   bool isLiked = false;
+  final int word = 100;
 
   @override
   void initState() {
@@ -288,20 +288,11 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                 isScrollControlled: true,
                                 builder: (context) {
                                   return FractionallySizedBox(
-                                    heightFactor: 0.4,
+                                    heightFactor: 0.388,
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
                                       child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  BookListByAuthor(
-                                                      author: widget.author),
-                                            ),
-                                          );
-                                        },
+                                        onTap: () {},
                                         child: AuthorInfo(
                                           authorImage: widget.authorImage,
                                           author: widget.author,
@@ -353,12 +344,11 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
               delegate: SliverChildListDelegate(
                 [
                   Container(
-                    height: MediaQuery.of(context).size.height * 2.6,
+                    width: double.infinity,
                     padding: const EdgeInsets.all(20.0),
                     decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10.0),
-                        topRight: Radius.circular(10.0),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(10),
                       ),
                       color: Colors.white,
                     ),
@@ -370,6 +360,8 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                           textAlign: TextAlign.justify,
                           style: const TextStyle(fontSize: 16),
                         ),
+                        if (widget.description.split(' ').length < word)
+                          const SizedBox(height: 330),
                       ],
                     ),
                   ),

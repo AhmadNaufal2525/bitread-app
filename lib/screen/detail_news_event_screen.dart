@@ -23,6 +23,7 @@ class NewsEventDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     int maxLineLength = 500;
+    const int word = 100;
     List<String> words = description.split(' ');
     List<String> paragraphs = [];
     String currentParagraph = '';
@@ -137,12 +138,11 @@ class NewsEventDetailScreen extends StatelessWidget {
               delegate: SliverChildListDelegate(
                 [
                   Container(
-                    height: MediaQuery.of(context).size.height * 3,
+                     width: double.infinity,
                     padding: const EdgeInsets.all(20.0),
                     decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10.0),
-                        topRight: Radius.circular(10.0),
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(10),
                       ),
                       color: Colors.white,
                     ),
@@ -160,6 +160,8 @@ class NewsEventDetailScreen extends StatelessWidget {
                           textAlign: TextAlign.justify,
                           style: const TextStyle(color: Colors.blue),
                         ),
+                        if (formattedText.split(' ').length < word)
+                          const SizedBox(height: 330),
                       ],
                     ),
                   ),
