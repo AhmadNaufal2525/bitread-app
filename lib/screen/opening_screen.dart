@@ -1,4 +1,5 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:bitread_app/screen/about_us_screen.dart';
 import 'package:bitread_app/screen/login_screen.dart';
 import 'package:bitread_app/screen/register_screen.dart';
 import 'package:bitread_app/widget/custom_button.dart';
@@ -91,7 +92,36 @@ class _OpeningScreenState extends State<OpeningScreen> {
                 ),
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.25,
+                height: MediaQuery.of(context).size.height * 0.17,
+              ),
+              FadeIn(
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const About(),
+                      ),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.group,
+                    color: Colors.black,
+                  ),
+                  label: const Text(
+                    'Tentang Kami',
+                    style: TextStyle(color: Colors.black),
+                  ),
+                ),
+              ),
+              const SizedBox(
+                height: 20,
               ),
               FadeIn(
                 child: const Text(

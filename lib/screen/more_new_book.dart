@@ -16,6 +16,7 @@ class _NewBookState extends State<NewBook> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 1,
         backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text(

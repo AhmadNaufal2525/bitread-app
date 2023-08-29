@@ -17,6 +17,7 @@ class _RatingBookState extends State<RatingBook> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 60,
+        elevation: 1,
         backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text(

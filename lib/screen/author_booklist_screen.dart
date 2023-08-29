@@ -17,13 +17,13 @@ class _BookListByAuthorState extends State<BookListByAuthor> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        elevation: 1,
         backgroundColor: Colors.white,
         title: Text(
           'Buku ${widget.author}',
           style: const TextStyle(color: Colors.black),
         ),
         iconTheme: const IconThemeData(color: Colors.black),
-        shadowColor: Colors.transparent,
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -38,8 +38,6 @@ class _BookListByAuthorState extends State<BookListByAuthor> {
           } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return const Center(child: Text('No books found for this author.'));
           }
-
-          // List of books data
           List<Map<String, dynamic>> books = snapshot.data!.docs
               .map((doc) => doc.data() as Map<String, dynamic>)
               .toList();
@@ -51,7 +49,7 @@ class _BookListByAuthorState extends State<BookListByAuthor> {
               itemBuilder: (BuildContext context, int index) {
                 QueryDocumentSnapshot doc = snapshot.data!.docs[index];
                 String bookTitle = doc['title'];
-                String bookId = doc.id; // Get the document ID
+                String bookId = doc.id;
                 String bookAuthor = doc['author'];
                 double bookRating = doc['rating'] ?? 0.0;
                 String bookDesc = doc['description'];
@@ -70,7 +68,6 @@ class _BookListByAuthorState extends State<BookListByAuthor> {
                           imageUrl: bookImageUrl ?? '',
                           desc: bookDesc,
                           url: bookUrl,
-                          // Pass other necessary data
                         ),
                       ),
                     );

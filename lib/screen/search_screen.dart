@@ -30,7 +30,6 @@ class _SearchSreenState extends State<SearchSreen> {
       body: SafeArea(
         child: LiquidPullToRefresh(
           color: const Color(0xffFE0002),
-          backgroundColor: Colors.white,
           onRefresh: handleRefresh,
           child: SingleChildScrollView(
             child: Padding(

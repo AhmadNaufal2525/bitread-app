@@ -288,7 +288,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                                 isScrollControlled: true,
                                 builder: (context) {
                                   return FractionallySizedBox(
-                                    heightFactor: 0.388,
+                                    heightFactor: 0.33,
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
                                       child: GestureDetector(

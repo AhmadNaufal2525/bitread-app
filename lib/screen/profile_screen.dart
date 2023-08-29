@@ -68,7 +68,7 @@ class _ProfilScreenState extends State<ProfilScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        shadowColor: const Color.fromRGBO(0, 0, 0, 0),
+        elevation: 1,
         centerTitle: true,
         title: const Text(
           'Profile',

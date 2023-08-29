@@ -11,13 +11,13 @@ class RecommendedBookScreen extends StatefulWidget {
   State<RecommendedBookScreen> createState() => _RecommendedBookScreenState();
 }
 
-
 class _RecommendedBookScreenState extends State<RecommendedBookScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        elevation: 1,
         centerTitle: true,
         title: const Text(
           'Rekomendasi Buku',

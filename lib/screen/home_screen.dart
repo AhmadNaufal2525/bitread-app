@@ -27,7 +27,6 @@ class _HomeScreenState extends State<HomeScreen> {
           body: SafeArea(
             child: LiquidPullToRefresh(
               color: const Color(0xffFE0002),
-              backgroundColor: Colors.white,
               onRefresh: handleRefresh,
               child: ListView(
                 children: [

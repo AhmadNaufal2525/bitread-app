@@ -93,6 +93,7 @@ class _EditPostState extends State<EditPost> {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         toolbarHeight: 80,
+        elevation: 1,
         backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text(
@@ -100,9 +101,7 @@ class _EditPostState extends State<EditPost> {
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
         ),
         iconTheme: const IconThemeData(color: Colors.black),
-        shadowColor: Colors.transparent,
       ),
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

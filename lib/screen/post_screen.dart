@@ -23,27 +23,31 @@ class _PostScreenState extends State<PostScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        shadowColor: Colors.transparent,
-        toolbarHeight: 80,
-        title: const Text(
-          'Blog Harian',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(10),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Align(
+        toolbarHeight: 100,
+        elevation: 1,
+        title: Column(
+          children: [
+            const Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                'Blog Harian',
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Align(
               alignment: Alignment.topLeft,
               child: Text(
                 DateFormat("dd MMM, yyyy").format(DateTime.now()),
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16, color: Colors.black),
               ),
             ),
-          ),
+          ],
         ),
       ),
-      backgroundColor: Colors.white,
       body: LiquidPullToRefresh(
         color: const Color(0xffFE0002),
         backgroundColor: Colors.white,

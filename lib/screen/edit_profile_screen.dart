@@ -128,6 +128,7 @@ class EditProfileState extends State<EditProfile> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        elevation: 1,
         toolbarHeight: 60,
         backgroundColor: Colors.white,
         centerTitle: true,
@@ -136,9 +137,7 @@ class EditProfileState extends State<EditProfile> {
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
         ),
         iconTheme: const IconThemeData(color: Colors.black),
-        shadowColor: Colors.transparent,
       ),
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

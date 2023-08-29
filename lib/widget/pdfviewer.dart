@@ -30,7 +30,7 @@ class _PdfViewerState extends State<PdfViewer> {
       appBar: AppBar(
         toolbarHeight: 60,
         backgroundColor: Colors.white,
-        shadowColor: Colors.transparent,
+        elevation: 1,
         centerTitle: true,
         title: const Text(
           'E-Book Reader',

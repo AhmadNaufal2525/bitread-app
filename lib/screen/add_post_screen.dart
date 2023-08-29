@@ -150,6 +150,7 @@ class AddPostScreenState extends State<AddPostScreen> {
       appBar: AppBar(
         toolbarHeight: 80,
         backgroundColor: Colors.white,
+        elevation: 1,
         centerTitle: true,
         title: const Text(
           'Posting Blog',
@@ -158,7 +159,6 @@ class AddPostScreenState extends State<AddPostScreen> {
         iconTheme: const IconThemeData(color: Colors.black),
         shadowColor: Colors.transparent,
       ),
-      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
