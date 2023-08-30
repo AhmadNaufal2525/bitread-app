@@ -4,6 +4,8 @@ import 'package:bitread_app/widget/custom_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BookDetailScreen extends StatefulWidget {
@@ -49,7 +51,15 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
           },
         );
       } else {
-        throw Exception('Book document with ID ${widget.id} does not exist.');
+        setState(() {
+          QuickAlert.show(
+            context: context,
+            type: QuickAlertType.info,
+            title: 'E-Book',
+            text:
+                'E-Book untuk buku ini belum tersedia. Harap bersabar untuk menunggu penerbit mengunggah E-Book. Terima kasih atas pengertian Anda!',
+          );
+        });
       }
     } catch (e) {
       throw Exception('Error loading PDF: $e');
@@ -88,8 +98,8 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
               delegate: SliverChildListDelegate(
                 [
                   Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 20),
                     child: Column(
                       children: <Widget>[
                         Row(
@@ -185,8 +195,18 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                             Expanded(
                               child: CustomButton(
                                 onPressed: () async {
-                                  final url = Uri.parse(widget.url);
-                                  await launchUrl(url);
+                                  if (widget.url.isNotEmpty) {
+                                    final url = Uri.parse(widget.url);
+                                    await launchUrl(url);
+                                  } else {
+                                    QuickAlert.show(
+                                      context: context,
+                                      type: QuickAlertType.info,
+                                      title: 'Link Pembelian Buku',
+                                      text:
+                                          'Link untuk Pembelian Buku ini belum tersedia. Coba Lagi Nanti Ya!',
+                                    );
+                                  }
                                 },
                                 text: 'Beli Buku',
                                 icon: const Icon(Icons.shopping_bag_sharp),
