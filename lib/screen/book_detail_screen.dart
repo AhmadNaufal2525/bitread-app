@@ -202,7 +202,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                     QuickAlert.show(
                                       context: context,
                                       type: QuickAlertType.info,
-                                      title: 'Link Pembelian Buku',
+                                      title: 'Pembelian Buku',
                                       text:
                                           'Link untuk Pembelian Buku ini belum tersedia. Coba Lagi Nanti Ya!',
                                     );
@@ -210,7 +210,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                                 },
                                 text: 'Beli Buku',
                                 icon: const Icon(Icons.shopping_bag_sharp),
-                                color: Colors.grey,
+                                color: Colors.green,
                               ),
                             )
                           ],

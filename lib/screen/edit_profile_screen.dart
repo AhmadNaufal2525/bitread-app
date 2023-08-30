@@ -42,6 +42,19 @@ class EditProfileState extends State<EditProfile> {
 
   Future<void> updateProfile() async {
     try {
+      final usernameSnapshot = await FirebaseFirestore.instance
+          .collection('User')
+          .where('username', isEqualTo: username)
+          .get();
+      if (usernameSnapshot.docs.isNotEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Username sudah digunakan oleh pengguna lain.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
       final docRef =
           FirebaseFirestore.instance.collection('User').doc(widget.id);
       final postCollectionRef =

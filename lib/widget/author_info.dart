@@ -31,7 +31,7 @@ class AuthorInfo extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      " ${author.length > 12 ? author.substring(0, 12) : author}",
+                      " ${author.length > 14 ? author.substring(0, 12) : author}",
                       style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -183,73 +183,81 @@ class AuthorInfo extends StatelessWidget {
           const SizedBox(
             height: 18,
           ),
-          const Align(alignment: Alignment.topLeft,child: Text('Buku Penulis', style: TextStyle(fontWeight: FontWeight.bold),),),
-           const SizedBox(
+          const Align(
+            alignment: Alignment.topLeft,
+            child: Text(
+              'Buku Penulis',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(
             height: 18,
           ),
           StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('Books')
-            .where('author', isEqualTo: author)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return const Center(child: Text('Penulis Belum Menerbitkan Buku'));
-          }
-          List<Map<String, dynamic>> books = snapshot.data!.docs
-              .map((doc) => doc.data() as Map<String, dynamic>)
-              .toList();
+            stream: FirebaseFirestore.instance
+                .collection('Books')
+                .where('author', isEqualTo: author)
+                .snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                return const Center(
+                    child: Text('Penulis Belum Menerbitkan Buku'));
+              }
+              List<Map<String, dynamic>> books = snapshot.data!.docs
+                  .map((doc) => doc.data() as Map<String, dynamic>)
+                  .toList();
 
-          return SizedBox(
-            height: 350,
-            child: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16.0,
-              ),
-              itemCount: books.length,
-              itemBuilder: (BuildContext context, int index) {
-                QueryDocumentSnapshot doc = snapshot.data!.docs[index];
-                String bookTitle = doc['title'];
-                String bookId = doc.id;
-                String bookAuthor = doc['author'];
-                double bookRating = doc['rating'] ?? 0.0;
-                String bookDesc = doc['description'];
-                String bookUrl = doc['url_book'];
-                String? bookImageUrl = doc['imageUrl'];
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BookDetailScreen(
-                          id: bookId,
-                          title: bookTitle,
-                          author: bookAuthor,
-                          rating: bookRating,
-                          imageUrl: bookImageUrl ?? '',
-                          desc: bookDesc,
-                          url: bookUrl,
-                        ),
+              return SizedBox(
+                height: 350,
+                child: GridView.builder(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 16.0,
+                  ),
+                  itemCount: books.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    QueryDocumentSnapshot doc = snapshot.data!.docs[index];
+                    String bookTitle = doc['title'];
+                    String bookId = doc.id;
+                    String bookAuthor = doc['author'];
+                    double bookRating = doc['rating'] ?? 0.0;
+                    String bookDesc = doc['description'];
+                    String bookUrl = doc['url_book'];
+                    String? bookImageUrl = doc['imageUrl'];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BookDetailScreen(
+                              id: bookId,
+                              title: bookTitle,
+                              author: bookAuthor,
+                              rating: bookRating,
+                              imageUrl: bookImageUrl ?? '',
+                              desc: bookDesc,
+                              url: bookUrl,
+                            ),
+                          ),
+                        );
+                      },
+                      child: GridCardBook(
+                        title: bookTitle,
+                        author: bookAuthor,
+                        rating: bookRating,
+                        imageUrl: bookImageUrl,
                       ),
                     );
                   },
-                  child: GridCardBook(
-                    title: bookTitle,
-                    author: bookAuthor,
-                    rating: bookRating,
-                    imageUrl: bookImageUrl,
-                  ),
-                );
-              },
-            ),
-          );
-        },
-      ),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );
