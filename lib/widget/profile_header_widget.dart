@@ -1,4 +1,4 @@
-import 'package:bitread_app/screen/edit_profile_screen.dart';
+import 'package:bitread_app/screen/profile/edit_profile_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -100,12 +100,15 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                             );
                           }
                         } catch (error) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Error loading user data: $error'),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
+                          setState(() {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content:
+                                    Text('Error loading user data: $error'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          });
                         }
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -184,17 +187,20 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                               if (instagramUrl != null &&
                                   instagramUrl.isNotEmpty) {
                                 final url = Uri.parse(instagramUrl);
-                                await launchUrl(url);
+                                await launchUrl(url,
+                                    mode: LaunchMode.externalApplication);
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    showCloseIcon: true,
-                                    closeIconColor: Colors.white,
-                                    content: Text(
-                                        'Kamu belum menambahkan link Instagram mu!'),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
+                                setState(() {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      showCloseIcon: true,
+                                      closeIconColor: Colors.white,
+                                      content: Text(
+                                          'Kamu belum menambahkan link Instagram mu!'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                });
                               }
                             }
                           }
@@ -231,17 +237,20 @@ class _ProfileHeaderState extends State<ProfileHeader> {
 
                               if (twitterUrl != null && twitterUrl.isNotEmpty) {
                                 final url = Uri.parse(twitterUrl);
-                                await launchUrl(url);
+                                await launchUrl(url,
+                                    mode: LaunchMode.externalApplication);
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    showCloseIcon: true,
-                                    closeIconColor: Colors.white,
-                                    content: Text(
-                                        'Kamu belum menambahkan link Twitter mu!'),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
+                                setState(() {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      showCloseIcon: true,
+                                      closeIconColor: Colors.white,
+                                      content: Text(
+                                          'Kamu belum menambahkan link Twitter mu!'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                });
                               }
                             }
                           }
@@ -279,17 +288,20 @@ class _ProfileHeaderState extends State<ProfileHeader> {
                               if (facebookUrl != null &&
                                   facebookUrl.isNotEmpty) {
                                 final url = Uri.parse(facebookUrl);
-                                await launchUrl(url);
+                                await launchUrl(url,
+                                    mode: LaunchMode.externalApplication);
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    showCloseIcon: true,
-                                    closeIconColor: Colors.white,
-                                    content: Text(
-                                        'Kamu belum menambahkan link Facebook mu!'),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
+                                setState(() {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      showCloseIcon: true,
+                                      closeIconColor: Colors.white,
+                                      content: Text(
+                                          'Kamu belum menambahkan link Facebook mu!'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                });
                               }
                             }
                           }

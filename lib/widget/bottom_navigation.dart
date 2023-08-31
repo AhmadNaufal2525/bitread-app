@@ -1,7 +1,7 @@
-import 'package:bitread_app/screen/home_screen.dart';
-import 'package:bitread_app/screen/post_screen.dart';
-import 'package:bitread_app/screen/profile_screen.dart';
-import 'package:bitread_app/screen/search_screen.dart';
+import 'package:bitread_app/screen/home/home_screen.dart';
+import 'package:bitread_app/screen/post/post_screen.dart';
+import 'package:bitread_app/screen/profile/profile_screen.dart';
+import 'package:bitread_app/screen/search/search_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

@@ -1,6 +1,6 @@
 import 'package:bitread_app/provider/books_provider.dart';
-import 'package:bitread_app/screen/book_detail_screen.dart';
-import 'package:bitread_app/screen/more_popular_book.dart';
+import 'package:bitread_app/screen/book/book_detail_screen.dart';
+import 'package:bitread_app/screen/book/more_popular_book.dart';
 import 'package:bitread_app/widget/grid_card_book.dart';
 import 'package:bitread_app/widget/grid_card_shimmer.dart';
 import 'package:flutter/material.dart';

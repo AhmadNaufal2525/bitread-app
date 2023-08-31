@@ -1,27 +1,26 @@
 import 'package:bitread_app/provider/books_provider.dart';
-import 'package:bitread_app/screen/book_detail_screen.dart';
+import 'package:bitread_app/screen/book/book_detail_screen.dart';
 import 'package:bitread_app/widget/grid_card_book.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class RatingBook extends StatefulWidget {
-  const RatingBook({super.key});
+class PopularBookScreen extends StatefulWidget {
+  const PopularBookScreen({super.key});
 
   @override
-  State<RatingBook> createState() => _RatingBookState();
+  State<PopularBookScreen> createState() => _PopularBookScreenState();
 }
 
-class _RatingBookState extends State<RatingBook> {
+class _PopularBookScreenState extends State<PopularBookScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 60,
         elevation: 1,
         backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text(
-          'Rating Teratas',
+          'Buku Terpopuler',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
         ),
         leading: IconButton(
@@ -53,6 +52,7 @@ class _RatingBookState extends State<RatingBook> {
                         child: Text('Error: ${snapshot.error}'),
                       );
                     }
+                    
 
                     final List<Map<String, dynamic>>? books = snapshot.data;
                     books?.sort((a, b) => b['rating'].compareTo(a['rating']));

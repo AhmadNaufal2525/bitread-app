@@ -1,10 +1,9 @@
-import 'package:bitread_app/screen/add_post_screen.dart';
-import 'package:bitread_app/screen/post_detail_screen.dart';
+import 'package:bitread_app/screen/post/add_post_screen.dart';
+import 'package:bitread_app/screen/post/post_detail_screen.dart';
 import 'package:bitread_app/widget/post_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class PostScreen extends StatefulWidget {
   const PostScreen({super.key});
@@ -48,7 +47,7 @@ class _PostScreenState extends State<PostScreen> {
           ],
         ),
       ),
-      body: LiquidPullToRefresh(
+      body: RefreshIndicator(
         color: const Color(0xffFE0002),
         backgroundColor: Colors.white,
         onRefresh: handleRefresh,

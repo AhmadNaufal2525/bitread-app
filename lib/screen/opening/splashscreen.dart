@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:bitread_app/screen/opening_screen.dart';
+import 'package:bitread_app/screen/opening/opening_screen.dart';
 import 'package:bitread_app/widget/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

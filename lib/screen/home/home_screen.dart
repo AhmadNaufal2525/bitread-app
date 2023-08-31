@@ -4,7 +4,6 @@ import 'package:bitread_app/widget/recommended_book.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,7 +14,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Future<void> handleRefresh() async {
-    return await Future.delayed(const Duration(milliseconds: 200));
+    return await Future.delayed(const Duration(milliseconds: 200),);
   }
 
   @override
@@ -25,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context, snapshot) {
         return Scaffold(
           body: SafeArea(
-            child: LiquidPullToRefresh(
+            child: RefreshIndicator(
               color: const Color(0xffFE0002),
               onRefresh: handleRefresh,
               child: ListView(

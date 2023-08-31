@@ -1,7 +1,7 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:bitread_app/screen/about_us_screen.dart';
-import 'package:bitread_app/screen/login_screen.dart';
-import 'package:bitread_app/screen/register_screen.dart';
+import 'package:bitread_app/screen/opening/about_us_screen.dart';
+import 'package:bitread_app/screen/auth/login_screen.dart';
+import 'package:bitread_app/screen/auth/register_screen.dart';
 import 'package:bitread_app/widget/custom_button.dart';
 import 'package:flutter/material.dart';
 
@@ -16,13 +16,14 @@ class _OpeningScreenState extends State<OpeningScreen> {
   @override
   Widget build(BuildContext context) {
     double w = MediaQuery.of(context).size.width;
+    double h = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: const Color(0xffFE0002),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(
-              height: 30,
+            SizedBox(
+              height: h * 0.03,
             ),
             FadeIn(
               child: Image.asset(
@@ -40,7 +41,7 @@ class _OpeningScreenState extends State<OpeningScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: h * 0.03),
             FadeInUp(
               delay: const Duration(milliseconds: 600),
               child: CustomButton(
@@ -66,7 +67,7 @@ class _OpeningScreenState extends State<OpeningScreen> {
                 color: const Color(0xffE97777),
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: h * 0.03),
             FadeInUp(
               delay: const Duration(milliseconds: 600),
               child: CustomButton(
@@ -94,9 +95,9 @@ class _OpeningScreenState extends State<OpeningScreen> {
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.14,
+              height: h * 0.034,
             ),
-            FadeIn(
+            FadeInUp(
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
@@ -123,7 +124,7 @@ class _OpeningScreenState extends State<OpeningScreen> {
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.03,
+              height: h * 0.16,
             ),
             FadeIn(
               child: const Text(

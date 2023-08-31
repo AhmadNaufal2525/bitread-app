@@ -1,4 +1,4 @@
-import 'package:bitread_app/screen/post_detail_screen.dart';
+import 'package:bitread_app/screen/post/post_detail_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NewsEventDetailScreen extends StatelessWidget {
   final String image;
@@ -138,7 +139,7 @@ class NewsEventDetailScreen extends StatelessWidget {
               delegate: SliverChildListDelegate(
                 [
                   Container(
-                     width: double.infinity,
+                    width: double.infinity,
                     padding: const EdgeInsets.all(20.0),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.vertical(
@@ -155,10 +156,22 @@ class NewsEventDetailScreen extends StatelessWidget {
                           style: const TextStyle(fontSize: 16),
                         ),
                         const SizedBox(height: 20),
-                        Text(
-                          sourceLink,
-                          textAlign: TextAlign.justify,
-                          style: const TextStyle(color: Colors.blue),
+                        TextButton(
+                          onPressed: () async {
+                            final url = Uri.parse(sourceLink);
+                            await launchUrl(
+                              url,
+                              mode: LaunchMode.externalApplication,
+                            );
+                          },
+                          child: Text(
+                            sourceLink,
+                            textAlign: TextAlign.justify,
+                            style: const TextStyle(
+                              color: Colors.blue,
+                              fontSize: 16,
+                            ),
+                          ),
                         ),
                         if (formattedText.split(' ').length < word)
                           const SizedBox(height: 330),

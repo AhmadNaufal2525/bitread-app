@@ -1,5 +1,5 @@
 import 'package:bitread_app/provider/books_provider.dart';
-import 'package:bitread_app/screen/book_detail_screen.dart';
+import 'package:bitread_app/screen/book/book_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +13,7 @@ class SearchResultScreen extends StatelessWidget {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
-          backgroundColor: Colors.transparent,
+          backgroundColor: Colors.white,
           actions: [
             Align(
               child: IconButton(

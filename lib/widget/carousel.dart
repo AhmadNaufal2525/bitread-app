@@ -1,4 +1,4 @@
-import 'package:bitread_app/screen/detail_news_event_screen.dart';
+import 'package:bitread_app/screen/home/detail_news_event_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';

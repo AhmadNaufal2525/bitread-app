@@ -1,13 +1,12 @@
 import 'package:bitread_app/provider/books_provider.dart';
-import 'package:bitread_app/screen/book_detail_screen.dart';
-import 'package:bitread_app/screen/more_new_book.dart';
-import 'package:bitread_app/screen/more_rating_book.dart';
-import 'package:bitread_app/screen/search_result_screen.dart';
+import 'package:bitread_app/screen/book/book_detail_screen.dart';
+import 'package:bitread_app/screen/book/more_new_book.dart';
+import 'package:bitread_app/screen/book/more_rating_book.dart';
+import 'package:bitread_app/screen/search/search_result_screen.dart';
 import 'package:bitread_app/widget/card_book.dart';
 import 'package:bitread_app/widget/card_book_shimmer.dart';
 import 'package:bitread_app/widget/searchbox.dart';
 import 'package:flutter/material.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 
 class SearchSreen extends StatefulWidget {
@@ -28,7 +27,7 @@ class _SearchSreenState extends State<SearchSreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: LiquidPullToRefresh(
+        child: RefreshIndicator(
           color: const Color(0xffFE0002),
           onRefresh: handleRefresh,
           child: SingleChildScrollView(

@@ -67,7 +67,10 @@ class About extends StatelessWidget {
                           onTap: () async {
                             final url = Uri.parse(
                                 'https://instagram.com/bitread_id?igshid=OGQ5ZDc2ODk2ZA==');
-                            await launchUrl(url);
+                            await launchUrl(
+                              url,
+                              mode: LaunchMode.externalApplication,
+                            );
                           },
                           child: Column(
                             children: [
@@ -85,7 +88,10 @@ class About extends StatelessWidget {
                           onTap: () async {
                             final url = Uri.parse(
                                 'https://www.tiktok.com/@bitread_id?_t=8fEd8oU10zq&_r=1');
-                            await launchUrl(url);
+                            await launchUrl(
+                              url,
+                              mode: LaunchMode.externalApplication,
+                            );
                           },
                           child: Column(
                             children: [

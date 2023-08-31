@@ -1,4 +1,4 @@
-import 'package:bitread_app/screen/book_detail_screen.dart';
+import 'package:bitread_app/screen/book/book_detail_screen.dart';
 import 'package:bitread_app/widget/grid_card_book.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';

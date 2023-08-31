@@ -1,5 +1,5 @@
 import 'package:bitread_app/provider/books_provider.dart';
-import 'package:bitread_app/screen/splashscreen.dart';
+import 'package:bitread_app/screen/opening/splashscreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';

@@ -42,19 +42,6 @@ class EditProfileState extends State<EditProfile> {
 
   Future<void> updateProfile() async {
     try {
-      final usernameSnapshot = await FirebaseFirestore.instance
-          .collection('User')
-          .where('username', isEqualTo: username)
-          .get();
-      if (usernameSnapshot.docs.isNotEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Username sudah digunakan oleh pengguna lain.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-        return;
-      }
       final docRef =
           FirebaseFirestore.instance.collection('User').doc(widget.id);
       final postCollectionRef =
@@ -111,7 +98,8 @@ class EditProfileState extends State<EditProfile> {
         },
       );
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      setState(() {
+        ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
             'Terjadi kesalahan, coba lagi nanti',
@@ -120,6 +108,7 @@ class EditProfileState extends State<EditProfile> {
           backgroundColor: Colors.red,
         ),
       );
+      });
     }
   }
 
@@ -291,21 +280,25 @@ class EditProfileState extends State<EditProfile> {
                       if (selectedImagePath != '') {
                         setState(() {});
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        setState(() {
+                          ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text("Tidak Ada Gambar Yang Dipilih!"),
                             backgroundColor: Colors.red,
                           ),
                         );
+                        });
                       }
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      setState(() {
+                        ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
                               "Izinkan akses kamera untuk mengambil gambar."),
                           backgroundColor: Colors.red,
                         ),
                       );
+                      });
                     }
                   },
                 ),
@@ -325,21 +318,25 @@ class EditProfileState extends State<EditProfile> {
                       if (selectedImagePath != '') {
                         setState(() {});
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        setState(() {
+                          ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text("Tidak Ada Gambar Yang Dipilih!"),
                             backgroundColor: Colors.red,
                           ),
                         );
+                        });
                       }
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
+                      setState(() {
+                        ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(
                               "Izinkan akses penyimpanan untuk memilih gambar."),
                           backgroundColor: Colors.red,
                         ),
                       );
+                      });
                     }
                   },
                 ),

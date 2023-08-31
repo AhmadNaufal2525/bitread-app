@@ -1,26 +1,27 @@
 import 'package:bitread_app/provider/books_provider.dart';
-import 'package:bitread_app/screen/book_detail_screen.dart';
+import 'package:bitread_app/screen/book/book_detail_screen.dart';
 import 'package:bitread_app/widget/grid_card_book.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class NewBook extends StatefulWidget {
-  const NewBook({super.key});
+class RatingBook extends StatefulWidget {
+  const RatingBook({super.key});
 
   @override
-  State<NewBook> createState() => _NewBookState();
+  State<RatingBook> createState() => _RatingBookState();
 }
 
-class _NewBookState extends State<NewBook> {
+class _RatingBookState extends State<RatingBook> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 60,
         elevation: 1,
         backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text(
-          'Buku Terbaru',
+          'Rating Teratas',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
         ),
         leading: IconButton(
@@ -54,19 +55,7 @@ class _NewBookState extends State<NewBook> {
                     }
 
                     final List<Map<String, dynamic>>? books = snapshot.data;
-                    books?.sort(
-                        (a, b) => b['uploadTime'].compareTo(a['uploadTime']));
-                    final now = DateTime.now();
-                    final cutoffDate = now.subtract(const Duration(days: 7));
-                    final newBooks = books?.where((book) =>
-                            book['uploadTime'].toDate().isAfter(cutoffDate)) ??
-                        [];
-
-                    if (newBooks.isEmpty) {
-                      return const Center(
-                        child: Text('Belum ada buku terbaru'),
-                      );
-                    }
+                    books?.sort((a, b) => b['rating'].compareTo(a['rating']));
                     return GridView.builder(
                       scrollDirection: Axis.vertical,
                       gridDelegate:

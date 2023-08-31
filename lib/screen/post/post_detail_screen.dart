@@ -1,4 +1,4 @@
-import 'package:bitread_app/screen/edit_post_screen.dart';
+import 'package:bitread_app/screen/post/edit_post_screen.dart';
 import 'package:bitread_app/widget/author_info.dart';
 import 'package:bitread_app/widget/like_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

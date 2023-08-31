@@ -1,26 +1,26 @@
 import 'package:bitread_app/provider/books_provider.dart';
-import 'package:bitread_app/screen/book_detail_screen.dart';
+import 'package:bitread_app/screen/book/book_detail_screen.dart';
 import 'package:bitread_app/widget/grid_card_book.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class RecommendedBookScreen extends StatefulWidget {
-  const RecommendedBookScreen({super.key});
+class NewBook extends StatefulWidget {
+  const NewBook({super.key});
 
   @override
-  State<RecommendedBookScreen> createState() => _RecommendedBookScreenState();
+  State<NewBook> createState() => _NewBookState();
 }
 
-class _RecommendedBookScreenState extends State<RecommendedBookScreen> {
+class _NewBookState extends State<NewBook> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 1,
+        backgroundColor: Colors.white,
         centerTitle: true,
         title: const Text(
-          'Rekomendasi Buku',
+          'Buku Terbaru',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
         ),
         leading: IconButton(
@@ -54,6 +54,19 @@ class _RecommendedBookScreenState extends State<RecommendedBookScreen> {
                     }
 
                     final List<Map<String, dynamic>>? books = snapshot.data;
+                    books?.sort(
+                        (a, b) => b['uploadTime'].compareTo(a['uploadTime']));
+                    final now = DateTime.now();
+                    final cutoffDate = now.subtract(const Duration(days: 7));
+                    final newBooks = books?.where((book) =>
+                            book['uploadTime'].toDate().isAfter(cutoffDate)) ??
+                        [];
+
+                    if (newBooks.isEmpty) {
+                      return const Center(
+                        child: Text('Belum ada buku terbaru'),
+                      );
+                    }
                     return GridView.builder(
                       scrollDirection: Axis.vertical,
                       gridDelegate:

@@ -4,6 +4,7 @@ import 'package:bitread_app/widget/custom_button.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,6 +33,7 @@ class BookDetailScreen extends StatefulWidget {
 }
 
 class _BookDetailScreenState extends State<BookDetailScreen> {
+  bool secureMode = false;
   Future<void> openPdfFromFirebase(BuildContext context) async {
     try {
       CollectionReference booksCollection =
@@ -40,16 +42,26 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
           await booksCollection.doc(widget.id).get();
       if (bookSnapshot.exists) {
         String pdfUrl = bookSnapshot.get('ebook');
-        setState(
-          () {
+        if (pdfUrl.isNotEmpty) {
+          setState(() {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => PdfViewer(pdfUrl: pdfUrl),
               ),
             );
-          },
-        );
+          });
+        } else {
+          setState(() {
+            QuickAlert.show(
+              context: context,
+              type: QuickAlertType.info,
+              title: 'E-Book',
+              text:
+                  'E-Book untuk buku ini belum tersedia. Harap bersabar untuk menunggu penerbit mengunggah E-Book ini.',
+            );
+          });
+        }
       } else {
         setState(() {
           QuickAlert.show(
@@ -57,7 +69,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
             type: QuickAlertType.info,
             title: 'E-Book',
             text:
-                'E-Book untuk buku ini belum tersedia. Harap bersabar untuk menunggu penerbit mengunggah E-Book. Terima kasih atas pengertian Anda!',
+                'E-Book untuk buku ini belum tersedia. Harap bersabar untuk menunggu penerbit mengunggah E-Book ini.',
           );
         });
       }
@@ -181,8 +193,20 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                           children: <Widget>[
                             Expanded(
                               child: CustomButton(
-                                onPressed: () {
-                                  openPdfFromFirebase(context);
+                                onPressed: () async {
+                                  final secureModeToggle = !secureMode;
+
+                                  if (secureModeToggle == true) {
+                                    await FlutterWindowManager.addFlags(
+                                        FlutterWindowManager.FLAG_SECURE);
+                                  } else {
+                                    await FlutterWindowManager.clearFlags(
+                                        FlutterWindowManager.FLAG_SECURE);
+                                  }
+                                  setState(() {
+                                    secureMode = !secureMode;
+                                    openPdfFromFirebase(context);
+                                  });
                                 },
                                 text: 'Baca Buku',
                                 icon: const Icon(Icons.menu_book),
@@ -196,8 +220,20 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
                               child: CustomButton(
                                 onPressed: () async {
                                   if (widget.url.isNotEmpty) {
-                                    final url = Uri.parse(widget.url);
-                                    await launchUrl(url);
+                                    Uri urlToLaunch = Uri.parse(widget.url);
+                                    try {
+                                      await launchUrl(urlToLaunch,
+                                          mode: LaunchMode.externalApplication);
+                                    } catch (e) {
+                                      setState(() {
+                                        QuickAlert.show(
+                                          context: context,
+                                          type: QuickAlertType.error,
+                                          title: 'Error',
+                                          text: 'Gagal Membuka Aplikasi',
+                                        );
+                                      });
+                                    }
                                   } else {
                                     QuickAlert.show(
                                       context: context,

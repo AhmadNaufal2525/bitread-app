@@ -65,7 +65,8 @@ class _EditPostState extends State<EditPost> {
         },
       );
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
+     setState(() {
+        ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
             'Terjadi kesalahan, coba lagi nanti',
@@ -74,6 +75,7 @@ class _EditPostState extends State<EditPost> {
           backgroundColor: Colors.red,
         ),
       );
+     });
     }
   }
 

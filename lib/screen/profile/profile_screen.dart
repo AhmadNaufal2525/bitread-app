@@ -1,4 +1,4 @@
-import 'package:bitread_app/screen/opening_screen.dart';
+import 'package:bitread_app/screen/opening/opening_screen.dart';
 import 'package:bitread_app/widget/book_author.dart';
 import 'package:bitread_app/widget/grid_profile_post.dart';
 import 'package:flutter/material.dart';
@@ -85,64 +85,67 @@ class _ProfilScreenState extends State<ProfilScreen> {
         ],
       ),
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          Expanded(
-            child: DefaultTabController(
-              length: 3,
-              child: NestedScrollView(
-                headerSliverBuilder: (context, _) {
-                  return [
-                    SliverList(
-                      delegate: SliverChildListDelegate(
-                        [
-                          const ProfileHeader(),
-                          const SizedBox(height: 20),
-                        ],
+      body: RefreshIndicator(
+        onRefresh: handleRefresh,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            Expanded(
+              child: DefaultTabController(
+                length: 3,
+                child: NestedScrollView(
+                  headerSliverBuilder: (context, _) {
+                    return [
+                      SliverList(
+                        delegate: SliverChildListDelegate(
+                          [
+                            const ProfileHeader(),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
                       ),
-                    ),
-                  ];
-                },
-                body: Column(
-                  children: [
-                    Material(
-                      color: Colors.white,
-                      child: TabBar(
-                        labelColor: Colors.black,
-                        unselectedLabelColor: Colors.grey[400],
-                        indicatorWeight: 3,
-                        indicatorColor: const Color(0xffFE0002),
-                        tabs: const [
-                          Tab(
-                            icon: Icon(Icons.view_list_rounded),
-                          ),
-                          Tab(
-                            icon: Icon(Icons.grid_view_rounded),
-                          ),
-                          Tab(
-                            icon: Icon(Icons.book_rounded),
-                          ),
-                        ],
+                    ];
+                  },
+                  body: Column(
+                    children: [
+                      Material(
+                        color: Colors.white,
+                        child: TabBar(
+                          labelColor: Colors.black,
+                          unselectedLabelColor: Colors.grey[400],
+                          indicatorWeight: 3,
+                          indicatorColor: const Color(0xffFE0002),
+                          tabs: const [
+                            Tab(
+                              icon: Icon(Icons.view_list_rounded),
+                            ),
+                            Tab(
+                              icon: Icon(Icons.grid_view_rounded),
+                            ),
+                            Tab(
+                              icon: Icon(Icons.book_rounded),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                    const Expanded(
-                      child: TabBarView(
-                        children: [
-                          ListProfilePost(),
-                          GridProfilePost(),
-                          BookAuthor()
-                        ],
+                      const Expanded(
+                        child: TabBarView(
+                          children: [
+                            ListProfilePost(),
+                            GridProfilePost(),
+                            BookAuthor()
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

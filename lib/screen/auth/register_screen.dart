@@ -1,7 +1,5 @@
 import 'package:animate_do/animate_do.dart';
-import 'package:bitread_app/screen/forgot_password_screen.dart';
-import 'package:bitread_app/screen/register_screen.dart';
-import 'package:bitread_app/widget/bottom_navigation.dart';
+import 'package:bitread_app/screen/auth/login_screen.dart';
 import 'package:bitread_app/widget/custom_button.dart';
 import 'package:bitread_app/widget/custom_text_field.dart';
 import 'package:bitread_app/widget/google_button.dart';
@@ -11,20 +9,24 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bitread_app/widget/bottom_navigation.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final formKey = GlobalKey<FormState>();
+  late String username;
   late String email;
   late String password;
+  late String confPassword;
   final auth = FirebaseAuth.instance;
   final firestore = FirebaseFirestore.instance;
   bool isLoading = false;
@@ -33,31 +35,70 @@ class _LoginScreenState extends State<LoginScreen> {
     prefs.setBool('isLoggedIn', isLoggedIn);
   }
 
-  Future<void> signin(
-      BuildContext context, String email, String password) async {
+  Future<void> registerUser(BuildContext context, String username, String email,
+      String password) async {
     try {
       setState(() {
         isLoading = true;
       });
-      await auth.signInWithEmailAndPassword(email: email, password: password);
+
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      User? user = userCredential.user;
+      user?.updateDisplayName(username);
+      String id = user?.uid ?? '';
+
+      await firestore.collection('User').doc(user?.uid).set(
+        {'id': id, 'username': username, 'email': email, 'image': ''},
+      );
+
       setState(
         () {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (BuildContext context) => const BottomNav(),
+          FocusScope.of(context).unfocus();
+          Navigator.pop(context);
+          Fluttertoast.showToast(
+            msg: "Daftar Akun Berhasil!",
+            gravity: ToastGravity.TOP,
+            backgroundColor: Colors.green,
+            textColor: Colors.white,
+          );
+
+          showModalBottomSheet(
+            context: context,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(25),
+              ),
             ),
-            (route) => false,
+            isScrollControlled: true,
+            builder: (context) {
+              return const FractionallySizedBox(
+                heightFactor: 0.862,
+                child: LoginScreen(),
+              );
+            },
           );
         },
       );
-      await setLoggedIn(true);
     } on FirebaseAuthException catch (error) {
-      Fluttertoast.showToast(
+      if (error.code == 'email-already-in-use') {
+        Fluttertoast.showToast(
+          msg: "Email sudah digunakan. Coba daftar dengan email lain.",
+          gravity: ToastGravity.TOP,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+        );
+      } else {
+        Fluttertoast.showToast(
           msg: error.message.toString(),
           gravity: ToastGravity.TOP,
           backgroundColor: Colors.red,
-          textColor: Colors.white);
+          textColor: Colors.white,
+        );
+      }
     } finally {
       setState(() {
         isLoading = false;
@@ -94,6 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
       await setLoggedIn(true);
+
       setState(() {
         isLoading = false;
       });
@@ -110,16 +152,14 @@ class _LoginScreenState extends State<LoginScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
     if (isLoggedIn) {
-      setState(
-        () {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) => const BottomNav()),
-            (route) => false,
-          );
-        },
-      );
+      setState(() {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => const BottomNav()),
+          (route) => false,
+        );
+      });
     }
   }
 
@@ -130,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Stack(
         children: [
           Opacity(
-            opacity: isLoading ? 0.5 : 1.0,
+            opacity: isLoading ? 0 : 1,
             child: AbsorbPointer(
               absorbing: isLoading,
               child: SingleChildScrollView(
@@ -147,7 +187,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 FadeInUp(
                                   child: const Text(
-                                    'Login',
+                                    'Register',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20),
@@ -164,21 +204,41 @@ class _LoginScreenState extends State<LoginScreen> {
                               ],
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: 8,
                             ),
                             FadeInUp(
                               child: const Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
-                                  'Masukkan email dan kata sandi akunmu disini',
+                                  'Silahkan isi kelengkapan akunmu di bawah ini',
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 14),
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.05,
+                            const SizedBox(
+                              height: 18,
+                            ),
+                            FadeInUp(
+                              child: CustomTextField(
+                                icon: Icons.person_2_rounded,
+                                hintText: 'Username',
+                                onChanged: (value) {
+                                  username = value.trim();
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Username Tidak Boleh Kosong!';
+                                  } else if (value.length < 8) {
+                                    return 'Username harus terdiri dari 8 karakter!';
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
                             ),
                             FadeInUp(
                               child: CustomTextField(
@@ -199,8 +259,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                               ),
                             ),
-                            SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.04,
+                            const SizedBox(
+                              height: 20,
                             ),
                             FadeInUp(
                               child: PasswordTextField(
@@ -211,52 +271,56 @@ class _LoginScreenState extends State<LoginScreen> {
                                 },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Masukkan Password Anda';
+                                    return 'Password Tidak Boleh Kosong!';
                                   } else if (value.length < 6) {
-                                    return 'Password harus terdiri dari 6 karakter!';
+                                    return 'Password harus terdiri dari 6 karakter atau lebih';
                                   }
                                   return null;
                                 },
                               ),
                             ),
                             const SizedBox(
-                              height: 30,
+                              height: 20,
                             ),
                             FadeInUp(
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    showModalBottomSheet(
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(25),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: RichText(
+                                  textAlign: TextAlign.justify,
+                                  text: TextSpan(
+                                    text:
+                                        'Dengan mendaftarkan akun, anda telah menyetujui untuk menerima ',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily:
+                                            GoogleFonts.poppins().fontFamily,
+                                        fontSize: 14),
+                                    children: [
+                                      TextSpan(
+                                        text: 'Privacy Policy Bitread',
+                                        style: TextStyle(
+                                          color: Colors.blue,
+                                          fontFamily:
+                                              GoogleFonts.poppins().fontFamily,
+                                          fontSize: 14,
                                         ),
                                       ),
-                                      context: context,
-                                      builder: (context) =>
-                                          const ForgotPassScreen(),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Lupa Password?',
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 14),
+                                    ],
                                   ),
                                 ),
                               ),
                             ),
                             const SizedBox(
-                              height: 20,
+                              height: 16,
                             ),
                             FadeInUp(
                               child: CustomButton(
                                 color: const Color(0xffFE0002),
-                                text: 'Masuk',
+                                text: 'Daftar',
                                 onPressed: () {
                                   if (formKey.currentState!.validate()) {
-                                    signin(context, email, password);
+                                    registerUser(
+                                        context, username, email, password);
                                   }
                                 },
                               ),
@@ -326,33 +390,33 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                             ),
                             const SizedBox(
-                              height: 26,
+                              height: 16,
                             ),
                             FadeInUp(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  const Text("Tidak punya akun?"),
+                                  const Text("Sudah punya akun?"),
                                   TextButton(
                                     onPressed: () {
                                       Navigator.pop(context);
                                       showModalBottomSheet(
+                                        context: context,
                                         shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.vertical(
                                             top: Radius.circular(25),
                                           ),
                                         ),
                                         isScrollControlled: true,
-                                        context: context,
                                         builder: (context) {
                                           return const FractionallySizedBox(
                                             heightFactor: 0.862,
-                                            child: RegisterScreen(),
+                                            child: LoginScreen(),
                                           );
                                         },
                                       );
                                     },
-                                    child: const Text("Daftar disini"),
+                                    child: const Text("Masuk disini"),
                                   ),
                                 ],
                               ),

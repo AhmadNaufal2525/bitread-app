@@ -1,26 +1,26 @@
 import 'package:bitread_app/provider/books_provider.dart';
-import 'package:bitread_app/screen/book_detail_screen.dart';
+import 'package:bitread_app/screen/book/book_detail_screen.dart';
 import 'package:bitread_app/widget/grid_card_book.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class PopularBookScreen extends StatefulWidget {
-  const PopularBookScreen({super.key});
+class RecommendedBookScreen extends StatefulWidget {
+  const RecommendedBookScreen({super.key});
 
   @override
-  State<PopularBookScreen> createState() => _PopularBookScreenState();
+  State<RecommendedBookScreen> createState() => _RecommendedBookScreenState();
 }
 
-class _PopularBookScreenState extends State<PopularBookScreen> {
+class _RecommendedBookScreenState extends State<RecommendedBookScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 1,
         backgroundColor: Colors.white,
+        elevation: 1,
         centerTitle: true,
         title: const Text(
-          'Buku Terpopuler',
+          'Rekomendasi Buku',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.w900),
         ),
         leading: IconButton(
@@ -52,10 +52,8 @@ class _PopularBookScreenState extends State<PopularBookScreen> {
                         child: Text('Error: ${snapshot.error}'),
                       );
                     }
-                    
 
                     final List<Map<String, dynamic>>? books = snapshot.data;
-                    books?.sort((a, b) => b['rating'].compareTo(a['rating']));
                     return GridView.builder(
                       scrollDirection: Axis.vertical,
                       gridDelegate:
