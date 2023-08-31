@@ -85,7 +85,8 @@ class AuthorInfo extends StatelessWidget {
 
                         if (instagramUrl != null && instagramUrl.isNotEmpty) {
                           final url = Uri.parse(instagramUrl);
-                          await launchUrl(url);
+                          await launchUrl(url,
+                                    mode: LaunchMode.externalApplication);
                         }
                       }
                     },
@@ -129,7 +130,8 @@ class AuthorInfo extends StatelessWidget {
                           final url = Uri.parse(
                             twitterUrl,
                           );
-                          await launchUrl(url);
+                          await launchUrl(url,
+                                    mode: LaunchMode.externalApplication);
                         }
                       }
                     },
@@ -171,7 +173,8 @@ class AuthorInfo extends StatelessWidget {
 
                         if (facebookUrl != null && facebookUrl.isNotEmpty) {
                           final url = Uri.parse(facebookUrl);
-                          await launchUrl(url);
+                          await launchUrl(url,
+                                    mode: LaunchMode.externalApplication);
                         }
                       }
                     },
