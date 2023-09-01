@@ -95,7 +95,7 @@ class _OpeningScreenState extends State<OpeningScreen> {
               ),
             ),
             SizedBox(
-              height: h * 0.034,
+              height: h * 0.16,
             ),
             FadeInUp(
               child: ElevatedButton.icon(
@@ -124,7 +124,7 @@ class _OpeningScreenState extends State<OpeningScreen> {
               ),
             ),
             SizedBox(
-              height: h * 0.16,
+              height: h * 0.04,
             ),
             FadeIn(
               child: const Text(
