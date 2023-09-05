@@ -35,6 +35,7 @@ class _OpeningScreenState extends State<OpeningScreen> {
                       icon: const Icon(
                         Icons.info,
                         color: Colors.white,
+                        size: 26,
                       ),
                       onPressed: () {
                         Navigator.push(
@@ -122,14 +123,16 @@ class _OpeningScreenState extends State<OpeningScreen> {
                 ],
               ),
               const Positioned(
-                left: 70,
+                left: 0,
                 right: 0,
                 bottom: 36,
-                child: Text(
-                  'Bitread All Right Reserved @2023',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
+                child: Center(
+                  child: Text(
+                    'Bitread All Right Reserved @2023',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ),
