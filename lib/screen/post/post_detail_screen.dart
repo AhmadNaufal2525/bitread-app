@@ -1,11 +1,13 @@
 import 'package:bitread_app/screen/post/edit_post_screen.dart';
 import 'package:bitread_app/widget/author_info.dart';
+import 'package:bitread_app/widget/custompopitem.dart';
 import 'package:bitread_app/widget/like_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:popover/popover.dart';
 import 'package:quickalert/quickalert.dart';
 
 class PostDetailScreen extends StatefulWidget {
@@ -88,6 +90,7 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         ),
       );
       Navigator.pop(context);
+      Navigator.pop(context);
     } catch (e) {
       errorAlert();
     }
@@ -122,6 +125,11 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
         Navigator.pop(context);
       },
     );
+  }
+
+  Future<void> someAsyncFunction() async {
+    // Simulate an async operation.
+    await Future.delayed(const Duration(seconds: 0));
   }
 
   @override
@@ -184,60 +192,73 @@ class _PostDetailScreenState extends State<PostDetailScreen> {
                     ),
                   ),
                 ),
-                if (isCurrentUserAuthor)
-                  PopupMenuButton<String>(
-                    icon: const Icon(
-                      Icons.more_vert_rounded,
-                      color: Colors.white,
-                    ),
-                    onSelected: (String value) async {
-                      if (value == 'edit') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditPost(
-                              description: widget.description,
-                              id: widget.id,
-                              image: widget.imageUrl,
-                              title: widget.title,
-                            ),
-                          ),
-                        );
-                      } else if (value == 'delete') {
-                        confirmDeleteAlert();
-                      }
-                    },
-                    itemBuilder: (BuildContext context) {
-                      return [
-                        const PopupMenuItem<String>(
-                          value: 'edit',
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.edit_rounded,
-                                color: Colors.blue,
-                              ),
-                              SizedBox(width: 8),
-                              Text('Edit'),
-                            ],
-                          ),
-                        ),
-                        const PopupMenuItem<String>(
-                          value: 'delete',
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.delete_rounded,
-                                color: Colors.red,
-                              ),
-                              SizedBox(width: 8),
-                              Text('Delete'),
-                            ],
-                          ),
-                        ),
-                      ];
-                    },
-                  ),
+                FutureBuilder<void>(
+                  future:
+                      someAsyncFunction(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<void> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return GestureDetector(
+                        onTap: () {
+                          showPopover(
+                            context: context,
+                            bodyBuilder: (context) {
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CustomPopupMenuItem(
+                                    icon: Icons.edit_rounded,
+                                    iconColor: Colors.blue,
+                                    text: 'Edit',
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => EditPost(
+                                            description: widget.description,
+                                            id: widget.id,
+                                            image: widget.imageUrl,
+                                            title: widget.title,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const Divider(thickness: 0.5,),
+                                  CustomPopupMenuItem(
+                                    icon: Icons.delete_rounded,
+                                    iconColor: Colors.red,
+                                    text: 'Delete',
+                                    onTap: () {
+                                      confirmDeleteAlert();
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                            onPop: () => print('Popover was popped!'),
+                            direction: PopoverDirection.bottom,
+                            backgroundColor: Colors.white,
+
+                            width: 160,
+                            height: 110,
+                            arrowHeight: 5,
+                            arrowWidth: 5,
+                          );
+                        },
+                        child: isCurrentUserAuthor
+                            ? const Icon(
+                                Icons.more_vert_rounded,
+                                color: Colors.white,
+                              )
+                            : const SizedBox.shrink(),
+                      );
+                    } else {
+                      // Display a loading indicator or placeholder widget while waiting for the future.
+                      return const CircularProgressIndicator();
+                    }
+                  },
+                ),
               ],
               expandedHeight: MediaQuery.of(context).size.height * 0.45,
               flexibleSpace: FlexibleSpaceBar(
